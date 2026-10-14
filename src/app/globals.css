@@ -1,0 +1,541 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Cotton White, Cherry Red & Deep Maroon Color System
+
+     primary    #EDEBD0   Cotton White — the page ground
+     secondary  #810100   Cherry Red — structural accent: borders, eyebrows,
+                          icon badges, focus rings, the marquee, the accent panel
+     contrast   #630000   Deep Maroon — attention: primary CTAs, headline accents
+     tertiary   #1B1717   Noir Black — the ink. Text, hairlines and every
+                          translucent surface tint mixes from this.
+
+   Contrast Ratios (on Cotton White):
+     Noir on Cotton:      14.7:1 (AAA Pass — body text)
+     Maroon on Cotton:    11.4:1 (AAA Pass — any size)
+     Cherry on Cotton:     9.0:1 (AAA Pass — any size)
+     Cotton on Cherry:     9.0:1 (AAA Pass — the accent panel)
+     Cotton on Maroon:    11.4:1 (AAA Pass — the primary button)
+
+   Every pairing against the ground clears AAA, so unlike the palette this
+   replaced there is no colour here restricted to display type.
+
+   The one caution: Cherry and Maroon sit just 1.3:1 apart. They read as
+   distinct hues but NOT as distinct tones, so they must never be stacked as
+   figure-on-ground — no maroon text on cherry, no cherry fill on maroon.
+   Anything placed on either red is Cotton White.
+------------------------------------------------------------------ */
+@theme {
+  --color-primary: #EDEBD0;
+  --color-secondary: #810100;
+  --color-contrast: #630000;
+  --color-tertiary: #1B1717;
+  /* Raised card face — lighter than the ground, so panels read as sitting
+     above the page rather than cut into it. */
+  --color-surface: #F9F8EA;
+  /* Ink at full strength, for text that must not be mixed down. */
+  --color-ink: #0F0D0D;
+}
+
+@theme inline {
+  --font-display: var(--font-sora);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  /* Every shadow carries a red cast, never neutral grey — a grey shadow over
+     cotton white goes dishwater. */
+  --shadow-warm: rgba(45, 12, 12, 0.20);
+  --shadow-warm-strong: rgba(45, 12, 12, 0.32);
+  --panel-radius: 24px;
+  --nav-h: 76px;
+}
+
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------ */
+@layer base {
+  html {
+    overflow-x: clip;
+    -webkit-tap-highlight-color: transparent;
+    /* Keeps native #hash landings clear of the fixed navbar. */
+    scroll-padding-top: calc(var(--nav-h) + 20px);
+  }
+
+  body {
+    overflow-x: clip;
+    background: var(--color-primary);
+    color: var(--color-tertiary);
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-secondary);
+    color: var(--color-primary);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-primary);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-secondary);
+    border-radius: 99px;
+    border: 3px solid var(--color-primary);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Section Background Patterns (Cherry & Maroon on Cotton White)
+------------------------------------------------------------------ */
+
+/* Hero Pattern: cherry-into-maroon wash over the cotton white ground */
+.bg-pattern-hero {
+  background-color: var(--color-primary);
+  background-image:
+    radial-gradient(circle at 78% 12%, color-mix(in srgb, var(--color-contrast) 17%, transparent) 0%, transparent 52%),
+    radial-gradient(circle at 20% 78%, color-mix(in srgb, var(--color-secondary) 28%, transparent) 0%, transparent 58%),
+    radial-gradient(color-mix(in srgb, var(--color-tertiary) 9%, transparent) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 28px 28px;
+}
+
+/* Live Auditor Pattern: Digital Scanline & Mint Grid */
+.bg-pattern-auditor {
+  background-image: 
+    linear-gradient(to right, color-mix(in srgb, var(--color-secondary) 16%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-secondary) 16%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Web Suite Pattern: Cream Code Grid */
+.bg-pattern-web {
+  background-image: 
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--color-secondary) 24%, transparent) 1px, transparent 1.5px),
+    linear-gradient(to right, color-mix(in srgb, var(--color-tertiary) 8%, transparent) 1px, transparent 1px);
+  background-size: 20px 20px, 40px 40px;
+}
+
+/* Digital Suite Pattern: Mint Radial Matrix */
+.bg-pattern-digital {
+  background-image: 
+    radial-gradient(color-mix(in srgb, var(--color-secondary) 20%, transparent) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+/* Cyber Shield Pattern: Zero-Trust Hexagon Mesh, drawn in cherry */
+.bg-pattern-cyber {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='none' stroke='%23810100' stroke-width='0.6' stroke-opacity='0.28'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v13.2l11 6.35 11-6.35V17.9L14 11.55 3 17.9z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Configurator Pattern: Architectural Blueprint Graph Grid */
+.bg-pattern-configurator {
+  background-image: 
+    linear-gradient(to right, color-mix(in srgb, var(--color-tertiary) 10%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-tertiary) 10%, transparent) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+/* Growth Impact Pattern: Metric Mesh */
+.bg-pattern-impact {
+  background-image: 
+    radial-gradient(circle at 0% 0%, color-mix(in srgb, var(--color-contrast) 18%, transparent) 0%, transparent 50%),
+    radial-gradient(color-mix(in srgb, var(--color-tertiary) 10%, transparent) 1px, transparent 1px);
+  background-size: 100% 100%, 22px 22px;
+}
+
+/* Unified Architecture Pattern: Orbiting Mint Radial Glow */
+.bg-pattern-architecture {
+  background-image: 
+    radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--color-secondary) 26%, transparent) 0%, transparent 70%),
+    linear-gradient(to right, color-mix(in srgb, var(--color-tertiary) 8%, transparent) 1px, transparent 1px);
+  background-size: 100% 100%, 30px 30px;
+}
+
+/* ------------------------------------------------------------------
+   LIQUID GLASSMORPHISM PANELS
+------------------------------------------------------------------ */
+
+/* Raised Card — a pale face lifted off the cotton white ground */
+.panel {
+  position: relative;
+  border-radius: var(--panel-radius);
+  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 22%, transparent);
+  color: var(--color-tertiary);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 40px -18px var(--shadow-warm);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  overflow: hidden;
+}
+
+/* Specular sheen — cherry rather than white, so it warms instead of washes */
+.panel::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    transparent 40%,
+    color-mix(in srgb, var(--color-secondary) 10%, transparent) 60%,
+    transparent 100%
+  );
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity 0.5s ease;
+}
+
+/* Hover — the border warms and the card casts further */
+.panel:hover {
+  border-color: color-mix(in srgb, var(--color-secondary) 55%, transparent);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
+    0 26px 55px -18px var(--shadow-warm-strong);
+}
+.panel:hover::before {
+  opacity: 1;
+}
+
+/* Quiet Well — sunk into the ground instead of raised off it. The tint mixes
+   from cherry, not ink: neutral ink over cotton white goes grey and drains it. */
+.panel-quiet {
+  background: color-mix(in srgb, var(--color-secondary) 9%, transparent);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border-color: color-mix(in srgb, var(--color-tertiary) 12%, transparent);
+  box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Solid Card — no translucency, for content that sits over a busy pattern */
+.panel-light {
+  position: relative;
+  border-radius: var(--panel-radius);
+  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 20%, transparent);
+  color: var(--color-tertiary);
+  box-shadow: 0 10px 30px -12px var(--shadow-warm);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  overflow: hidden;
+}
+.panel-light:hover {
+  border-color: color-mix(in srgb, var(--color-secondary) 60%, transparent);
+  box-shadow: 0 20px 45px -14px var(--shadow-warm-strong);
+}
+
+.panel-pill {
+  --panel-radius: 999px;
+}
+
+/* Opaque face for menus that float over content. The translucent .panel lets
+   headline type read straight through it, which looks like a render glitch
+   rather than glass once the ground is light. */
+.panel-opaque {
+  background: var(--color-primary);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Feature Card — the same light face, ringed in cherry and lifted. Emphasis
+   without inverting to a dark surface, so the card's text classes still hold. */
+.panel-feature {
+  background: var(--color-surface);
+  border: 2px solid color-mix(in srgb, var(--color-secondary) 55%, transparent);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
+    0 26px 55px -20px var(--shadow-warm-strong);
+}
+.panel-feature:hover {
+  border-color: var(--color-secondary);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
+    0 32px 65px -20px var(--shadow-warm-strong);
+}
+
+/* Accent Panel — a solid cherry block, the one dark surface on the site */
+.panel-accent {
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--color-secondary) 88%, #000000 12%) 0%,
+    var(--color-secondary) 55%,
+    color-mix(in srgb, var(--color-secondary) 78%, var(--color-contrast) 22%) 100%
+  );
+  border: 1px solid color-mix(in srgb, var(--color-tertiary) 30%, transparent);
+  color: var(--color-primary);
+  box-shadow:
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.25),
+    0 24px 50px -18px var(--shadow-warm-strong);
+}
+
+/* Maroon is invisible against cherry (1.3:1), so accents inside go to cotton. */
+.panel-accent .eyebrow,
+.panel-accent .text-accent {
+  color: var(--color-primary) !important;
+}
+.panel-accent .panel,
+.panel-accent .panel-quiet {
+  background: color-mix(in srgb, var(--color-primary) 14%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  color: var(--color-primary);
+  box-shadow: none;
+}
+.panel-accent .panel:hover,
+.panel-accent .panel-light:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 60%, transparent);
+}
+
+/* ------------------------------------------------------------------
+   Buttons
+------------------------------------------------------------------ */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.9rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.35s ease;
+  will-change: transform;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -8px color-mix(in srgb, var(--color-contrast) 55%, transparent);
+}
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Maroon carries the primary action. Both reds are dark, so the letters are
+   Cotton White (11.4:1) — dark ink on maroon would be 1.3:1 and unreadable. */
+.btn-primary {
+  background: var(--color-contrast);
+  color: var(--color-primary);
+  border: 1px solid color-mix(in srgb, var(--color-contrast) 80%, #000000 20%);
+}
+
+.btn-ghost {
+  color: var(--color-tertiary);
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 40%, transparent);
+  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+  backdrop-filter: blur(8px);
+}
+.btn-ghost:hover {
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
+  box-shadow: 0 12px 28px -8px color-mix(in srgb, var(--color-secondary) 45%, transparent);
+}
+
+/* Inside the cherry block maroon goes muddy, so the actions invert to cotton. */
+.panel-accent .btn-primary {
+  background: var(--color-primary);
+  color: var(--color-ink);
+  border-color: var(--color-primary);
+}
+.panel-accent .btn-primary:hover {
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.35);
+}
+.panel-accent .btn-ghost {
+  color: var(--color-primary);
+  border-color: color-mix(in srgb, var(--color-primary) 45%, transparent);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+.panel-accent .btn-ghost:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.3);
+}
+
+/* ------------------------------------------------------------------
+   Form fields
+------------------------------------------------------------------ */
+.field-input {
+  width: 100%;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 30%, transparent);
+  background: var(--color-surface);
+  padding: 0.85rem 1rem;
+  font-size: 0.94rem;
+  color: var(--color-tertiary);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.field-input::placeholder {
+  color: color-mix(in srgb, var(--color-tertiary) 55%, transparent);
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-secondary) 25%, transparent);
+}
+
+select.field-input {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 2.6rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23810100' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+}
+
+/* Fields sitting on the cherry block need their own light face. */
+.panel-accent .field-input {
+  background: color-mix(in srgb, var(--color-primary) 92%, transparent);
+  border-color: color-mix(in srgb, var(--color-tertiary) 25%, transparent);
+}
+.panel-accent .field-input:focus {
+  border-color: var(--color-tertiary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-tertiary) 25%, transparent);
+}
+
+/* ------------------------------------------------------------------
+   Text helpers
+------------------------------------------------------------------ */
+/* Maroon at 11.4:1 — unlike the flame it replaced, this is safe at any size. */
+.text-accent {
+  color: var(--color-contrast);
+}
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}
+
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 100;
+  pointer-events: none;
+  /* Noise reads much harder over cotton white than it did over near-black. */
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------
+   ANIMATED ICONS & MICRO-INTERACTIONS
+------------------------------------------------------------------ */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(4deg);
+  }
+}
+
+@keyframes float-reverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(12px) rotate(-4deg);
+  }
+}
+
+@keyframes orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px color-mix(in srgb, var(--color-contrast) 30%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 35px color-mix(in srgb, var(--color-contrast) 70%, transparent);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 5s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: float-reverse 6s ease-in-out infinite;
+}
+
+.animate-orbit-spin {
+  animation: orbit-spin 22s linear infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.icon-glow-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--color-secondary) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-secondary) 38%, transparent);
+  color: var(--color-secondary);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.icon-glow-badge:hover {
+  transform: scale(1.1) rotate(4deg);
+  background: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: var(--color-primary);
+  box-shadow: 0 8px 20px -6px color-mix(in srgb, var(--color-secondary) 60%, transparent);
+}
+
+.panel-accent .icon-glow-badge {
+  background: color-mix(in srgb, var(--color-primary) 18%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+  color: var(--color-primary);
+}
+.panel-accent .icon-glow-badge:hover {
+  background: var(--color-primary);
+  color: var(--color-secondary);
+  box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.35);
+}
+
+/* ------------------------------------------------------------------
+   Reduced motion
+------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

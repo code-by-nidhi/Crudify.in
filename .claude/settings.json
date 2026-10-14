@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sed -i 's|<div className=\"mt-auto flex items-center gap-2 pt-7 text-\\\\[13px\\\\] font-medium text-white\">|<div className=\"mt-auto flex items-center gap-2 pt-7 text-[13px] font-medium text-tertiary/65\">|' src/components/Courses.tsx)",
+      "Bash(sed -i 's|tracking-\\\\[-0.02em\\\\] transition-colors group-hover:text-tertiary\"|tracking-[-0.02em] text-tertiary/75 transition-colors group-hover:text-tertiary\"|' src/components/WhyUs.tsx)",
+      "Bash(sed -i 's|<span className=\"text-accent\">{stat.suffix}</span>|<span className=\"text-tertiary/55\">{stat.suffix}</span>|' src/components/Stats.tsx)",
+      "Bash(sed -i 's|40<span className=\"text-accent\">+</span>|40<span className=\"text-tertiary/55\">+</span>|' src/components/TechArc.tsx)",
+      "Bash(sed -i 's|Tech<span className=\"text-accent\">Cadd</span>|<span className=\"text-tertiary/55\">Tech</span>Cadd|' src/components/Footer.tsx src/components/Navbar.tsx)",
+      "PowerShell($out = \"C:\\\\Users\\\\HP\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-HP-Desktop-techcaddnew\\\\44bed284-b99d-4a17-aaee-257166503986\\\\scratchpad\"; & \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\" --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=9000 --window-size=1440,900 --screenshot=\"$out\\\\flat.png\" \"http://localhost:3002/\" 2>$null | Out-Null; \"ok\")",
+      "Bash(grep -rno \"\\\\\\(text\\\\|bg\\\\|border\\\\|shadow\\\\|group-hover:text\\\\|hover:bg\\\\|hover:text\\\\|hover:border\\\\\\)-\\\\\\(primary\\\\|secondary\\\\|tertiary\\\\|white\\\\\\)\\\\\\(\\\\/\\\\[\\\\?[0-9.]*\\\\]\\\\?\\\\\\)\\\\?\" src/components/*.tsx)",
+      "Bash(sed -i -e 's/group-hover:text-tertiary\\\\b/group-hover:text-secondary/g' src/components/Courses.tsx src/components/WhyUs.tsx)",
+      "Bash(sed -i -e 's/rounded-2xl text-tertiary\"/rounded-2xl text-secondary\"/' src/components/Courses.tsx)",
+      "Bash(sed -i -e 's/font-mono text-\\\\[13px\\\\] text-tertiary\"/font-mono text-[13px] text-secondary\"/' src/components/Journey.tsx)",
+      "Bash(sed -i -e 's/font-mono text-\\\\[12px\\\\] text-tertiary\"/font-mono text-[12px] text-secondary\"/' src/components/WhyUs.tsx)",
+      "Bash(sed -i -e 's/scale-x-0 bg-tertiary\"/scale-x-0 bg-secondary\"/' src/components/Journey.tsx src/components/Navbar.tsx)",
+      "Bash(sed -i -e 's/fill=\"#fff\"/fill=\"var\\(--color-secondary\\)\"/' -e 's/stroke=\"#fff\"/stroke=\"var\\(--color-secondary\\)\"/g' src/components/Logo.tsx)",
+      "Bash(sed -i 's/themeColor: \"#522a6f\"/themeColor: \"#ffffff\"/' src/app/layout.tsx)",
+      "PowerShell($out = \"C:\\\\Users\\\\HP\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-HP-Desktop-techcaddnew\\\\44bed284-b99d-4a17-aaee-257166503986\\\\scratchpad\"; & \"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\" --headless=new --disable-gpu --hide-scrollbars --virtual-time-budget=9000 --window-size=1440,900 --screenshot=\"$out\\\\light-hero.png\" \"http://localhost:3002/\" 2>$null | Out-Null; \"ok\")",
+      "Bash(node -e \"console.log\\('WebSocket' in globalThis ? 'ws-global: yes' : 'ws-global: no'\\)\")"
+    ]
+  }
+}
