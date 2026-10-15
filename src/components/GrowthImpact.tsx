@@ -2,48 +2,14 @@
 
 import Link from "next/link";
 import { useRef } from "react";
-import { CourseIcon, type IconName } from "./Icons";
+import { CourseIcon } from "./Icons";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
+import { scrollToSection } from "./SmoothScroll";
+import { CASE_STUDIES, CASE_STUDIES_HREF } from "./home/homeContent";
 
-type Result = {
-  client: string;
-  city: string;
-  services: string[];
-  value: string;
-  label: string;
-  icon: IconName;
-};
-
-/** TODO: these are the sample figures from the content plan. Replace every
- *  client, value and label with real, verifiable numbers before launch —
- *  generative engines quote these verbatim, so keep them concrete. */
-const RESULTS: Result[] = [
-  {
-    client: "Edtech brand",
-    city: "Ludhiana",
-    services: ["Meta Ads", "AI Content Creation"],
-    value: "3.2x",
-    label: "increase in qualified leads in 90 days",
-    icon: "megaphone",
-  },
-  {
-    client: "E-commerce store",
-    city: "Mohali",
-    services: ["Google Ads", "Website Development"],
-    value: "4 months",
-    label: "from store launch to consistent e-commerce sales",
-    icon: "web",
-  },
-  {
-    client: "Local service business",
-    city: "Jalandhar",
-    services: ["AI Chatbot", "CRM Dashboard"],
-    value: "40%",
-    label: "reduction in missed leads",
-    icon: "cpu",
-  },
-];
-
+/** "Our Work". Reads CASE_STUDIES — real, verifiable numbers only, since
+ *  generative engines quote these verbatim. Until there are some, the section
+ *  says so plainly instead of showing invented figures. */
 export default function GrowthImpact() {
   const root = useRef<HTMLElement>(null);
 
@@ -75,57 +41,69 @@ export default function GrowthImpact() {
       className="relative px-[4vw] py-24 bg-contrast/6 text-tertiary border-t border-tertiary/12"
     >
       <div className="mx-auto max-w-[1240px]">
-        {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="eyebrow !text-secondary font-extrabold">Real Results From Real Punjab Businesses</div>
+          <div className="eyebrow !text-secondary font-extrabold">Our Work</div>
           <h2 className="mt-3 font-display text-[clamp(2.2rem,4.5vw,3.6rem)] font-extrabold tracking-tight text-tertiary">
-            Exponential Growth After <span className="text-secondary">Using Our Services</span>
+            Results We&apos;ve <span className="text-secondary">Delivered</span>
           </h2>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          {RESULTS.map((r, i) => (
-            <article
-              key={r.client + r.city}
-              data-bento-card
-              className={`p-7 rounded-3xl flex flex-col justify-between transition-all duration-300 ${
-                i === 0
-                  ? "panel panel-feature border border-secondary/40 shadow-[0_28px_60px_-20px_var(--shadow-warm-strong)]"
-                  : "panel-light bg-surface border border-tertiary/12 hover:border-secondary/60 hover:shadow-xl"
-              }`}
-            >
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="p-2.5 rounded-xl bg-secondary/15 text-secondary">
-                    <CourseIcon name={r.icon} className="h-5 w-5" />
-                  </span>
-                  <span className="rounded-full bg-primary border border-tertiary/12 px-3 py-1 text-[11px] font-bold text-secondary">
-                    {r.city}
-                  </span>
-                </div>
+        {CASE_STUDIES.length > 0 ? (
+          <div className="grid gap-6 md:grid-cols-3">
+            {CASE_STUDIES.map((study, i) => (
+              <article
+                key={study.client + study.result}
+                data-bento-card
+                className={`p-7 rounded-3xl flex flex-col justify-between transition-all duration-300 ${
+                  i === 0
+                    ? "panel panel-feature border border-secondary/40 shadow-[0_28px_60px_-20px_var(--shadow-warm-strong)]"
+                    : "panel-light bg-surface border border-tertiary/12 hover:border-secondary/60 hover:shadow-xl"
+                }`}
+              >
+                <span className="self-start p-2.5 rounded-xl bg-secondary/15 text-secondary">
+                  <CourseIcon name={study.icon} className="h-5 w-5" />
+                </span>
                 <h3 className="mt-6 font-display text-lg font-extrabold text-tertiary">
-                  {r.client}, {r.city}
+                  {study.client}
                 </h3>
-                <p className="mt-1 text-xs font-semibold text-tertiary/65">
-                  Service: {r.services.join(" + ")}
+                <p className="mt-3 pt-4 border-t border-tertiary/12 text-[15px] font-semibold leading-relaxed text-tertiary/80">
+                  {study.result}
                 </p>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-tertiary/12">
-                <p className="font-display text-5xl font-black tracking-tight text-secondary">
-                  {r.value}
-                </p>
-                <p className="mt-2 text-sm font-semibold text-tertiary/80">{r.label}</p>
-              </div>
-            </article>
-          ))}
-        </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div
+            data-bento-card
+            className="panel panel-feature mx-auto flex max-w-2xl flex-col items-center gap-4 rounded-3xl p-8 text-center"
+          >
+            <span className="p-3 rounded-xl bg-secondary/15 text-secondary">
+              <CourseIcon name="chart" className="h-6 w-6" />
+            </span>
+            <p className="text-[15px] leading-relaxed text-tertiary/75">
+              We&apos;re publishing case studies with verified numbers — Google Maps
+              calls, store orders and cost per lead. Want to see work for a business
+              like yours? Ask us on a call.
+            </p>
+          </div>
+        )}
 
         <div className="mt-12 flex justify-center">
-          {/* Point at /case-studies once that page exists. */}
-          <Link href="/#apply" className="btn btn-ghost border-secondary/40 text-secondary hover:bg-secondary/15">
-            Get Results Like These →
-          </Link>
+          {CASE_STUDIES_HREF ? (
+            <Link
+              href={CASE_STUDIES_HREF}
+              className="btn btn-ghost border-secondary/40 text-secondary hover:bg-secondary/15"
+            >
+              View all case studies →
+            </Link>
+          ) : (
+            <button
+              onClick={() => scrollToSection("apply")}
+              className="btn btn-ghost border-secondary/40 text-secondary hover:bg-secondary/15"
+            >
+              Talk to us →
+            </button>
+          )}
         </div>
       </div>
     </section>

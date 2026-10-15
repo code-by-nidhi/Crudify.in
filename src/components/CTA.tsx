@@ -7,25 +7,27 @@ import FloatingTechIcons from "./FloatingTechIcons";
 import { CourseIcon } from "./Icons";
 
 const SUITE_OPTIONS = [
-  "AI-Powered Services (content, chatbots, SEO, design, video)",
-  "Meta Ads / Google Ads Management",
-  "Website or E-commerce Store",
-  "Dedicated Social Media Manager",
-  "Cybersecurity & Resilience Shield",
-  "A mix of both tiers — not sure yet",
+  "Business Growth Booster (website + Meta ads + 5 reels)",
+  "Social Media Management",
+  "FB & Insta Ads / Google & YouTube Ads",
+  "Google Maps Ranking",
+  "Website or Ecommerce / Shopify Store",
+  "Graphic Design, Video Editing or Shoot",
+  "AI Agents & Automation",
+  "Not sure yet: help me choose",
 ];
 
-const CITY_LINE = ["Ludhiana", "Mohali", "Amritsar", "Jalandhar", "Patiala", "Phagwara"];
-
 const CTA_FLOATING_ICONS = [
-  { type: "course" as const, name: "shield" as const, label: "Resilience Shield", className: "left-6 top-10 animate-float-slow hidden md:flex" },
+  { type: "course" as const, name: "globe" as const, label: "Google Maps Ranking", className: "left-6 top-10 animate-float-slow hidden md:flex" },
   { type: "course" as const, name: "megaphone" as const, label: "Meta & Google Ads", className: "right-8 top-16 animate-float-reverse hidden md:flex" },
-  { type: "course" as const, name: "zap" as const, label: "Free Growth Audit", className: "left-12 bottom-12 animate-float-reverse hidden md:flex" },
+  { type: "course" as const, name: "zap" as const, label: "Free Growth Plan", className: "left-12 bottom-12 animate-float-reverse hidden md:flex" },
 ];
 
 export default function CTA() {
   const root = useRef<HTMLElement>(null);
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useGSAP(
     () => {
@@ -54,9 +56,32 @@ export default function CTA() {
     { scope: root },
   );
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSent(true);
+    if (submitting) return;
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    setSubmitting(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          phone: data.get("phone"),
+          service: data.get("course"),
+        }),
+      });
+      const result = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !result.ok) throw new Error(result.error || "Something went wrong. Please try again.");
+      form.reset();
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -73,26 +98,26 @@ export default function CTA() {
             <span className="grid h-7 w-7 place-items-center rounded-xl bg-primary/20 text-primary animate-pulse">
               <CourseIcon name="cube" className="h-4 w-4" />
             </span>
-            <p className="eyebrow !text-primary">Free Consultation</p>
+            <p className="eyebrow !text-primary">Free Growth Plan</p>
           </div>
           <h2 className="mt-4 font-display text-[clamp(2rem,4.4vw,3.1rem)] font-bold leading-[1.05] tracking-[-0.035em] text-primary">
-            <AnimatedText text="Ready to Grow Your" className="!text-primary font-bold" onScroll />
+            <AnimatedText text="Ready to grow?" className="!text-primary font-bold" onScroll />
             <br />
             <AnimatedText
-              text="Business in Punjab?"
+              text="Get your free growth plan."
               className="!text-primary font-bold underline decoration-primary/45"
               onScroll
             />
           </h2>
           <p className="mt-6 max-w-[44ch] text-[15px] leading-relaxed !text-primary/90 font-medium">
-            Whether you need AI-powered execution or a dedicated growth strategist,
-            Crudify is Ludhiana&apos;s marketing partner built for real results.
+            Tell us where you want to grow. We&apos;ll come back with a clear plan,
+            and whether With AI+, Without AI or a mix of both fits your business.
           </p>
 
           <ul className="mt-10 space-y-3.5">
             {[
-              "Free growth audit of your ads, website and funnel",
-              "A clear recommendation: AI-powered, human-driven, or both",
+              "A free review of your ads, website and Google Maps profile",
+              "A clear recommendation: With AI+, Without AI, or both",
               "Transparent pricing — no hidden costs",
             ].map((item) => (
               <li key={item} className="flex items-center gap-3 text-[14px] font-semibold !text-primary">
@@ -128,11 +153,11 @@ export default function CTA() {
               </svg>
             </span>
             <h3 className="font-display text-xl font-bold !text-primary">
-              Consultation Requested
+              Call Requested
             </h3>
             <p className="text-[14px] leading-relaxed !text-primary/90">
-              Thanks — a Crudify growth strategist will call you shortly to book
-              your free consultation.
+              Thanks — the CRUDIFY team will call you shortly to book your
+              call.
             </p>
             <button
               onClick={() => setSent(false)}
@@ -182,13 +207,20 @@ export default function CTA() {
             <button
               data-cta-field
               type="submit"
-              className="btn btn-primary mt-2 w-full font-extrabold text-sm shadow-xl"
+              disabled={submitting}
+              className="btn btn-primary mt-2 w-full font-extrabold text-sm shadow-xl disabled:opacity-70 disabled:cursor-wait"
             >
-              Book Your Free Consultation
+              {submitting ? "Sending…" : "Book a Call"}
             </button>
 
+            {error && (
+              <p role="alert" className="text-center text-[13px] font-semibold !text-primary">
+                {error}
+              </p>
+            )}
+
             <p data-cta-field className="text-center text-[11.5px] !text-primary/80 font-medium">
-              Serving {CITY_LINE.join(" · ")}
+              Ludhiana-based. Serving businesses across India.
             </p>
           </form>
         )}

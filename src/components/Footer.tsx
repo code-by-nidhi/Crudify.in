@@ -68,7 +68,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-16 flex flex-col gap-4 border-t border-tertiary/10 pt-7 text-[12.5px] text-tertiary/60 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Crudify. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} CRUDIFY. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-5 font-medium">
             <span className="text-secondary font-semibold">Serving {CITIES.join(" · ")}</span>
             <span>•</span>

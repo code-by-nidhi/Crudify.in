@@ -4,66 +4,72 @@ import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
 import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
-import WhatWeDo from "@/components/home/WhatWeDo";
-import DigitalProducts from "@/components/DigitalProducts";
-import CyberProducts from "@/components/CyberProducts";
+import ServicesCompare from "@/components/home/ServicesCompare";
+import GrowthBooster from "@/components/home/GrowthBooster";
 import GrowthImpact from "@/components/GrowthImpact";
+import HomeReviews from "@/components/home/HomeReviews";
 import HomeFaq from "@/components/home/HomeFaq";
+import HomeBlogs from "@/components/home/HomeBlogs";
 import CTA from "@/components/CTA";
-import { BRAND, CITIES, FAQS, TIERS } from "@/components/home/homeContent";
+import { BRAND, FAQS, SERVICES } from "@/components/home/homeContent";
 
 export const metadata: Metadata = {
-  title: { absolute: `Best Marketing Company in Punjab | ${BRAND}, Ludhiana` },
-  description: `${BRAND} is Ludhiana's leading marketing company serving all of Punjab — Meta & Google Ads, AI automation, web dev & cybersecurity. Get a free audit.`,
+  title: {
+    absolute: `${BRAND} | Digital Marketing, Web Development & AI Agents in Ludhiana`,
+  },
+  description: `${BRAND} is your growth partner for social media, Meta and Google ads, websites, Shopify stores, Google Maps ranking, video and AI agents. Choose With AI+ or Without AI. Based in Ludhiana, serving India.`,
   keywords: [
-    "Best Marketing Company in Punjab",
-    "Digital Marketing Agency Ludhiana",
-    "Meta Ads Agency Punjab",
-    "Google Ads Company Ludhiana",
-    "AI Marketing Services Punjab",
-    "Website Development Company Ludhiana",
-    "Cybersecurity Services Punjab",
+    "digital marketing agency in Ludhiana",
+    "website development Ludhiana",
+    "Google Maps ranking",
+    "Shopify store development",
+    "AI agents for business",
+    "digital marketing packages",
   ],
   alternates: { canonical: "/" },
 };
 
-/** LocalBusiness + the 13 services + FAQPage, for rich results and for AI
- *  answer engines. Add `url`, `telephone`, `address` and — once there are
- *  reviews — `aggregateRating` to the business node. */
+const DESCRIPTION = `${BRAND} is a Ludhiana-based growth agency combining digital marketing, web and app development, and cybersecurity. Every service comes in two versions: With AI+ (faster, affordable) and Without AI (handcrafted, premium).`;
+
+/** Organization + LocalBusiness + FAQPage, for rich results and for AI answer
+ *  engines. TODO: add `url`, `telephone`, `streetAddress`, `postalCode` and
+ *  `sameAs` (Google Business Profile, socials), and keep the name, address
+ *  and phone identical to the Google Business Profile and directories. */
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": "ProfessionalService",
+      "@type": "Organization",
       "@id": "#organization",
       name: BRAND,
-      description: `${BRAND} is a Ludhiana-based marketing company serving businesses across Punjab with AI-powered and human-driven services — Meta Ads, Google Ads, SEO, websites, e-commerce and cybersecurity.`,
+      slogan: "Your Growth Partner",
+      description: DESCRIPTION,
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": "#localbusiness",
+      name: BRAND,
+      description: DESCRIPTION,
+      parentOrganization: { "@id": "#organization" },
       address: {
         "@type": "PostalAddress",
         addressLocality: "Ludhiana",
         addressRegion: "Punjab",
         addressCountry: "IN",
       },
-      areaServed: [
-        ...CITIES.map((name) => ({ "@type": "City", name })),
-        { "@type": "State", name: "Punjab" },
-      ],
+      areaServed: { "@type": "Country", name: "India" },
       hasOfferCatalog: {
         "@type": "OfferCatalog",
-        name: "Digital & Growth Services",
-        itemListElement: TIERS.map((tier) => ({
-          "@type": "OfferCatalog",
-          name: tier.title,
-          itemListElement: tier.services.map((service) => ({
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Service",
-              name: service.name,
-              description: service.desc,
-              provider: { "@id": "#organization" },
-              areaServed: { "@type": "State", name: "Punjab" },
-            },
-          })),
+        name: "Digital Marketing, Web Development & AI Services",
+        itemListElement: SERVICES.map((service) => ({
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: service.name,
+            description: `With AI+: ${service.ai}. Without AI: ${service.custom}.`,
+            provider: { "@id": "#localbusiness" },
+            areaServed: { "@type": "Country", name: "India" },
+          },
         })),
       },
     },
@@ -91,11 +97,12 @@ export default function Home() {
       <Marquee />
       <AboutSection />
       <FeaturesSection />
-      <WhatWeDo />
-      <DigitalProducts />
-      <CyberProducts />
+      <ServicesCompare />
+      <GrowthBooster />
       <GrowthImpact />
+      <HomeReviews />
       <HomeFaq />
+      <HomeBlogs />
       <CTA />
     </>
   );

@@ -423,6 +423,21 @@ select.field-input {
   color: var(--color-contrast);
 }
 
+/* SEO keywords inside body copy — a highlighter stroke under the words, so
+   they stand out without reading like links. */
+.kw {
+  font-weight: 650;
+  color: var(--color-secondary);
+  padding: 0 0.12em;
+  border-radius: 3px;
+  background-image: linear-gradient(
+    transparent 58%,
+    color-mix(in srgb, var(--color-secondary) 16%, transparent) 58%
+  );
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
 .eyebrow {
   font-size: 0.72rem;
   font-weight: 700;

@@ -19,7 +19,7 @@ const ABOUT_STATS = [
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Crudify is a five-person studio covering MERN development, digital marketing and cybersecurity — one team that builds, markets and secures, starting in Punjab.",
+    "CRUDIFY is a five-person studio covering MERN development, digital marketing and cybersecurity — one team that builds, markets and secures, starting in Punjab.",
 };
 
 export default function AboutPage() {
@@ -27,7 +27,7 @@ export default function AboutPage() {
     <>
       <AboutHero />
       <Marquee />
-      <Stats items={ABOUT_STATS} ariaLabel="Crudify by the numbers" />
+      <Stats items={ABOUT_STATS} ariaLabel="CRUDIFY by the numbers" />
       <AboutStory />
       <AboutValues />
       <AboutTimeline />

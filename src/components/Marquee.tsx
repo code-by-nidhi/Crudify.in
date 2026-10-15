@@ -4,17 +4,17 @@ import { useRef } from "react";
 import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 
 const TELEMETRY_ITEMS = [
-  "📣 Meta Ads Management",
-  "🔎 Google Ads Management",
-  "🤖 AI Chatbots & CRM Dashboards",
-  "✍️ AI Content Creation",
-  "📈 AI-Assisted SEO",
-  "🎬 Video & YouTube Editing",
-  "💻 Website & E-commerce Development",
-  "🛡️ Cybersecurity & Resilience Shield",
-  "📍 Ludhiana · Mohali · Amritsar · Jalandhar",
-  "📍 Patiala · Bathinda · Phagwara",
-];
+  "📱 Social Media Management",
+  "📣 FB & Insta Ads",
+  "🔎 Google & YouTube Ads",
+  "📍 Google Maps Ranking",
+  "💻 Website Building",
+  "🛒 Shopify & Ecommerce Stores",
+  "🎨 Graphic Design",
+  "🎬 Video Editing & Shoots",
+  "🤖 AI Agents",
+  "⚡ With AI+ or Without AI",
+]
 
 export default function Marquee() {
   const root = useRef<HTMLDivElement>(null);

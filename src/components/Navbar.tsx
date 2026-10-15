@@ -179,7 +179,7 @@ export default function Navbar() {
           href="/"
           onClick={(e) => go(e, "/")}
           className="flex items-center gap-2.5 pl-1 text-left group"
-          aria-label="Crudify home"
+          aria-label="CRUDIFY home"
         >
           <div className="flex flex-col gap-1">
             <Logo className="h-[22px] origin-left transition-transform duration-300 group-hover:scale-105" />

@@ -13,7 +13,7 @@ const PARAGRAPHS = [
   },
   {
     heading: "All three skills, one place",
-    body: "Crudify started because our own team already had all three: MERN development, digital marketing and cybersecurity. Instead of specialising in just one, we built a studio around doing all three together.",
+    body: "CRUDIFY started because our own team already had all three: MERN development, digital marketing and cybersecurity. Instead of specialising in just one, we built a studio around doing all three together.",
   },
   {
     heading: "Two speeds, not one size",
@@ -98,7 +98,7 @@ export default function AboutStory() {
                 C
               </span>
               <div>
-                <p className="text-[14px] font-medium">The Crudify team</p>
+                <p className="text-[14px] font-medium">The CRUDIFY team</p>
                 <p className="text-[12px] text-tertiary/60">
                   Five people · three disciplines
                 </p>

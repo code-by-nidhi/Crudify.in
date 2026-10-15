@@ -88,7 +88,7 @@ export default function WhatWeDo() {
       <div className="mx-auto grid max-w-[1240px] gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <p data-wwd-fade className="eyebrow">
-            What Crudify does for you
+            What CRUDIFY does for you
           </p>
           <h2 className="mt-4 max-w-[18ch] font-display text-[clamp(2rem,4.4vw,3.1rem)] font-semibold leading-[1.06] tracking-[-0.035em] text-tertiary">
             <AnimatedText text="What Our Website & Team" onScroll />{" "}

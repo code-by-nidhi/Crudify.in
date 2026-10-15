@@ -1,27 +1,19 @@
 "use client";
 
-import Link from "next/link";
 import { useRef, useState } from "react";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import AnimatedText from "./AnimatedText";
 import { scrollToSection } from "./SmoothScroll";
 import { CourseIcon } from "./Icons";
-import { BRAND, TIERS } from "./home/homeContent";
+import KeywordText from "./home/KeywordText";
+import { BRAND, SERVICES, VERSIONS, type ServiceVersion } from "./home/homeContent";
 
-type TierTab = (typeof TIERS)[number]["id"];
-
-/** Kept to figures the content plan states outright — swap the middle one for
- *  the real ad-spend figure ("₹X Cr+ Ad Spend Managed") once it is confirmed. */
-const TRUST_STRIP = [
-  ["50+", "Punjab Businesses Grown"],
-  ["13", "Services, Two Tiers"],
-  ["7", "Punjab Cities Served"],
-];
+const MODES = Object.keys(VERSIONS) as ServiceVersion[];
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
   const panel = useRef<HTMLDivElement>(null);
-  const [activeTab, setActiveTab] = useState<TierTab>("ai");
+  const [activeTab, setActiveTab] = useState<ServiceVersion>("ai");
 
   useGSAP(
     () => {
@@ -144,7 +136,7 @@ export default function Hero() {
     { scope: root, dependencies: [activeTab] },
   );
 
-  const tier = TIERS.find((t) => t.id === activeTab) ?? TIERS[0];
+  const version = VERSIONS[activeTab];
 
   return (
     <section
@@ -157,15 +149,15 @@ export default function Hero() {
         <div data-hero-copy className="relative z-10">
           <p data-hero-badge className="text-secondary font-mono text-sm font-bold uppercase tracking-widest flex items-center gap-2 mb-3">
             <span className="h-2 w-2 rounded-full bg-secondary animate-ping" />
-            {BRAND} · Ludhiana, Punjab
+            {BRAND} · Your Growth Partner
           </p>
 
           <h1 className="font-display text-[clamp(2.3rem,5vw,3.9rem)] font-extrabold leading-[1.04] tracking-[-0.035em] text-tertiary">
-            <AnimatedText text="The Best Marketing Company in Punjab" delay={0.2} />
+            <AnimatedText text={`${BRAND}: Your Growth Partner`} delay={0.2} />
             <br />
             <span className="mt-3 block text-[0.55em] leading-[1.15]">
               <AnimatedText
-                text="— Built for Ludhiana Businesses That Want to Grow Fast"
+                text="for Marketing, Websites & AI"
                 className="text-contrast drop-shadow-[0_2px_12px_rgba(99,0,0,0.20)]"
                 delay={0.4}
               />
@@ -176,14 +168,9 @@ export default function Hero() {
               verbatim into an AI Overview, so keep it self-contained. */}
           <p
             data-hero-fade
-            className="mt-6 max-w-[54ch] text-[1.05rem] leading-relaxed text-tertiary/80 font-medium"
+            className="mt-6 max-w-[56ch] text-[1.05rem] leading-relaxed text-tertiary/80 font-medium"
           >
-            From <strong className="text-secondary font-bold">Meta Ads</strong> to{" "}
-            <strong className="text-secondary font-bold">AI chatbots</strong> to{" "}
-            <strong className="text-secondary font-bold">cybersecurity</strong> — {BRAND} is
-            the only marketing partner in Punjab combining human strategists with
-            AI-powered execution to help Ludhiana, Mohali, Amritsar, and Jalandhar
-            businesses grow without wasting ad spend.
+            <KeywordText text="We help Indian businesses get found on Google, turn visitors into customers, and automate the busywork. Choose With AI+ for speed and value, or Without AI for a fully handcrafted build." />
           </p>
 
           {/* Action CTAs */}
@@ -192,38 +179,31 @@ export default function Hero() {
               onClick={() => scrollToSection("apply")}
               className="btn btn-primary shadow-xl hover:shadow-secondary/30"
             >
-              Get a Free Growth Audit
+              Get a Free Growth Plan
               <CourseIcon name="chart" className="h-4 w-4" />
             </button>
 
-            <Link
-              href="/services"
+            <button
+              onClick={() => scrollToSection("services")}
               className="btn btn-ghost border-secondary/35 text-tertiary hover:border-secondary hover:text-secondary"
             >
               See Our Services →
-            </Link>
+            </button>
           </div>
 
-          {/* Trust strip */}
-          <dl
+          {/* Trust line */}
+          <p
             data-hero-fade
-            className="mt-10 grid max-w-lg grid-cols-3 gap-px overflow-hidden rounded-2xl border border-secondary/25 bg-surface/70 backdrop-blur-md shadow-xl"
+            className="mt-8 inline-flex items-center gap-2.5 rounded-full border border-secondary/25 bg-surface/70 px-4 py-2 text-[13px] font-semibold text-tertiary/75 shadow-md backdrop-blur-md"
           >
-            {TRUST_STRIP.map(([value, label]) => (
-              <div key={label} className="px-4 py-3.5 backdrop-blur">
-                <dt className="font-display text-2xl font-bold tracking-tight text-secondary">
-                  {value}
-                </dt>
-                <dd className="mt-0.5 text-[11px] font-bold uppercase tracking-wider text-tertiary/70">{label}</dd>
-              </div>
-            ))}
-          </dl>
-          <p data-hero-fade className="mt-4 text-[12px] font-semibold text-tertiary/60">
-            Serving Ludhiana, Mohali, Amritsar, Jalandhar &amp; Phagwara
+            <CourseIcon name="globe" className="h-4 w-4 text-secondary" />
+            <span>
+              <strong className="kw">Ludhiana</strong>-based. Serving businesses across India.
+            </span>
           </p>
         </div>
 
-        {/* Right Column: tier switcher */}
+        {/* Right Column: version switcher */}
         <div className="relative [perspective:1400px]">
           <div
             ref={panel}
@@ -231,43 +211,44 @@ export default function Hero() {
           >
             <div className="flex items-center justify-between gap-2 border-b border-tertiary/20 pb-4">
               <div className="flex items-center gap-1.5 bg-tertiary/10 p-1 rounded-full border border-tertiary/15">
-                {TIERS.map((t) => (
+                {MODES.map((mode) => (
                   <button
-                    key={t.id}
-                    onClick={() => setActiveTab(t.id)}
-                    aria-pressed={activeTab === t.id}
+                    key={mode}
+                    onClick={() => setActiveTab(mode)}
+                    aria-pressed={activeTab === mode}
                     className={`px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 ${
-                      activeTab === t.id
+                      activeTab === mode
                         ? "bg-secondary text-primary shadow-md scale-105"
                         : "text-tertiary/80 hover:text-tertiary hover:bg-tertiary/10"
                     }`}
                   >
-                    {t.id === "ai" ? "AI-Powered" : "Human-Driven"}
+                    {VERSIONS[mode].label}
                   </button>
                 ))}
               </div>
 
               <span className="panel panel-pill hidden px-3 py-1 text-[11px] font-bold uppercase tracking-wider bg-secondary/15 text-secondary border border-secondary/30 sm:inline-flex">
-                {tier.subtitle}
+                {version.tagline}
               </span>
             </div>
 
             <div className="mt-6">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-secondary">
-                {tier.badge}
+                Every service, two versions
               </p>
               <h3 className="mt-1 font-display text-xl font-bold tracking-tight text-tertiary">
-                {tier.title}
+                {version.label}
               </h3>
               <p className="mt-2 text-xs text-tertiary/85 leading-relaxed">
-                Best for: {tier.bestFor}
+                {version.summary}
               </p>
 
-              <ul className="mt-5 space-y-2.5">
-                {tier.services.map((s) => (
+              <ul className="mt-5 grid gap-x-4 gap-y-2.5 sm:grid-cols-2">
+                {SERVICES.map((s) => (
                   <li
                     key={s.name}
                     data-tier-row
+                    title={s[activeTab]}
                     className="flex items-center gap-3 text-[13px] font-semibold text-tertiary"
                   >
                     <span className="grid h-6 w-6 shrink-0 place-items-center rounded-lg bg-secondary/15 text-secondary">
@@ -282,13 +263,13 @@ export default function Hero() {
             <div className="mt-7 flex items-center justify-between border-t border-tertiary/20 pt-4 text-xs text-tertiary/85">
               <div className="flex items-center gap-2">
                 <CourseIcon name="check" className="h-4 w-4 text-secondary" />
-                <span className="font-mono text-[11px]">Mix &amp; match both tiers</span>
+                <span className="font-mono text-[11px]">Pick per service</span>
               </div>
               <button
-                onClick={() => scrollToSection("service-tiers")}
+                onClick={() => scrollToSection("services")}
                 className="font-bold underline text-secondary hover:text-secondary/80 transition-colors text-xs"
               >
-                Compare tiers →
+                Compare versions →
               </button>
             </div>
           </div>
@@ -300,11 +281,11 @@ export default function Hero() {
             className="absolute -left-6 top-[15%] z-20 hidden items-center gap-2.5 rounded-full border border-secondary/40 bg-surface px-4 py-2.5 text-tertiary shadow-2xl animate-float-slow sm:flex"
           >
             <div className="p-2 rounded-full bg-secondary text-primary shadow-md animate-pulse">
-              <CourseIcon name="shield" className="h-4 w-4" />
+              <CourseIcon name="globe" className="h-4 w-4" />
             </div>
             <div>
-              <p className="font-display text-xs font-extrabold leading-tight text-tertiary">Resilience Shield</p>
-              <p className="text-[10px] uppercase font-extrabold text-tertiary/70">Cybersecurity</p>
+              <p className="font-display text-xs font-extrabold leading-tight text-tertiary">Google Maps Ranking</p>
+              <p className="text-[10px] uppercase font-extrabold text-tertiary/70">Get found locally</p>
             </div>
           </div>
 
@@ -314,11 +295,11 @@ export default function Hero() {
             className="absolute -right-4 bottom-[8%] z-20 hidden items-center gap-2.5 rounded-full border border-secondary/40 bg-surface px-4 py-2.5 text-tertiary shadow-2xl animate-float-reverse sm:flex"
           >
             <div className="p-2 rounded-full bg-secondary text-primary shadow-md animate-pulse">
-              <CourseIcon name="megaphone" className="h-4 w-4" />
+              <CourseIcon name="cpu" className="h-4 w-4" />
             </div>
             <div>
-              <p className="font-display text-xs font-extrabold leading-tight text-tertiary">Meta &amp; Google Ads</p>
-              <p className="text-[10px] font-extrabold uppercase text-tertiary/70">Every rupee tracked</p>
+              <p className="font-display text-xs font-extrabold leading-tight text-tertiary">AI Agents</p>
+              <p className="text-[10px] font-extrabold uppercase text-tertiary/70">Answer &amp; book 24/7</p>
             </div>
           </div>
         </div>

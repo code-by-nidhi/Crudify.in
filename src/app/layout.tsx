@@ -25,13 +25,13 @@ const sora = Sora({
 
 export const metadata: Metadata = {
   title: {
-    default: "Crudify — Best Marketing Company in Punjab",
-    template: "%s | Crudify",
+    default: "CRUDIFY — Best Marketing Company in Punjab",
+    template: "%s | CRUDIFY",
   },
   description:
-    "Crudify is a Ludhiana-based marketing company serving all of Punjab — Meta & Google Ads, AI automation, web development, e-commerce and cybersecurity.",
+    "CRUDIFY is a Ludhiana-based marketing company serving all of Punjab — Meta & Google Ads, AI automation, web development, e-commerce and cybersecurity.",
   keywords: [
-    "Crudify",
+    "CRUDIFY",
     "Best Marketing Company in Punjab",
     "Digital Marketing Agency Ludhiana",
     "Meta Ads Agency Punjab",

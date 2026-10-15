@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import AnimatedText from "../AnimatedText";
+import KeywordText from "./KeywordText";
 import { FAQS } from "./homeContent";
 
 /** Same accordion as ServicesFaq, reading the homepage questions. The
@@ -47,8 +48,8 @@ export default function HomeFaq() {
             <AnimatedText text="Questions" className="text-accent" onScroll />
           </h2>
           <p className="mt-6 max-w-[40ch] text-[14.5px] leading-relaxed text-tertiary/60">
-            Don&apos;t see your question? Send it through the form below and a
-            growth strategist will reply.
+            Don&apos;t see your question? Send it through the form below and our
+            team will reply.
           </p>
         </div>
 
@@ -102,7 +103,7 @@ export default function HomeFaq() {
                 >
                   <div className="overflow-hidden">
                     <p className="max-w-[62ch] pb-7 text-[14.5px] leading-relaxed text-tertiary/60">
-                      {faq.a}
+                      <KeywordText text={faq.a} />
                     </p>
                   </div>
                 </div>

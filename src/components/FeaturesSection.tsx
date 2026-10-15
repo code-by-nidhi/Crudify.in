@@ -3,46 +3,12 @@
 import { useRef } from "react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import AnimatedText from "./AnimatedText";
-import { CourseIcon, type IconName } from "./Icons";
+import { CourseIcon } from "./Icons";
+import KeywordText from "./home/KeywordText";
+import { BRAND, WHY_US } from "./home/homeContent";
 
-const FEATURES: { icon: IconName; tag: string; title: string; body: string }[] = [
-  {
-    icon: "globe",
-    tag: "Local",
-    title: "Local Punjab Expertise",
-    body: "We understand Ludhiana, Mohali, and Punjab's local market, language, and buyer behavior better than any national agency.",
-  },
-  {
-    icon: "cpu",
-    tag: "Hybrid",
-    title: "AI + Human Hybrid Model",
-    body: "Get AI-speed execution with human strategy — the best of both without paying premium for everything.",
-  },
-  {
-    icon: "key",
-    tag: "Pricing",
-    title: "Transparent Pricing",
-    body: "No hidden costs. Choose AI-based affordable plans or full human-managed premium plans.",
-  },
-  {
-    icon: "cube",
-    tag: "Full-Funnel",
-    title: "Full-Funnel Capability",
-    body: "Ads, website, content, automation, and security — one team, one dashboard, zero coordination headache.",
-  },
-  {
-    icon: "zap",
-    tag: "Speed",
-    title: "Fast Turnaround",
-    body: "Our AI-powered workflows mean content, creatives, and reports get delivered in days, not weeks.",
-  },
-  {
-    icon: "chart",
-    tag: "Data",
-    title: "Data-Backed Decisions",
-    body: "Every campaign is tracked through CRM dashboards so you always know your ROI.",
-  },
-];
+/** Copy lives in homeContent so it stays in step with the rest of the page. */
+const FEATURES = WHY_US;
 
 export default function FeaturesSection() {
   const root = useRef<HTMLElement>(null);
@@ -143,18 +109,18 @@ export default function FeaturesSection() {
         <div className="flex h-full flex-col justify-center gap-10 py-24 sm:py-28 motion-safe:lg:gap-12 motion-safe:lg:py-0">
           <div className="mx-auto w-full max-w-[1240px] px-[4vw]">
             <p data-features-head className="eyebrow">
-              Why Crudify
+              Why Us
             </p>
             <h2 className="mt-4 max-w-[22ch] font-display text-[clamp(2rem,4.4vw,3.1rem)] font-semibold leading-[1.06] tracking-[-0.035em] text-tertiary">
-              <AnimatedText text="What Makes Us the Best" onScroll />{" "}
-              <AnimatedText text="Marketing Company in Punjab" className="text-accent" onScroll />
+              <AnimatedText text="Why Businesses" onScroll />{" "}
+              <AnimatedText text={`Choose ${BRAND}`} className="text-accent" onScroll />
             </h2>
             <p
               data-features-head
               className="mt-5 max-w-[56ch] text-[1.02rem] leading-relaxed text-tertiary/70"
             >
-              Six reasons Ludhiana and Punjab businesses trust us with their
-              growth — and keep working with us.
+              Five reasons businesses in Ludhiana and across India trust us with
+              their growth.
             </p>
           </div>
 
@@ -177,14 +143,11 @@ export default function FeaturesSection() {
                 </span>
               </div>
 
-              <p className="mt-6 text-[11px] font-bold uppercase tracking-[0.18em] text-secondary">
-                {feature.tag}
-              </p>
-              <h3 className="mt-2 font-display text-[1.25rem] font-semibold leading-snug tracking-[-0.02em] transition-colors group-hover:text-secondary">
+              <h3 className="mt-6 font-display text-[1.25rem] font-semibold leading-snug tracking-[-0.02em] transition-colors group-hover:text-secondary">
                 {feature.title}
               </h3>
               <p className="mt-3 text-[13.5px] leading-relaxed text-tertiary/60">
-                {feature.body}
+                <KeywordText text={feature.body} />
               </p>
             </article>
           ))}
