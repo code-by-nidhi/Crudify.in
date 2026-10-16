@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { CourseIcon } from "./Icons";
+import { CourseIcon, type IconName } from "./Icons";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 
 interface ModuleItem {
@@ -9,7 +9,7 @@ interface ModuleItem {
   name: string;
   category: "web" | "digital" | "cyber";
   price: number;
-  icon: string;
+  icon: IconName;
 }
 
 const MODULES_LIST: ModuleItem[] = [
@@ -133,7 +133,7 @@ export default function ProductConfigurator() {
                   >
                     <div className="flex items-center justify-between">
                       <span className={`p-2 rounded-xl ${isSelected ? "bg-secondary text-primary" : "bg-tertiary/10 text-tertiary"}`}>
-                        <CourseIcon name={m.icon as any} className="h-4 w-4" />
+                        <CourseIcon name={m.icon} className="h-4 w-4" />
                       </span>
                       <span
                         className={`h-4 w-4 rounded-full border flex items-center justify-center ${

@@ -95,7 +95,7 @@ function QuoteCard({ quote }: { quote: Quote }) {
       </div>
 
       <blockquote className="mt-4 text-[14px] leading-relaxed text-tertiary/80 font-medium">
-        "{quote.text}"
+        &ldquo;{quote.text}&rdquo;
       </blockquote>
 
       <figcaption className="mt-6 flex items-center gap-3 border-t border-tertiary/12 pt-4">

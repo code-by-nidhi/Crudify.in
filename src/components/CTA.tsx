@@ -59,28 +59,48 @@ export default function CTA() {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (submitting) return;
+
     const form = e.currentTarget;
-    const data = new FormData(form);
+    const formData = new FormData(form);
+    const name = String(formData.get("name") || "").trim();
+    const phone = String(formData.get("phone") || "").trim();
+    const service = String(formData.get("service") || formData.get("course") || "").trim();
+    const hp = String(formData.get("_hp") || "").trim();
+
+    if (!name || !phone || !service) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
+
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: data.get("name"),
-          phone: data.get("phone"),
-          service: data.get("course"),
+          name,
+          phone,
+          service,
+          _hp: hp,
         }),
       });
-      const result = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
-      if (!res.ok || !result.ok) throw new Error(result.error || "Something went wrong. Please try again.");
+
+      const data = (await res.json().catch(() => null)) as { ok?: boolean; success?: boolean; error?: string } | null;
+      const success = data?.success ?? data?.ok;
+
+      if (!res.ok || !success) {
+        throw new Error(data?.error || "Failed to submit request. Please try again.");
+      }
+
       form.reset();
       setSent(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
+    }
     }
   };
 
@@ -160,7 +180,10 @@ export default function CTA() {
               call.
             </p>
             <button
-              onClick={() => setSent(false)}
+              onClick={() => {
+                setSent(false);
+                setError(null);
+              }}
               className="btn btn-ghost mt-2 !py-2.5 text-[13px]"
             >
               Send another request
@@ -168,6 +191,16 @@ export default function CTA() {
           </div>
         ) : (
           <form onSubmit={onSubmit} className="flex flex-col gap-4">
+            {/* Honeypot field for bot protection */}
+            <input
+              type="text"
+              name="_hp"
+              tabIndex={-1}
+              autoComplete="off"
+              className="sr-only absolute -left-[9999px]"
+              aria-hidden="true"
+            />
+
             <Field label="Your Name / Business">
               <input
                 required
@@ -192,7 +225,7 @@ export default function CTA() {
             </Field>
 
             <Field label="What do you need help with?">
-              <select name="course" className="field-input font-medium" defaultValue="">
+              <select required name="service" className="field-input font-medium" defaultValue="">
                 <option value="" disabled className="bg-primary text-tertiary">
                   Select a service
                 </option>
@@ -203,6 +236,15 @@ export default function CTA() {
                 ))}
               </select>
             </Field>
+
+            {error && (
+              <div
+                className="rounded-xl border border-red-300/40 bg-red-950/70 p-3 text-[13px] font-medium text-red-100"
+                role="alert"
+              >
+                {error}
+              </div>
+            )}
 
             <button
               data-cta-field

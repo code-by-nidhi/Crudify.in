@@ -281,7 +281,7 @@ export default function ProjectsSection() {
                       Live Results
                     </span>
                     <span className="p-2 rounded-xl bg-secondary/20 text-secondary">
-                      <CourseIcon name={project.icon as any} className="h-4 w-4" />
+                      <CourseIcon name={project.icon} className="h-4 w-4" />
                     </span>
                   </div>
 
