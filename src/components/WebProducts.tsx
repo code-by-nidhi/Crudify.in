@@ -1,14 +1,24 @@
 "use client";
 
 import { useRef } from "react";
-import { CourseIcon } from "./Icons";
+import { CourseIcon, type IconName } from "./Icons";
 import FloatingTechIcons from "./FloatingTechIcons";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
+
+interface WebBenefit {
+  id: string;
+  title: string;
+  tag: string;
+  desc: string;
+  points: string[];
+  icon: IconName;
+  featured?: boolean;
+}
 
 /** Written from the visitor's side of the transaction rather than ours: what a
  *  website does for the business paying for it, not what it is built out of.
  *  The stack details live in the services pages for anyone who wants them. */
-const WEB_BENEFITS = [
+const WEB_BENEFITS: WebBenefit[] = [
   {
     id: "always-open",
     title: "It sells while you are asleep",
@@ -165,7 +175,7 @@ export default function WebProducts() {
               <div>
                 <div className="flex items-center justify-between">
                   <span className="p-2.5 rounded-xl bg-secondary/10 text-secondary">
-                    <CourseIcon name={item.icon as any} className="h-5 w-5" />
+                    <CourseIcon name={item.icon} className="h-5 w-5" />
                   </span>
                   <span className="text-[11px] font-extrabold uppercase tracking-wider text-secondary">
                     {item.tag}

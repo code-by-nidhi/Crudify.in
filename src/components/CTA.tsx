@@ -26,6 +26,8 @@ const CTA_FLOATING_ICONS = [
 export default function CTA() {
   const root = useRef<HTMLElement>(null);
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useGSAP(
     () => {
@@ -54,9 +56,53 @@ export default function CTA() {
     { scope: root },
   );
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSent(true);
+    if (loading) return;
+
+    setError(null);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const name = String(formData.get("name") || "").trim();
+    const phone = String(formData.get("phone") || "").trim();
+    const service = String(formData.get("service") || formData.get("course") || "").trim();
+    const hp = String(formData.get("_hp") || "").trim();
+
+    if (!name || !phone || !service) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          phone,
+          service,
+          _hp: hp,
+        }),
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error || "Failed to submit request. Please try again.");
+      }
+
+      setSent(true);
+      form.reset();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -135,7 +181,10 @@ export default function CTA() {
               your free consultation.
             </p>
             <button
-              onClick={() => setSent(false)}
+              onClick={() => {
+                setSent(false);
+                setError(null);
+              }}
               className="btn btn-ghost mt-2 !py-2.5 text-[13px]"
             >
               Send another request
@@ -143,6 +192,16 @@ export default function CTA() {
           </div>
         ) : (
           <form onSubmit={onSubmit} className="flex flex-col gap-4">
+            {/* Honeypot field for bot protection */}
+            <input
+              type="text"
+              name="_hp"
+              tabIndex={-1}
+              autoComplete="off"
+              className="sr-only absolute -left-[9999px]"
+              aria-hidden="true"
+            />
+
             <Field label="Your Name / Business">
               <input
                 required
@@ -167,7 +226,7 @@ export default function CTA() {
             </Field>
 
             <Field label="What do you need help with?">
-              <select name="course" className="field-input font-medium" defaultValue="">
+              <select required name="service" className="field-input font-medium" defaultValue="">
                 <option value="" disabled className="bg-primary text-tertiary">
                   Select a service
                 </option>
@@ -179,12 +238,22 @@ export default function CTA() {
               </select>
             </Field>
 
+            {error && (
+              <div
+                className="rounded-xl border border-red-300/40 bg-red-950/70 p-3 text-[13px] font-medium text-red-100"
+                role="alert"
+              >
+                {error}
+              </div>
+            )}
+
             <button
               data-cta-field
               type="submit"
-              className="btn btn-primary mt-2 w-full font-extrabold text-sm shadow-xl"
+              disabled={loading}
+              className="btn btn-primary mt-2 w-full font-extrabold text-sm shadow-xl disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Book Your Free Consultation
+              {loading ? "Submitting..." : "Book Your Free Consultation"}
             </button>
 
             <p data-cta-field className="text-center text-[11.5px] !text-primary/80 font-medium">
