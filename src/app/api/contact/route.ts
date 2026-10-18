@@ -122,7 +122,9 @@ export async function POST(request: Request) {
         responseData = null;
       }
 
-      if (!res.ok || !responseData || responseData.success !== true) {
+      // Apps Script (google-apps-script/Code.gs) replies with { ok: true }.
+      const confirmed = responseData?.ok === true || responseData?.success === true;
+      if (!res.ok || !confirmed) {
         const errorMessage =
           responseData && typeof responseData.error === "string"
             ? responseData.error
@@ -145,6 +147,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
-
 }

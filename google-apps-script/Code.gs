@@ -2,7 +2,7 @@
  * Crudify consultation form → Google Sheets.
  *
  * Setup:
- *  1. Create a Google Sheet (signed in as codebynidhi1007@gmail.com).
+ *  1. Create a Google Sheet .
  *  2. Extensions → Apps Script, paste this file, save.
  *  3. Project Settings → Script properties → add SHARED_SECRET (any long random string).
  *  4. Deploy → New deployment → Web app
@@ -12,7 +12,7 @@
  */
 
 const SHEET_NAME = "Leads";
-const NOTIFY_EMAIL = "codebynidhi1007@gmail.com";
+const NOTIFY_EMAIL = "singhharinder662@gmail.com";
 const HEADERS = ["Timestamp", "Name / Business", "Phone", "Service", "Page", "User Agent"];
 
 function doPost(e) {

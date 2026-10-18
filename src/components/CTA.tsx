@@ -101,7 +101,6 @@ export default function CTA() {
     } finally {
       setSubmitting(false);
     }
-    }
   };
 
   return (
@@ -254,12 +253,6 @@ export default function CTA() {
             >
               {submitting ? "Sending…" : "Book a Call"}
             </button>
-
-            {error && (
-              <p role="alert" className="text-center text-[13px] font-semibold !text-primary">
-                {error}
-              </p>
-            )}
 
             <p data-cta-field className="text-center text-[11.5px] !text-primary/80 font-medium">
               Ludhiana-based. Serving businesses across India.
