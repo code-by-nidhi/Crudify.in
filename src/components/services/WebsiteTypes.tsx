@@ -13,6 +13,7 @@ type Mockup =
   | "wordpress"
   | "landing"
   | "redesign"
+  | "wedding"
   | "custom";
 
 const TYPES: { name: string; desc: string; ghost: string; mockup: Mockup }[] = [
@@ -59,6 +60,12 @@ const TYPES: { name: string; desc: string; ghost: string; mockup: Mockup }[] = [
     mockup: "redesign",
   },
   {
+    name: "Web-Based Wedding Invitation Sites",
+    desc: "Elegant digital invitations with event details, venue maps, galleries and online RSVPs — shared with a single link.",
+    ghost: "Wedding",
+    mockup: "wedding",
+  },
+  {
     name: "Custom Web Experiences",
     desc: "For brands that need something beyond a standard template.",
     ghost: "Custom",
@@ -69,7 +76,7 @@ const TYPES: { name: string; desc: string; ghost: string; mockup: Mockup }[] = [
 const pad = (n: number) => String(n).padStart(2, "0");
 
 /* ------------------------------------------------------------------
-   Mockups — one browser frame, eight page layouts inside it. Drawn in the
+   Mockups — one browser frame, nine page layouts inside it. Drawn in the
    site's two inks (tertiary structure, secondary for the one element each
    layout is built around) so they swap without the panel changing style.
 ------------------------------------------------------------------ */
@@ -202,6 +209,33 @@ const PAGES: Record<Mockup, React.ReactNode> = {
       <rect x={159} y={26} width={2} height={186} className={LIT} />
       <circle cx={160} cy={119} r={9} className={LIT} />
       <path d="M156 119 l-2.5 0 M164 119 l2.5 0" className="stroke-primary" strokeWidth={2} strokeLinecap="round" />
+    </>
+  ),
+  wedding: (
+    <>
+      {/* invitation card */}
+      <rect x={90} y={34} width={140} height={170} rx={10} className={SOFT} />
+      <path d="M100 74 C 110 48, 140 42, 160 44 C 180 42, 210 48, 220 74" className="fill-none stroke-tertiary/30" strokeWidth={1.2} />
+      <circle cx={160} cy={62} r={12} className={LIT} />
+      <path d="M160 67 l-4.5 -4.5 a2.6 2.6 0 0 1 4.5 -3 a2.6 2.6 0 0 1 4.5 3 Z" className="fill-primary" />
+      <Bar x={112} y={86} w={96} h={9} />
+      <Bar x={140} y={100} w={40} h={3} o={0.35} />
+      <Bar x={118} y={110} w={84} h={9} />
+      <Bar x={128} y={128} w={64} h={4} o={0.5} />
+      {[0, 1, 2].map((i) => (
+        <rect key={i} x={110 + i * 34} y={142} width={28} height={22} rx={4} className={INK} opacity={0.12 + i * 0.06} />
+      ))}
+      <rect x={120} y={176} width={80} height={16} rx={8} className={LIT} />
+      {/* side details — venue & countdown */}
+      <rect x={22} y={60} width={56} height={56} rx={6} className={SOFT} />
+      <circle cx={50} cy={84} r={5} className={LIT} />
+      <Bar x={30} y={104} w={40} h={3} o={0.4} />
+      {[0, 1, 2].map((i) => (
+        <g key={i}>
+          <rect x={244 + (i % 2) * 28} y={60 + Math.floor(i / 2) * 32} width={24} height={26} rx={4} className={SOFT} />
+          <Bar x={249 + (i % 2) * 28} y={68 + Math.floor(i / 2) * 32} w={14} h={6} o={0.7} />
+        </g>
+      ))}
     </>
   ),
   custom: (
