@@ -10,6 +10,12 @@ export type ServiceOutcome = {
   body: string;
 };
 
+/** One column of the navbar mega menu. */
+export type ServiceMenuGroup = {
+  title: string;
+  items: string[];
+};
+
 export type Service = {
   id: string;
   label: string;
@@ -18,6 +24,8 @@ export type Service = {
   desc: string;
   icon: IconName;
   items: ServiceItem[];
+  /** Navbar mega menu — grouped columns shown when this service is hovered. */
+  menu: ServiceMenuGroup[];
   stack: string[];
   /** Spans both bento columns. Set on the first and last tile so the grid
    *  closes evenly around the two half-width cards between them. */
@@ -68,6 +76,31 @@ export const SERVICES: Service[] = [
       {
         name: "Digital Menus",
         desc: "QR menus you can update in seconds, without a reprint.",
+      },
+    ],
+    menu: [
+      {
+        title: "Websites",
+        items: [
+          "Business Websites",
+          "Corporate Websites",
+          "E-Commerce Websites",
+          "Shopify Stores",
+          "WordPress Websites",
+        ],
+      },
+      {
+        title: "Pages & Experiences",
+        items: [
+          "Landing Pages",
+          "Website Redesign",
+          "Wedding Invitation Sites",
+          "Custom Web Experiences",
+        ],
+      },
+      {
+        title: "Web Applications",
+        items: ["SaaS Apps", "Dashboards", "Digital Menus"],
       },
     ],
     stack: ["Next.js", "React", "Node", "PostgreSQL"],
@@ -133,6 +166,35 @@ export const SERVICES: Service[] = [
         desc: "Channel setup, thumbnails, SEO and a consistent posting rhythm.",
       },
     ],
+    menu: [
+      {
+        title: "Search Engine Optimization",
+        items: [
+          "SEO Services Overview",
+          "On-Page SEO",
+          "Off-Page SEO & Link Building",
+          "Technical SEO Audit",
+          "Local SEO",
+        ],
+      },
+      {
+        title: "Social Media Marketing",
+        items: [
+          "Social Media Strategy",
+          "Facebook & Instagram Marketing",
+          "Influencer Marketing",
+        ],
+      },
+      {
+        title: "Paid Advertising",
+        items: [
+          "Google Ads Management",
+          "Meta Ads (Facebook & Instagram)",
+          "YouTube Ads",
+          "Display & Programmatic Ads",
+        ],
+      },
+    ],
     stack: ["Meta Ads", "Google Ads", "GA4", "Business Profile"],
     headline: { lead: "Campaigns measured in", accent: "leads, not likes." },
     intro:
@@ -181,6 +243,35 @@ export const SERVICES: Service[] = [
       {
         name: "Workflow Automation",
         desc: "CRM, inbox and spreadsheets connected into one pipeline.",
+      },
+    ],
+    menu: [
+      {
+        title: "AI Products",
+        items: [
+          "AI Chatbots & Virtual Assistants",
+          "Custom AI Agent Builder",
+          "Voice Recognition & Speech AI",
+          "AI-driven Automation Tools",
+        ],
+      },
+      {
+        title: "AI Analytics",
+        items: [
+          "Predictive Analytics & Forecasting",
+          "Business Intelligence Dashboards",
+          "Customer Behaviour Insights",
+          "Marketing Automation AI",
+        ],
+      },
+      {
+        title: "Custom AI Development",
+        items: [
+          "Custom AI Software Development",
+          "AI Integration Services",
+          "AI Model Training & Fine-tuning",
+          "AI Consultation & Strategy",
+        ],
       },
     ],
     stack: ["Claude API", "Python", "n8n", "WhatsApp API"],
@@ -237,6 +328,20 @@ export const SERVICES: Service[] = [
         desc: "A written playbook to contain, recover and report an incident.",
       },
     ],
+    menu: [
+      {
+        title: "Assess",
+        items: ["Security Audit", "Vulnerability Assessment"],
+      },
+      {
+        title: "Protect",
+        items: ["Cyber Attack Prevention", "WAF & DDoS Mitigation"],
+      },
+      {
+        title: "Monitor & Respond",
+        items: ["Log Management & Analysis", "Incident Management & Response"],
+      },
+    ],
     stack: ["OWASP", "SIEM", "Cloudflare", "TLS 1.3"],
     wide: true,
     headline: { lead: "Find it before", accent: "someone else does." },
@@ -286,4 +391,41 @@ export const SERVICE_NAV = SERVICES.map((service) => ({
   tag: service.tag,
   icon: service.icon,
   href: serviceHref(service.id),
+  menu: service.menu,
 }));
+
+/** Sectors we run Google and Meta ad campaigns for. */
+export const AD_INDUSTRIES = [
+  "Real Estate",
+  "Education & Coaching",
+  "Healthcare & Clinics",
+  "Ecommerce & D2C",
+  "Restaurants & Food",
+  "Fitness & Gyms",
+  "Legal Services",
+  "IT & Software",
+  "Construction",
+  "Travel & Hospitality",
+  "Manufacturing",
+  "Local Businesses",
+];
+
+/**
+ * Navbar mega menu: the four services plus an industries entry, which shows
+ * AD_INDUSTRIES as a grid instead of grouped columns.
+ */
+export const SERVICE_MENU: ((typeof SERVICE_NAV)[number] & {
+  industries?: string[];
+})[] = [
+  ...SERVICE_NAV,
+  {
+    id: "industries",
+    label: "Industries",
+    title: "Industries We Run Ads For",
+    tag: "Campaigns By Sector",
+    icon: "globe",
+    href: serviceHref("digital-marketing"),
+    menu: [],
+    industries: AD_INDUSTRIES,
+  },
+];

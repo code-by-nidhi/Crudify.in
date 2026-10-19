@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion } from "@/lib/gsap";
-import { SERVICE_NAV } from "./services/servicesData";
+import { SERVICE_MENU } from "./services/servicesData";
 import { scrollToSection, scrollToTop } from "./SmoothScroll";
 import { CourseIcon } from "./Icons";
 import Logo from "./Logo";
@@ -12,7 +12,7 @@ import Logo from "./Logo";
 const LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
-  { label: "Services", href: "/services", menu: SERVICE_NAV },
+  { label: "Services", href: "/services", menu: SERVICE_MENU },
   { label: "Results", href: "/#results" },
   { label: "Contact Us", href: "/#apply" },
 ];
@@ -44,6 +44,8 @@ export default function Navbar() {
   const [menu, setMenu] = useState({ open: false, path: pathname });
   const menuOpen = menu.open && menu.path === pathname;
   const setMenuOpen = (open: boolean) => setMenu({ open, path: pathname });
+  /** Which service area the mega menu's right side is showing. */
+  const [menuSection, setMenuSection] = useState(0);
 
   /**
    * The scroll handler below needs the current menu state, but it must not be a
@@ -171,7 +173,7 @@ export default function Navbar() {
           transform: hidden ? "translate3d(0, -130%, 0)" : "translate3d(0, 0, 0)",
           willChange: "transform",
         }}
-        className={`pointer-events-auto mx-auto mt-4 flex w-[min(1240px,94vw)] items-center justify-between gap-3 rounded-full px-5 py-2.5 transition-all duration-300 ease-out bg-primary/95 backdrop-blur-2xl border border-secondary/35 shadow-[0_18px_45px_-15px_var(--shadow-warm)] ${
+        className={`pointer-events-auto relative mx-auto mt-4 flex w-[min(1240px,94vw)] items-center justify-between gap-3 rounded-full px-5 py-2.5 transition-all duration-300 ease-out bg-primary/95 backdrop-blur-2xl border border-secondary/35 shadow-[0_18px_45px_-15px_var(--shadow-warm)] ${
           scrolled ? "border-secondary/60 shadow-[0_24px_55px_-16px_var(--shadow-warm-strong)] scale-[0.99]" : ""
         }`}
       >
@@ -238,7 +240,6 @@ export default function Navbar() {
             return (
               <div
                 key={link.href}
-                className="relative"
                 onMouseEnter={() => setMenuOpen(true)}
                 onMouseLeave={() => setMenuOpen(false)}
                 // Tabbing into the trigger or any item keeps the panel open;
@@ -252,11 +253,12 @@ export default function Navbar() {
               >
                 {trigger}
 
-                {/* pt-3 lives inside the panel wrapper so the gap between the
-                    bar and the card stays hoverable */}
+                {/* Anchored to the whole bar rather than the trigger, so the
+                    wide panel lines up with it. pt-3 lives inside the wrapper
+                    so the gap between the bar and the card stays hoverable. */}
                 <div
                   id="services-menu"
-                  className={`absolute left-1/2 top-full z-20 w-[min(30rem,88vw)] -translate-x-1/2 pt-3 transition-all duration-250 ease-out ${
+                  className={`absolute inset-x-0 top-full z-20 pt-3 transition-all duration-250 ease-out ${
                     menuOpen
                       ? "visible translate-y-0 opacity-100"
                       : "invisible -translate-y-2 opacity-0"
@@ -265,52 +267,140 @@ export default function Navbar() {
                 >
                   {/* Opaque face, no backdrop-blur: on a light ground a menu you
                       can read the page through is just hard to read. */}
-                  <div className="overflow-hidden rounded-3xl border border-secondary/30 bg-primary p-2 shadow-[0_28px_60px_-18px_var(--shadow-warm-strong)]">
-                    <ul className="grid gap-0.5 sm:grid-cols-2">
-                      {link.menu.map((item) => {
-                        const itemActive = pathname === item.href;
+                  <div className="grid grid-cols-[17rem_1fr] overflow-hidden rounded-3xl border border-secondary/30 bg-primary shadow-[0_28px_60px_-18px_var(--shadow-warm-strong)]">
+                    {/* left — the service areas; hovering one swaps the right side */}
+                    <div className="flex flex-col border-r border-tertiary/10 p-2">
+                      <ul className="flex flex-col gap-0.5">
+                        {link.menu.map((item, i) => {
+                          const itemActive = pathname === item.href;
+                          const on = menuSection === i;
 
-                        return (
-                          <li key={item.href}>
-                            <Link
-                              href={item.href}
-                              tabIndex={menuOpen ? undefined : -1}
-                              aria-current={itemActive ? "page" : undefined}
-                              onClick={(e) => go(e, item.href)}
-                              className={`group/item flex h-full items-start gap-3 rounded-2xl p-3 transition-colors hover:bg-secondary/12 ${
-                                itemActive ? "bg-secondary/12" : ""
-                              }`}
-                            >
-                              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-secondary/35 bg-secondary/15 text-secondary">
-                                <CourseIcon name={item.icon} className="h-4 w-4" />
-                              </span>
-                              <span className="min-w-0">
+                          return (
+                            <li key={item.href}>
+                              <Link
+                                href={item.href}
+                                tabIndex={menuOpen ? undefined : -1}
+                                aria-current={itemActive ? "page" : undefined}
+                                onMouseEnter={() => setMenuSection(i)}
+                                onFocus={() => setMenuSection(i)}
+                                onClick={(e) => go(e, item.href)}
+                                className={`group/item flex items-center gap-3 rounded-2xl p-3 transition-colors ${
+                                  on
+                                    ? "bg-secondary/12"
+                                    : "hover:bg-secondary/8"
+                                }`}
+                              >
+                                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-secondary/35 bg-secondary/15 text-secondary">
+                                  <CourseIcon
+                                    name={item.icon}
+                                    className="h-4 w-4"
+                                  />
+                                </span>
+                                <span className="min-w-0 flex-1">
+                                  <span
+                                    className={`block text-[12.5px] font-extrabold transition-colors ${
+                                      on || itemActive
+                                        ? "text-secondary"
+                                        : "text-tertiary"
+                                    }`}
+                                  >
+                                    {item.title}
+                                  </span>
+                                  <span className="mt-0.5 block text-[11px] font-semibold leading-snug text-tertiary/60">
+                                    {item.tag}
+                                  </span>
+                                </span>
                                 <span
-                                  className={`block text-[12.5px] font-extrabold transition-colors group-hover/item:text-secondary ${
-                                    itemActive ? "text-secondary" : "text-tertiary"
+                                  aria-hidden="true"
+                                  className={`text-sm transition-all duration-300 ${
+                                    on
+                                      ? "translate-x-0.5 text-secondary"
+                                      : "text-tertiary/30"
                                   }`}
                                 >
-                                  {item.title}
+                                  →
                                 </span>
-                                <span className="mt-0.5 block text-[11px] font-semibold leading-snug text-tertiary/60">
-                                  {item.tag}
-                                </span>
-                              </span>
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    </ul>
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
 
-                    <Link
-                      href="/services"
-                      tabIndex={menuOpen ? undefined : -1}
-                      onClick={(e) => go(e, "/services")}
-                      className="mt-1 flex items-center justify-between rounded-2xl border-t border-tertiary/12 px-3 py-2.5 text-[11.5px] font-extrabold text-tertiary/70 transition-colors hover:text-secondary"
-                    >
-                      All services, compared side by side
-                      <span aria-hidden="true">→</span>
-                    </Link>
+                      <Link
+                        href="/services"
+                        tabIndex={menuOpen ? undefined : -1}
+                        onClick={(e) => go(e, "/services")}
+                        className="mt-auto flex items-center justify-between rounded-2xl border-t border-tertiary/12 px-3 pt-3 pb-2 text-[11.5px] font-extrabold text-tertiary/70 transition-colors hover:text-secondary"
+                      >
+                        All services, compared
+                        <span aria-hidden="true">→</span>
+                      </Link>
+                    </div>
+
+                    {/* right — what the hovered area includes */}
+                    {(() => {
+                      const section: (typeof SERVICE_MENU)[number] =
+                        link.menu[menuSection] ?? link.menu[0];
+
+                      return (
+                        <div key={section.id} className="min-h-[22rem] p-7">
+                          <Link
+                            href={section.href}
+                            tabIndex={menuOpen ? undefined : -1}
+                            onClick={(e) => go(e, section.href)}
+                            className="font-display text-[1.6rem] font-extrabold tracking-[-0.03em] text-secondary transition-opacity hover:opacity-80"
+                          >
+                            {section.title}
+                          </Link>
+                          <p className="mt-1 text-[13px] font-semibold text-tertiary/65">
+                            {section.industries
+                              ? "Google and Meta ad campaigns built around how each sector buys."
+                              : "Explore our professional solutions and specialised industry expertise."}
+                          </p>
+
+                          {section.menu.length > 0 && (
+                            <div className="mt-5 grid grid-cols-3 gap-6 border-t border-tertiary/10 pt-5">
+                              {section.menu.map((group) => (
+                                <div key={group.title}>
+                                  <p className="border-b border-tertiary/8 pb-2.5 text-[10.5px] font-extrabold uppercase tracking-[0.18em] text-tertiary/50">
+                                    {group.title}
+                                  </p>
+                                  <ul className="mt-3 flex flex-col gap-1">
+                                    {group.items.map((name) => (
+                                      <li key={name}>
+                                        <Link
+                                          href={section.href}
+                                          tabIndex={menuOpen ? undefined : -1}
+                                          onClick={(e) => go(e, section.href)}
+                                          className="block py-1 text-[13px] font-bold leading-snug text-tertiary/80 transition-colors hover:text-secondary"
+                                        >
+                                          {name}
+                                        </Link>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {section.industries && (
+                            <div className="mt-5 border-t border-tertiary/10 pt-5">
+                              <ul className="grid grid-cols-3 gap-2.5">
+                                {section.industries.map((name) => (
+                                  <li
+                                    key={name}
+                                    className="rounded-xl border border-tertiary/10 bg-tertiary/[0.03] px-3 py-3 text-center text-[12.5px] font-bold text-tertiary/75"
+                                  >
+                                    {name}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </div>
                 </div>
               </div>
