@@ -1,4 +1,5 @@
 import type { IconName } from "../Icons";
+import type { ArtName } from "../ServicePreview";
 
 /** Homepage copy that more than one place reads — the sections themselves and
  *  the JSON-LD in app/page.tsx — so the schema never drifts from what is on
@@ -198,6 +199,8 @@ export const VERSIONS: Record<
 export type HomeService = {
   name: string;
   icon: IconName;
+  /** Illustration in the cursor-following preview card. */
+  art: ArtName;
   ai: string;
   custom: string;
 };
@@ -206,60 +209,70 @@ export const SERVICES: HomeService[] = [
   {
     name: "Social Media Management",
     icon: "activity",
+    art: "social",
     ai: "AI-assisted content calendar, captions and scheduling",
     custom: "Custom strategy, original copy, hands-on community management",
   },
   {
     name: "FB & Insta Ads",
     icon: "megaphone",
+    art: "ads",
     ai: "AI-generated creatives and copy variants, auto-optimised",
     custom: "Manual audience research, custom creatives, strategist-led optimisation",
   },
   {
     name: "Google & YouTube Ads",
     icon: "chart",
+    art: "search",
     ai: "AI keyword and ad-copy testing at scale",
     custom: "Hand-built campaigns, manual bid and keyword control",
   },
   {
     name: "Google Maps Ranking",
     icon: "globe",
+    art: "map",
     ai: "AI-written posts, review replies and profile optimisation",
     custom: "Manual local SEO, citation building and review strategy",
   },
   {
     name: "Website Building",
     icon: "code",
+    art: "browser",
     ai: "Template-based, AI-written content, live in 1-2 weeks",
     custom: "Fully custom design and development, live in 4-8 weeks",
   },
   {
     name: "Ecommerce Store Development",
     icon: "web",
+    art: "cart",
     ai: "Shopify on a proven theme, AI product descriptions",
     custom: "Custom-designed store, hand-written copy, secure custom checkout",
   },
   {
     name: "Graphic Design",
     icon: "cube",
+    art: "design",
     ai: "AI-assisted creatives, fast turnaround",
     custom: "Original designs and brand kits by a designer",
   },
   {
     name: "Video Editing",
     icon: "zap",
+    art: "video",
     ai: "AI-assisted cuts, captions and subtitles",
     custom: "Fully manual edit with custom motion and storytelling",
   },
   {
     name: "Shoot",
     icon: "digital",
+    art: "camera",
     ai: "AI-assisted scripts and shot lists, quick shoot",
     custom: "Fully scripted, directed and produced shoot",
   },
   {
     name: "AI Agents",
     icon: "terminal",
+    art: "agent",
     ai: "AI chatbots that answer, follow up and book 24/7",
     custom: "Rule-based bots and custom workflow automation, no AI model",
   },

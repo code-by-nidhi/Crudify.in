@@ -7,6 +7,13 @@ import { CourseIcon } from "../Icons";
 import { scrollToSection } from "../SmoothScroll";
 import { SERVICES } from "./servicesData";
 
+const HERO_FACTS = [
+  { value: `${SERVICES.length}`, label: "Service pillars under one roof" },
+  { value: "2", label: "Tiers — AI-Powered and Custom Premium" },
+  { value: "1–2 wk", label: "To go live on the Growth Pack" },
+  { value: "100%", label: "Code and accounts in your name" },
+];
+
 export default function ServicesHero() {
   const root = useRef<HTMLElement>(null);
 
@@ -103,6 +110,25 @@ export default function ServicesHero() {
             </li>
           ))}
         </ul>
+
+        {/* headline facts — every figure here is restated elsewhere on the
+            page, so the hero never promises something the body can't back */}
+        <dl className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-tertiary/12 bg-tertiary/10 sm:grid-cols-4">
+          {HERO_FACTS.map((fact) => (
+            <div
+              key={fact.label}
+              data-services-fade
+              className="flex flex-col gap-1 bg-primary/90 px-5 py-5 sm:px-6"
+            >
+              <dt className="order-2 text-[12px] font-medium leading-snug text-tertiary/60">
+                {fact.label}
+              </dt>
+              <dd className="order-1 font-display text-[1.9rem] font-extrabold leading-none tracking-[-0.03em] text-secondary">
+                {fact.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

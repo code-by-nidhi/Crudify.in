@@ -8,6 +8,7 @@ import ServiceDetailHero from "@/components/services/ServiceDetailHero";
 import ServicesEngagement from "@/components/services/ServicesEngagement";
 import ServicesFaq from "@/components/services/ServicesFaq";
 import ServicesProcess from "@/components/services/ServicesProcess";
+import WebsiteTypes from "@/components/services/WebsiteTypes";
 import { SERVICES, getService } from "@/components/services/servicesData";
 
 /** The four pillars are the only valid slugs, so prerender them all. */
@@ -45,6 +46,8 @@ export default async function ServiceDetailPage({
     <>
       <ServiceDetailHero service={service} />
       <Marquee />
+      {/* the web pillar gets its own breakdown of the site types we build */}
+      {service.id === "web" && <WebsiteTypes />}
       <ServiceDetailBody service={service} />
       <ServicesProcess />
       <ServicesEngagement />

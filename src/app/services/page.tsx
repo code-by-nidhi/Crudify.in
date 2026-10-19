@@ -8,6 +8,7 @@ import ServicesHero from "@/components/services/ServicesHero";
 import ServicesProcess from "@/components/services/ServicesProcess";
 import ServicesSectors from "@/components/services/ServicesSectors";
 import ServicesTiers from "@/components/services/ServicesTiers";
+import ServicesWhy from "@/components/services/ServicesWhy";
 
 export const metadata: Metadata = {
   title: "Services — Web, Digital Marketing, AI & Cyber Security",
@@ -25,12 +26,23 @@ export const metadata: Metadata = {
   ],
 };
 
+const VALUE_STRIP = [
+  "✶ Transparent Pricing",
+  "✶ Fixed Quote Before Work Starts",
+  "✶ Code & Accounts In Your Name",
+  "✶ One Team, Four Pillars",
+  "✶ No Hidden Charges",
+  "✶ 10-Minute Discovery Call",
+];
+
 export default function ServicesPage() {
   return (
     <>
       <ServicesHero />
       <Marquee />
       <ServicesCatalog />
+      <Marquee items={VALUE_STRIP} id="services-values" />
+      <ServicesWhy />
       <ServicesTiers />
       <ServicesSectors />
       <ServicesProcess />

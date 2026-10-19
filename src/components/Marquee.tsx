@@ -14,9 +14,15 @@ const TELEMETRY_ITEMS = [
   "🎬 Video Editing & Shoots",
   "🤖 AI Agents",
   "⚡ With AI+ or Without AI",
-]
+];
 
-export default function Marquee() {
+export default function Marquee({
+  items = TELEMETRY_ITEMS,
+  id = "brand-bar",
+}: {
+  items?: string[];
+  id?: string;
+} = {}) {
   const root = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLDivElement>(null);
 
@@ -57,14 +63,14 @@ export default function Marquee() {
   return (
     <div
       ref={root}
-      id="brand-bar"
+      id={id}
       /* Inverts against the cotton ground — the one full-bleed cherry band */
       className="relative overflow-hidden bg-secondary py-5 text-primary border-y border-tertiary/25 shadow-sm"
     >
       <div ref={track} className="flex w-max">
         {[0, 1].map((copy) => (
           <div key={copy} className="flex gap-12 pr-12" aria-hidden={copy === 1}>
-            {TELEMETRY_ITEMS.map((item) => (
+            {items.map((item) => (
               <span
                 key={item}
                 className="flex shrink-0 items-center gap-3 font-display text-[14px] font-extrabold uppercase tracking-wider text-primary"

@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import AnimatedText from "../AnimatedText";
 import { CourseIcon } from "../Icons";
+import { PreviewCard, useServicePreview } from "../ServicePreview";
 import { scrollToSection } from "../SmoothScroll";
 import KeywordText from "./KeywordText";
 import { BRAND, SERVICES, VERSIONS } from "./homeContent";
@@ -13,6 +14,9 @@ import { BRAND, SERVICES, VERSIONS } from "./homeContent";
  *  into a card whose cells carry their own version label. */
 export default function ServicesCompare() {
   const root = useRef<HTMLElement>(null);
+  const { containerRef, cardRef, show, hide, onMouseMove } = useServicePreview();
+  const [hovered, setHovered] = useState<number | null>(null);
+  const current = hovered === null ? null : SERVICES[hovered];
 
   useGSAP(
     () => {
@@ -95,13 +99,26 @@ export default function ServicesCompare() {
             ))}
           </div>
 
-          <div className="flex flex-col gap-3">
-            {SERVICES.map((service) => (
+          {/* positioned wrapper the cursor card is measured against */}
+          <div
+            ref={containerRef}
+            onMouseMove={onMouseMove}
+            onMouseLeave={() => {
+              setHovered(null);
+              hide();
+            }}
+            className="relative flex flex-col gap-3"
+          >
+            {SERVICES.map((service, i) => (
               <div
                 key={service.name}
                 role="row"
                 data-compare-row
                 style={{ visibility: "hidden" }}
+                onMouseEnter={() => {
+                  setHovered(i);
+                  show();
+                }}
                 className="panel group grid gap-4 p-5 sm:p-6 md:grid-cols-[0.8fr_1fr_1fr] md:items-center"
               >
                 <div role="rowheader" className="flex items-center gap-3.5">
@@ -131,6 +148,18 @@ export default function ServicesCompare() {
                 ))}
               </div>
             ))}
+
+            <PreviewCard
+              cardRef={cardRef}
+              item={
+                current && {
+                  icon: current.icon,
+                  title: current.name,
+                  art: current.art,
+                  tags: [VERSIONS.ai.label, VERSIONS.custom.label],
+                }
+              }
+            />
           </div>
         </div>
 
