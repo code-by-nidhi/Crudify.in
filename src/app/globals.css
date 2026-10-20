@@ -109,40 +109,29 @@
   background-size: 100% 100%, 100% 100%, 28px 28px;
 }
 
-/* Live Auditor Pattern: Digital Scanline & Mint Grid */
+/* Live Auditor Pattern: plain (grid removed) */
 .bg-pattern-auditor {
-  background-image: 
-    linear-gradient(to right, color-mix(in srgb, var(--color-secondary) 16%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in srgb, var(--color-secondary) 16%, transparent) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-image: none;
 }
 
-/* Web Suite Pattern: Cream Code Grid */
+/* Web Suite Pattern: plain (grid removed) */
 .bg-pattern-web {
-  background-image: 
-    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--color-secondary) 24%, transparent) 1px, transparent 1.5px),
-    linear-gradient(to right, color-mix(in srgb, var(--color-tertiary) 8%, transparent) 1px, transparent 1px);
-  background-size: 20px 20px, 40px 40px;
+  background-image: none;
 }
 
-/* Digital Suite Pattern: Mint Radial Matrix */
+/* Digital Suite Pattern: plain (dot matrix removed) */
 .bg-pattern-digital {
-  background-image: 
-    radial-gradient(color-mix(in srgb, var(--color-secondary) 20%, transparent) 1px, transparent 1px);
-  background-size: 18px 18px;
+  background-image: none;
 }
 
-/* Cyber Shield Pattern: Zero-Trust Hexagon Mesh, drawn in cherry */
+/* Cyber Shield Pattern: plain (hexagon mesh removed) */
 .bg-pattern-cyber {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill='none' stroke='%23810100' stroke-width='0.6' stroke-opacity='0.28'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v13.2l11 6.35 11-6.35V17.9L14 11.55 3 17.9z'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: none;
 }
 
-/* Configurator Pattern: Architectural Blueprint Graph Grid */
+/* Configurator Pattern: plain (graph grid removed) */
 .bg-pattern-configurator {
-  background-image: 
-    linear-gradient(to right, color-mix(in srgb, var(--color-tertiary) 10%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in srgb, var(--color-tertiary) 10%, transparent) 1px, transparent 1px);
-  background-size: 36px 36px;
+  background-image: none;
 }
 
 /* Growth Impact Pattern: Metric Mesh */
@@ -156,9 +145,8 @@
 /* Unified Architecture Pattern: Orbiting Mint Radial Glow */
 .bg-pattern-architecture {
   background-image: 
-    radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--color-secondary) 26%, transparent) 0%, transparent 70%),
-    linear-gradient(to right, color-mix(in srgb, var(--color-tertiary) 8%, transparent) 1px, transparent 1px);
-  background-size: 100% 100%, 30px 30px;
+    radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--color-secondary) 26%, transparent) 0%, transparent 70%);
+  background-size: 100% 100%;
 }
 
 /* ------------------------------------------------------------------
@@ -436,6 +424,16 @@ select.field-input {
   );
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
+}
+
+/* On a dark face the cherry keyword would vanish, so it takes the face's own
+   text colour and keeps only the highlighter stroke. */
+.on-dark .kw {
+  color: inherit;
+  background-image: linear-gradient(
+    transparent 58%,
+    color-mix(in srgb, currentColor 22%, transparent) 58%
+  );
 }
 
 .eyebrow {

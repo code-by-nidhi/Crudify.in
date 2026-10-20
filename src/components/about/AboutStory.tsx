@@ -67,9 +67,9 @@ export default function AboutStory() {
       id="about-story"
       className="bg-pattern-web relative px-[4vw] py-24 sm:py-32"
     >
-      <div className="mx-auto grid max-w-[1180px] gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
-        {/* sticky column */}
-        <div className="lg:sticky lg:top-28 lg:self-start">
+      <div className="mx-auto grid max-w-[1180px] gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:gap-20">
+        {/* heading + photos */}
+        <div>
           <p className="eyebrow">Our story</p>
           <h2 className="mt-4 font-display text-[clamp(2rem,4.4vw,3.1rem)] font-semibold leading-[1.06] tracking-[-0.035em] text-tertiary">
             <AnimatedText text="One team instead" onScroll />
@@ -77,19 +77,36 @@ export default function AboutStory() {
             <AnimatedText text="of three vendors." className="text-accent" onScroll />
           </h2>
 
-          <div className="relative mt-10 aspect-[3/2] overflow-hidden rounded-[24px] border border-secondary/20 shadow-[0_18px_40px_-18px_var(--shadow-warm)]">
-            <Image
-              src="/about/team.jpg"
-              alt="A team working on laptops around a shared table"
-              fill
-              sizes="(min-width: 1024px) 460px, 92vw"
-              className="object-cover"
-            />
+          {/* photo collage — the main shot, a second inset over its corner,
+              and the quote card floating off the opposite edge */}
+          <div className="relative mt-10 pb-16 pr-10 sm:pr-16">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[28px] shadow-[0_28px_60px_-20px_var(--shadow-warm-strong)]">
+              <Image
+                src="/about/team.jpg"
+                alt="A team working on laptops around a shared table"
+                fill
+                sizes="(min-width: 1024px) 420px, 85vw"
+                className="object-cover"
+              />
+              <span className="absolute left-4 top-4 rounded-full bg-primary/90 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-secondary backdrop-blur">
+                Build · Market · Secure
+              </span>
+            </div>
+
+            <div className="absolute bottom-0 right-0 aspect-square w-[44%] overflow-hidden rounded-[22px] border-[6px] border-primary shadow-[0_24px_50px_-18px_var(--shadow-warm-strong)]">
+              <Image
+                src="/about/strategy.jpg"
+                alt="A strategy session in front of a wall of sticky notes"
+                fill
+                sizes="(min-width: 1024px) 200px, 40vw"
+                className="object-cover"
+              />
+            </div>
           </div>
 
-          <div data-story-card className="panel mt-5 p-7">
+          <div data-story-card className="panel mt-6 p-7">
             <CourseIcon name="activity" className="h-6 w-6 text-secondary" />
-            <p className="mt-5 text-[15px] leading-relaxed text-tertiary/75">
+            <p className="mt-5 font-display text-[1.15rem] font-medium leading-snug tracking-[-0.01em] text-tertiary/85">
               &ldquo;We build, market, and secure what most teams only do one
               of.&rdquo;
             </p>
@@ -114,14 +131,14 @@ export default function AboutStory() {
               key={item.heading}
               data-story-block
               style={{ visibility: "hidden" }}
-              className="group border-b border-tertiary/10 py-8 first:pt-0 last:border-b-0"
+              className="group border-b border-tertiary/10 py-9 first:pt-0 last:border-b-0"
             >
-              <div className="flex gap-6">
-                <span className="mt-1 font-mono text-[12px] text-secondary">
+              <div className="flex gap-6 sm:gap-8">
+                <span className="font-display text-[2.6rem] font-bold leading-none tracking-[-0.05em] text-secondary/25 transition-colors duration-500 group-hover:text-secondary">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div>
-                  <h3 className="max-w-[26ch] font-display text-[1.35rem] font-semibold leading-snug tracking-[-0.02em] text-tertiary/75 transition-colors group-hover:text-secondary">
+                  <h3 className="max-w-[26ch] font-display text-[1.45rem] font-semibold leading-snug tracking-[-0.02em] text-tertiary transition-colors group-hover:text-secondary">
                     {item.heading}
                   </h3>
                   <p className="mt-3 max-w-[52ch] text-[14.5px] leading-relaxed text-tertiary/60">

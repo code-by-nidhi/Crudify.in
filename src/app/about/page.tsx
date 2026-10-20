@@ -27,7 +27,11 @@ export default function AboutPage() {
     <>
       <AboutHero />
       <Marquee />
-      <Stats items={ABOUT_STATS} ariaLabel="CRUDIFY by the numbers" />
+      <Stats
+        items={ABOUT_STATS}
+        ariaLabel="CRUDIFY by the numbers"
+        image={{ src: "/about/office.jpg", alt: "" }}
+      />
       <AboutStory />
       <AboutValues />
       <AboutTimeline />

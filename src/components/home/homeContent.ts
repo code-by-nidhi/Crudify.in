@@ -278,31 +278,47 @@ export const SERVICES: HomeService[] = [
   },
 ];
 
-export const WHY_US: { icon: IconName; title: string; body: string }[] = [
+export const WHY_US: {
+  icon: IconName;
+  label: string;
+  title: string;
+  body: string;
+  tags: string[];
+}[] = [
   {
     icon: "cube",
+    label: "Full funnel",
     title: "One team, full funnel",
     body: "Ads, website, content and AI automation work together.",
+    tags: ["Ads", "Website", "Content", "AI automation"],
   },
   {
     icon: "sliders",
+    label: "Flexible",
     title: "Two ways to work",
     body: "Fast, affordable With AI+ packages, or fully handcrafted Without AI builds.",
+    tags: ["With AI+", "Without AI"],
   },
   {
     icon: "shield",
+    label: "Secure",
     title: "Security built in",
     body: "Most agencies skip it. We don't.",
+    tags: ["Hardening", "Monitoring", "Response plan"],
   },
   {
     icon: "globe",
+    label: "Reach",
     title: "Local plus global",
     body: "Built for Indian SMEs, ready for the Gulf, UK and US.",
+    tags: ["India", "Gulf", "UK", "US"],
   },
   {
     icon: "chart",
+    label: "Transparent",
     title: "Clear reporting",
     body: "You see what's working, and what isn't.",
+    tags: ["Spend", "Enquiries", "Cost per lead"],
   },
 ];
 
