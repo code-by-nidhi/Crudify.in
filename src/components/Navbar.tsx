@@ -7,6 +7,7 @@ import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import { SERVICE_MENU } from "./services/servicesData";
 import { scrollToSection, scrollToTop } from "./SmoothScroll";
 import { CourseIcon } from "./Icons";
+import { openEnquiry } from "./contact/EnquiryModal";
 import Logo from "./Logo";
 
 const LINKS = [
@@ -16,8 +17,6 @@ const LINKS = [
   { label: "Results", href: "/#results" },
   { label: "Contact Us", href: "/#apply" },
 ];
-
-const ENQUIRE_HREF = "/#apply";
 
 /** "/services" stays lit while any of its detail pages is open. */
 function isActive(href: string, pathname: string) {
@@ -155,6 +154,14 @@ export default function Navbar() {
       e.preventDefault();
       scrollToSection(hash);
     }
+  };
+
+  /** Enquire Now opens the contact popup instead of scrolling to the form. */
+  const enquire = () => {
+    setOpen(false);
+    setMenuOpen(false);
+    setSheetMenuOpen(false);
+    openEnquiry();
   };
 
   return (
@@ -418,17 +425,16 @@ export default function Navbar() {
             <span>99.99% Systems Active</span>
           </div>
 
-          <Link
-            href={ENQUIRE_HREF}
-            scroll={false}
-            onClick={(e) => go(e, ENQUIRE_HREF)}
+          <button
+            type="button"
+            onClick={enquire}
             className="hidden sm:flex items-center gap-2.5 rounded-full bg-contrast text-primary px-4.5 py-1.5 text-xs font-extrabold shadow-[0_10px_24px_-10px_var(--color-contrast)] transition-all hover:scale-105"
           >
             <span>Enquire Now</span>
             <span className="grid h-5 w-5 place-items-center rounded-full bg-primary text-secondary font-bold text-[11px] shadow-sm">
               →
             </span>
-          </Link>
+          </button>
 
           <button
             onClick={() => setOpen((v) => !v)}
@@ -567,14 +573,13 @@ export default function Navbar() {
               </div>
             );
           })}
-          <Link
-            href={ENQUIRE_HREF}
-            scroll={false}
-            onClick={(e) => go(e, ENQUIRE_HREF)}
+          <button
+            type="button"
+            onClick={enquire}
             className="btn btn-primary mt-2 w-full text-sm"
           >
             Enquire Now
-          </Link>
+          </button>
         </div>
       </div>
     </header>

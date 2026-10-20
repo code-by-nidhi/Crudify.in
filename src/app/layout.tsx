@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Sora } from "next/font/google";
 import "./globals.css";
 
 import AuroraBackground from "@/components/AuroraBackground";
+import EnquiryModal from "@/components/contact/EnquiryModal";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Navbar />
         <main className="relative z-[2] flex-1">{children}</main>
         <Footer />
+        <EnquiryModal />
       </body>
     </html>
   );
