@@ -72,6 +72,10 @@ export default function Footer() {
           <div className="flex flex-wrap items-center gap-5 font-medium">
             <span className="text-secondary font-semibold">Serving {CITIES.join(" · ")}</span>
             <span>•</span>
+            <Link href="/blog" className="transition-colors hover:text-secondary">
+              Blog
+            </Link>
+            <span>•</span>
             <Link href="/#top" className="transition-colors hover:text-secondary font-bold">
               Back to Top ↑
             </Link>

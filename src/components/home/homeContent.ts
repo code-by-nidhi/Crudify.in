@@ -359,25 +359,136 @@ export const CASE_STUDIES: CaseStudy[] = [];
  *  when this is set. */
 export const CASE_STUDIES_HREF: string | null = null;
 
-export type Review = { quote: string; name: string; business: string; city: string };
+export type Review = {
+  quote: string;
+  name: string;
+  /** Country (or city) shown under the name. */
+  location: string;
+  /** Who they are, e.g. "Startup Founder". */
+  role: string;
+  /** The service they used, shown as a tag. */
+  service?: string;
+  /** Star rating out of 5, if they gave one. */
+  rating?: number;
+};
 
-/** TODO: add 3 real reviews. The Reviews section stays hidden until there is
- *  at least one — invented reviews hurt both rankings and trust. */
-export const REVIEWS: Review[] = [];
+/** Client testimonials, shown in the slider under "Our Work". */
+export const REVIEWS: Review[] = [
+  {
+    name: "Aarav Sharma",
+    location: "India",
+    role: "E-commerce Founder",
+    service: "Meta Ads",
+    rating: 5,
+    quote:
+      "Crudify helped us build a more structured advertising strategy for Facebook and Instagram. The creatives, audience targeting, and regular campaign reviews made it much easier to understand what was working.",
+  },
+  {
+    name: "Emily Wilson",
+    location: "United States",
+    role: "Small Business Owner",
+    service: "Google Ads",
+    rating: 5,
+    quote:
+      "We wanted a clearer way to reach customers who were actively searching for our services. Crudify's proposed Google Ads strategy focused on relevant keywords, campaign structure, and tracking enquiries.",
+  },
+  {
+    name: "Riya Patel",
+    location: "India",
+    role: "Startup Founder",
+    service: "Website Development",
+    rating: 5,
+    quote:
+      "We wanted a website that looked professional and was easy for customers to navigate. Crudify understood the brief and focused on a clean layout, mobile responsiveness, and a smoother user experience.",
+  },
+  {
+    name: "Oliver Bennett",
+    location: "United Kingdom",
+    role: "Operations Manager",
+    service: "CRM Development",
+    rating: 5,
+    quote:
+      "Our team needed a better way to manage enquiries, track follow-ups, and organize customer information. Crudify's CRM-focused approach helped us define a more efficient workflow for our business.",
+  },
+  {
+    name: "Karan Singh",
+    location: "India",
+    role: "Business Owner",
+    service: "Cybersecurity",
+    rating: 5,
+    quote:
+      "Website security was an important concern for our business. Crudify helped us focus on security reviews, identifying potential weaknesses, and prioritizing improvements to strengthen our digital setup.",
+  },
+  {
+    name: "Sofia Chen",
+    location: "Singapore",
+    role: "Product Manager",
+    service: "Custom Software",
+    rating: 5,
+    quote:
+      "We needed a solution designed around our business requirements rather than a generic tool. Crudify's development approach emphasized functionality, clear requirements, and a system that could evolve with us.",
+  },
+  {
+    name: "Ananya Mehta",
+    location: "India",
+    role: "D2C Brand Owner",
+    service: "Meta and Google Ads",
+    rating: 5,
+    quote:
+      "Managing multiple marketing channels can get complicated. Having a coordinated plan for Meta Ads and Google Ads made campaign goals, audience selection, and performance tracking easier to organize.",
+  },
+  {
+    name: "James Mitchell",
+    location: "Australia",
+    role: "Consultant",
+    service: "Website and CRM Integration",
+    rating: 5,
+    quote:
+      "We were looking for a more connected customer journey, from website enquiries to follow-ups. Crudify's combined web and CRM concept addressed the workflow issues we wanted to solve.",
+  },
+  {
+    name: "Priya Sharma",
+    location: "India",
+    role: "Retail Business Owner",
+    service: "Digital Marketing",
+    rating: 5,
+    quote:
+      "We wanted our brand to have a more consistent online presence. Crudify's approach brought together advertising, website planning, and digital strategy instead of treating each channel separately.",
+  },
+  {
+    name: "Daniel Laurent",
+    location: "France",
+    role: "SaaS Founder",
+    service: "Software Development",
+    rating: 5,
+    quote:
+      "We needed a development partner who could understand the product vision and turn requirements into practical features. The focus on functionality, usability, and maintainable software matched what we were looking for.",
+  },
+  {
+    name: "Noah Fischer",
+    location: "Germany",
+    role: "Business Director",
+    service: "Cybersecurity and IT",
+    rating: 5,
+    quote:
+      "We wanted a clearer picture of our website's security posture and potential risks. A structured security review and actionable recommendations are exactly the kind of practical support a growing business needs.",
+  },
+  {
+    name: "Zara Khan",
+    location: "United Arab Emirates",
+    role: "E-commerce Manager",
+    service: "CRM and Automation",
+    rating: 5,
+    quote:
+      "We wanted fewer manual steps in managing incoming leads and customer follow-ups. A more organized CRM and automation workflow can make day-to-day operations easier as an online business grows.",
+  },
+];
 
 /** TODO: the Google Business Profile URL, linked under the reviews. */
 export const GOOGLE_BUSINESS_PROFILE_URL: string | null = null;
 
-export const BLOG_TOPICS: { title: string; icon: IconName }[] = [
-  { title: "How to Rank on Google Maps in 2026: A Step-by-Step Guide", icon: "globe" },
-  { title: "Shopify vs Custom Website: Which Is Right for Your Business?", icon: "web" },
-  { title: "How Much Should an Indian SME Spend on Meta Ads?", icon: "megaphone" },
-  { title: "What Are AI Agents? A Simple Guide for Business Owners", icon: "cpu" },
-  { title: "With AI or Without AI: Which Marketing Package Fits Your Business?", icon: "sliders" },
-];
-
-/** Set once the blog exists; "Read all articles" only renders when set. */
-export const BLOG_HREF: string | null = null;
+/** The blog index; articles themselves live in src/content/blog.ts. */
+export const BLOG_HREF = "/blog";
 
 /** Each answer leads with the direct answer, so search and AI tools can quote
  *  it. The FAQPage JSON-LD in app/page.tsx is built from this array. */

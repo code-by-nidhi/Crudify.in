@@ -7,6 +7,7 @@ import EnquiryModal from "@/components/contact/EnquiryModal";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,6 +26,10 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
+  openGraph: { siteName: SITE_NAME, locale: "en_IN", type: "website" },
+  twitter: { card: "summary_large_image" },
   title: {
     default: "CRUDIFY — Best Marketing Company in Punjab",
     template: "%s | CRUDIFY",

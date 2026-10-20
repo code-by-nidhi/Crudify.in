@@ -14,13 +14,14 @@ const LINKS = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Services", href: "/services", menu: SERVICE_MENU },
-  { label: "Results", href: "/#results" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact Us", href: "/#apply" },
 ];
 
 /** "/services" stays lit while any of its detail pages is open. */
 function isActive(href: string, pathname: string) {
   if (href === "/services") return pathname.startsWith("/services");
+  if (href === "/blog") return pathname.startsWith("/blog");
   return href === pathname;
 }
 

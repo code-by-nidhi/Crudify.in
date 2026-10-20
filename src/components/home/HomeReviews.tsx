@@ -20,14 +20,14 @@ export default function HomeReviews() {
 
         <div className="grid gap-5 md:grid-cols-3">
           {REVIEWS.map((review) => (
-            <figure key={review.name + review.business} className="panel flex flex-col p-7">
+            <figure key={review.name + review.location} className="panel flex flex-col p-7">
               <blockquote className="flex-1 text-[15px] leading-relaxed text-tertiary/80">
                 &ldquo;{review.quote}&rdquo;
               </blockquote>
               <figcaption className="mt-6 border-t border-tertiary/12 pt-4 text-[13px]">
                 <span className="font-display font-semibold text-tertiary">{review.name}</span>
                 <span className="text-tertiary/60">
-                  , {review.business}, {review.city}
+                  , {review.role}, {review.location}
                 </span>
               </figcaption>
             </figure>

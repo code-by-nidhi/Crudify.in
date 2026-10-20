@@ -6,6 +6,7 @@ import { CourseIcon } from "./Icons";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import { scrollToSection } from "./SmoothScroll";
 import { CASE_STUDIES, CASE_STUDIES_HREF } from "./home/homeContent";
+import TestimonialSlider from "./home/TestimonialSlider";
 
 /** "Our Work". Reads CASE_STUDIES — real, verifiable numbers only, since
  *  generative engines quote these verbatim. Until there are some, the section
@@ -87,6 +88,8 @@ export default function GrowthImpact() {
             </p>
           </div>
         )}
+
+        <TestimonialSlider />
 
         <div className="mt-12 flex justify-center">
           {CASE_STUDIES_HREF ? (

@@ -6,8 +6,7 @@ import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import ServicesCompare from "@/components/home/ServicesCompare";
 import GrowthBooster from "@/components/home/GrowthBooster";
-import GrowthImpact from "@/components/GrowthImpact";
-import HomeReviews from "@/components/home/HomeReviews";
+import TestimonialSlider from "@/components/home/TestimonialSlider";
 import HomeFaq from "@/components/home/HomeFaq";
 import HomeBlogs from "@/components/home/HomeBlogs";
 import CTA from "@/components/CTA";
@@ -99,8 +98,7 @@ export default function Home() {
       <FeaturesSection />
       <ServicesCompare />
       <GrowthBooster />
-      <GrowthImpact />
-      <HomeReviews />
+      <TestimonialSlider />
       <HomeFaq />
       <HomeBlogs />
       <CTA />
