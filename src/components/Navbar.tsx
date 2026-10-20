@@ -276,7 +276,7 @@ export default function Navbar() {
                           const on = menuSection === i;
 
                           return (
-                            <li key={item.href}>
+                            <li key={item.id}>
                               <Link
                                 href={item.href}
                                 tabIndex={menuOpen ? undefined : -1}
@@ -542,7 +542,7 @@ export default function Navbar() {
                 >
                   <ul className="ml-4 flex min-h-0 flex-col gap-0.5 border-l border-tertiary/15 pl-2">
                     {link.menu.map((item) => (
-                      <li key={item.href}>
+                      <li key={item.id}>
                         <Link
                           href={item.href}
                           tabIndex={sheetMenuOpen ? undefined : -1}
