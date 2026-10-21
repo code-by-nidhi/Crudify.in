@@ -104,10 +104,10 @@ export default function AboutTeam() {
               <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/50 to-ink/0 transition-colors duration-500 group-hover:from-contrast/95 group-hover:via-contrast/55" />
 
               <div className="absolute inset-x-0 top-0 flex items-center justify-between p-6">
-                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-primary/90 text-secondary shadow-md backdrop-blur transition-transform duration-500 group-hover:scale-110">
+                <span className="grid h-12 w-12 place-items-center rounded-2xl bg-primary/90 text-secondary shadow-md transition-transform duration-500 group-hover:scale-110">
                   <CourseIcon name={team.icon} className="h-5 w-5" />
                 </span>
-                <span className="rounded-full border border-primary/30 bg-ink/30 px-3 py-1.5 font-mono text-[11px] text-primary backdrop-blur">
+                <span className="rounded-full border border-primary/30 bg-ink/30 px-3 py-1.5 font-mono text-[11px] text-primary">
                   {team.size}
                 </span>
               </div>

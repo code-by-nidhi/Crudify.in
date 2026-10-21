@@ -81,7 +81,7 @@ export default function CyberProducts() {
             <div
               key={item.title}
               data-cyber-card
-              className="panel-light p-6 bg-surface border border-tertiary/12 hover:border-secondary/60 hover:shadow-xl transition-all rounded-3xl flex flex-col"
+              className="panel-light p-6 bg-surface border border-tertiary/12 hover:border-secondary/60 hover:shadow-xl transition-[border-color,box-shadow] rounded-3xl flex flex-col"
             >
               <span className="self-start p-2.5 rounded-xl bg-secondary/10 text-secondary">
                 <CourseIcon name={item.icon} className="h-5 w-5" />

@@ -75,7 +75,7 @@ export default function GrowthBooster() {
             {/* header */}
             <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
               <div data-booster-item>
-                <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-primary backdrop-blur">
+                <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-primary">
                   <CourseIcon name="zap" className="h-3.5 w-3.5" />
                   All-in-one package
                 </span>
@@ -101,7 +101,7 @@ export default function GrowthBooster() {
               >
                 {CONTENTS.map((item, i) => (
                   <li key={item.label} className="flex flex-1 items-center gap-2 sm:gap-3">
-                    <div className="flex flex-1 flex-col items-center gap-3 rounded-2xl border border-primary/15 bg-primary/[0.06] px-2 py-5 text-center backdrop-blur transition-colors hover:border-primary/35 hover:bg-primary/10">
+                    <div className="flex flex-1 flex-col items-center gap-3 rounded-2xl border border-primary/15 bg-primary/[0.06] px-2 py-5 text-center transition-colors hover:border-primary/35 hover:bg-primary/10">
                       <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-secondary shadow-lg">
                         <CourseIcon name={item.icon} className="h-5 w-5" />
                       </span>
@@ -132,7 +132,7 @@ export default function GrowthBooster() {
                     className={`relative flex flex-col rounded-[28px] p-7 transition-transform duration-500 hover:-translate-y-1 sm:p-9 ${
                       featured
                         ? "bg-primary text-tertiary shadow-[0_30px_60px_-25px_rgba(0,0,0,0.6)]"
-                        : "border border-primary/15 bg-primary/[0.05] text-primary backdrop-blur"
+                        : "border border-primary/15 bg-primary/[0.05] text-primary"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-4">
@@ -207,7 +207,7 @@ export default function GrowthBooster() {
 
                     <button
                       type="button"
-                      onClick={openEnquiry}
+                      onClick={() => openEnquiry()}
                       className={`btn mt-8 w-full ${
                         featured
                           ? "btn-primary shadow-xl"
@@ -233,7 +233,7 @@ export default function GrowthBooster() {
               </p>
               <button
                 type="button"
-                onClick={openEnquiry}
+                onClick={() => openEnquiry()}
                 className="shrink-0 text-[14px] font-semibold text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:decoration-primary"
               >
                 Not sure which version? Talk to us.

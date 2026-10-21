@@ -130,7 +130,7 @@ export default function WebProducts() {
           {/* Featured Large Bento Box */}
           <div
             data-web-item
-            className="group md:col-span-2 panel-light p-8 bg-surface border border-tertiary/12 hover:border-secondary/60 shadow-lg rounded-3xl flex flex-col justify-between transition-all"
+            className="group md:col-span-2 panel-light p-8 bg-surface border border-tertiary/12 hover:border-secondary/60 shadow-lg rounded-3xl flex flex-col justify-between transition-[border-color,box-shadow]"
           >
             <div>
               <div className="flex items-center justify-between">
@@ -170,7 +170,7 @@ export default function WebProducts() {
             <div
               key={item.id}
               data-web-item
-              className="panel-light p-6 bg-surface border border-tertiary/12 hover:border-secondary/60 hover:shadow-xl transition-all rounded-3xl flex flex-col justify-between"
+              className="panel-light p-6 bg-surface border border-tertiary/12 hover:border-secondary/60 hover:shadow-xl transition-[border-color,box-shadow] rounded-3xl flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between">

@@ -93,7 +93,7 @@ export default function BlogIndexPage() {
               sizes="(min-width: 768px) 640px, 92vw"
               className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            <span className="absolute left-5 top-5 rounded-full bg-primary/90 px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-[0.16em] text-secondary backdrop-blur">
+            <span className="absolute left-5 top-5 rounded-full bg-primary/90 px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-[0.16em] text-secondary">
               Featured
             </span>
           </div>
@@ -124,7 +124,7 @@ export default function BlogIndexPage() {
                   sizes="(min-width: 640px) 600px, 92vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-primary/90 px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-[0.16em] text-secondary backdrop-blur">
+                <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-primary/90 px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-[0.16em] text-secondary">
                   <CourseIcon name={post.icon} className="h-3.5 w-3.5" />
                   {post.category}
                 </span>

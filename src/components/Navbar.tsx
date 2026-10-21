@@ -10,7 +10,13 @@ import { CourseIcon } from "./Icons";
 import { openEnquiry } from "./contact/EnquiryModal";
 import Logo from "./Logo";
 
-const LINKS = [
+type NavLink = {
+  label: string;
+  href: string;
+  menu?: typeof SERVICE_MENU;
+};
+
+const LINKS: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Services", href: "/services", menu: SERVICE_MENU },
@@ -87,7 +93,7 @@ export default function Navbar() {
 
       // Smooth scroll direction tracking without DOM layout reflows
       ScrollTrigger.create({
-        start: "top -100",
+        start: 0,
         end: "max",
         onUpdate: (self) => {
           const isScrolled = self.scroll() > 100;
@@ -136,10 +142,14 @@ export default function Navbar() {
    * than one route — so scroll in place whenever the target is already here and
    * let <Link> navigate otherwise.
    */
-  const go = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
+  const closeAll = () => {
     setOpen(false);
     setMenuOpen(false);
     setSheetMenuOpen(false);
+  };
+
+  const go = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
+    closeAll();
 
     const [path, hash] = href.split("#");
 
@@ -159,9 +169,7 @@ export default function Navbar() {
 
   /** Enquire Now opens the contact popup instead of scrolling to the form. */
   const enquire = () => {
-    setOpen(false);
-    setMenuOpen(false);
-    setSheetMenuOpen(false);
+    closeAll();
     openEnquiry();
   };
 
@@ -175,14 +183,21 @@ export default function Navbar() {
         />
       </div>
 
+      {/* The hide-on-scroll slide lives on this wrapper and the GSAP intro on
+          the bar inside it. Sharing one element made a CSS transition and a
+          GSAP tween fight over the same transform, which read as flicker. */}
+      <div
+        className={`transition-transform duration-300 ease-out ${
+          hidden ? "-translate-y-[130%]" : "translate-y-0"
+        }`}
+      >
       <div
         ref={bar}
-        style={{
-          transform: hidden ? "translate3d(0, -130%, 0)" : "translate3d(0, 0, 0)",
-          willChange: "transform",
-        }}
-        className={`pointer-events-auto relative mx-auto mt-4 flex w-[min(1240px,94vw)] items-center justify-between gap-3 rounded-full px-5 py-2.5 transition-all duration-300 ease-out bg-primary/95 backdrop-blur-2xl border border-secondary/35 shadow-[0_18px_45px_-15px_var(--shadow-warm)] ${
-          scrolled ? "border-secondary/60 shadow-[0_24px_55px_-16px_var(--shadow-warm-strong)] scale-[0.99]" : ""
+        data-nav-bar
+        // Solid face, no backdrop-blur and no scale-down on scroll: both
+        // re-rasterise the bar every frame and soften its text.
+        className={`pointer-events-auto relative mx-auto mt-4 flex w-[min(1240px,94vw)] items-center justify-between gap-3 rounded-full px-5 py-2.5 transition-[border-color,box-shadow] duration-300 ease-out bg-primary border border-secondary/35 shadow-[0_18px_45px_-15px_var(--shadow-warm)] ${
+          scrolled ? "border-secondary/60 shadow-[0_24px_55px_-16px_var(--shadow-warm-strong)]" : ""
         }`}
       >
         <Link
@@ -202,6 +217,7 @@ export default function Navbar() {
         <nav className="hidden items-center gap-0.5 lg:flex">
           {LINKS.map((link) => {
             const active = isActive(link.href, pathname);
+
 
             const trigger = (
               <Link
@@ -458,6 +474,7 @@ export default function Navbar() {
           </button>
         </div>
       </div>
+      </div>
 
       {/* Mobile sheet */}
       <div
@@ -483,6 +500,7 @@ export default function Navbar() {
             const rowClass = `rounded-2xl text-left text-[14px] font-bold transition-colors hover:bg-secondary/15 hover:text-secondary ${
               active ? "bg-secondary/15 text-secondary" : "text-tertiary"
             }`;
+
 
             if (!link.menu) {
               return (

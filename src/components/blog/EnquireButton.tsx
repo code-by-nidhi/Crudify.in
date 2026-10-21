@@ -11,7 +11,7 @@ export default function EnquireButton({
   className?: string;
 }) {
   return (
-    <button type="button" onClick={openEnquiry} className={className}>
+    <button type="button" onClick={() => openEnquiry()} className={className}>
       {children}
     </button>
   );

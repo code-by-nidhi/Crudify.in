@@ -347,7 +347,7 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
 
           {/* sidebar: table of contents */}
           <aside className="hidden lg:block">
-            <nav aria-label="On this page" className="sticky top-28 rounded-[22px] border border-secondary/15 bg-surface/70 p-6 backdrop-blur">
+            <nav aria-label="On this page" className="sticky top-28 rounded-[22px] border border-secondary/15 bg-surface/70 p-6">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-secondary">On this page</p>
               <ol className="mt-4 flex flex-col gap-2.5 text-[13.5px] leading-snug">
                 {post.sections.map((section, i) => (

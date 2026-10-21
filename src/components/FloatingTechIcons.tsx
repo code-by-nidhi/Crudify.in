@@ -20,7 +20,7 @@ export default function FloatingTechIcons({
       {items.map((item, idx) => (
         <div
           key={idx}
-          className={`absolute flex items-center gap-2 rounded-2xl border border-secondary/25 bg-tertiary/10 backdrop-blur-md px-3 py-1.5 shadow-lg text-secondary ${item.className || ""}`}
+          className={`absolute flex items-center gap-2 rounded-2xl border border-secondary/25 bg-tertiary/10 px-3 py-1.5 shadow-lg text-secondary ${item.className || ""}`}
           style={{ animationDelay: item.delay || "0s" }}
         >
           <div className="grid h-7 w-7 place-items-center rounded-xl bg-secondary/15 text-secondary animate-pulse">

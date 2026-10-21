@@ -88,7 +88,7 @@ export default function AboutStory() {
                 sizes="(min-width: 1024px) 420px, 85vw"
                 className="object-cover"
               />
-              <span className="absolute left-4 top-4 rounded-full bg-primary/90 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-secondary backdrop-blur">
+              <span className="absolute left-4 top-4 rounded-full bg-primary/90 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-secondary">
                 Build · Market · Secure
               </span>
             </div>

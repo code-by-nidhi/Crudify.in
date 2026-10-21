@@ -121,7 +121,7 @@ export default function AboutTimeline() {
                   <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/45 to-ink/5" />
 
                   <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5">
-                    <span className="rounded-full bg-primary/90 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-secondary backdrop-blur">
+                    <span className="rounded-full bg-primary/90 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-secondary">
                       {item.year}
                     </span>
                     <span className="font-display text-[1.6rem] font-bold leading-none tracking-[-0.05em] text-primary/45">

@@ -53,9 +53,8 @@ export default function Reveal({
       if (variant === "lift") {
         from.scale = 0.97;
       }
-      if (variant === "blur") {
-        from.filter = "blur(10px)";
-      }
+      // "blur" is kept as a name for existing callers but plays as a fade:
+      // animating filter: blur() repaints every frame and flickers.
 
       gsap.from(targets, from);
     },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
 
@@ -18,6 +18,13 @@ declare global {
  * sections to jitter.
  */
 export default function SmoothScroll() {
+  // Lift the intro gate (see globals.css). A layout effect, and this component
+  // renders before the Navbar and page, so it runs in the same commit — before
+  // paint — and ahead of every useGSAP that reads the elements' styles.
+  useLayoutEffect(() => {
+    delete document.documentElement.dataset.intro;
+  }, []);
+
   useEffect(() => {
     if (prefersReducedMotion()) return;
 

@@ -61,7 +61,7 @@ export default function HomeBlogs() {
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent" />
-                <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-primary/90 px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-[0.16em] text-secondary backdrop-blur">
+                <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-primary/90 px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-[0.16em] text-secondary">
                   <CourseIcon name={post.icon} className="h-3.5 w-3.5" />
                   {post.category}
                 </span>

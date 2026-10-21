@@ -157,15 +157,17 @@
 .panel {
   position: relative;
   border-radius: var(--panel-radius);
-  background: color-mix(in srgb, var(--color-surface) 82%, transparent);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  /* Near-opaque instead of backdrop-filter: a blurred backdrop is re-sampled
+     on every scroll frame and flickers under Lenis + GSAP transforms. */
+  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
   border: 1px solid color-mix(in srgb, var(--color-secondary) 22%, transparent);
   color: var(--color-tertiary);
   box-shadow:
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
     0 18px 40px -18px var(--shadow-warm);
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  /* No transform here: GSAP animates panels in, and a CSS transition on the
+     same property makes every tween stutter. */
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
   overflow: hidden;
 }
 
@@ -204,8 +206,6 @@
    from cherry, not ink: neutral ink over cotton white goes grey and drains it. */
 .panel-quiet {
   background: color-mix(in srgb, var(--color-secondary) 9%, transparent);
-  backdrop-filter: blur(12px) saturate(120%);
-  -webkit-backdrop-filter: blur(12px) saturate(120%);
   border-color: color-mix(in srgb, var(--color-tertiary) 12%, transparent);
   box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
 }
@@ -218,7 +218,7 @@
   border: 1px solid color-mix(in srgb, var(--color-secondary) 20%, transparent);
   color: var(--color-tertiary);
   box-shadow: 0 10px 30px -12px var(--shadow-warm);
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
   overflow: hidden;
 }
 .panel-light:hover {
@@ -329,7 +329,6 @@
   color: var(--color-tertiary);
   border: 1px solid color-mix(in srgb, var(--color-secondary) 40%, transparent);
   background: color-mix(in srgb, var(--color-surface) 55%, transparent);
-  backdrop-filter: blur(8px);
 }
 .btn-ghost:hover {
   border-color: var(--color-secondary);
@@ -447,12 +446,39 @@ select.field-input {
 .grain::before {
   content: "";
   position: fixed;
-  inset: -50%;
+  inset: 0;
   z-index: 100;
   pointer-events: none;
   /* Noise reads much harder over cotton white than it did over near-black. */
   opacity: 0.018;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------
+   Intro gate
+   The server HTML paints before GSAP hydrates, so intro elements would show
+   fully, vanish when their from() tween sets them up, then animate back in —
+   a visible flash on every load. A head script sets data-intro="pending" and
+   SmoothScroll clears it in the same commit GSAP sets its start states. The
+   fallback animation reveals everything if hydration never happens.
+------------------------------------------------------------------ */
+[data-intro="pending"] :is(
+  [data-nav-bar],
+  [data-word],
+  [data-hero-badge],
+  [data-hero-fade],
+  [data-cue],
+  [data-about-fade],
+  [data-services-fade],
+  [data-services-chip],
+  [data-detail-fade],
+  [data-detail-chip]
+) {
+  opacity: 0;
+  animation: intro-fallback 0s 2.5s forwards;
+}
+@keyframes intro-fallback {
+  to { opacity: 1; }
 }
 
 /* ------------------------------------------------------------------

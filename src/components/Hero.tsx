@@ -39,11 +39,12 @@ export default function Hero() {
         )
         .from("[data-cue]", { autoAlpha: 0, y: -14, duration: 0.8 }, 1.4);
 
-      // Scroll: copy lifts away, the run drifts slower than the page.
+      // Scroll: copy lifts away, the run drifts slower than the page. No blur
+      // filter — re-blurring the whole block every scroll frame is what made
+      // the hero smear and flicker.
       gsap.to("[data-hero-copy]", {
         y: -130,
         autoAlpha: 0,
-        filter: "blur(8px)",
         ease: "none",
         scrollTrigger: {
           trigger: root.current,

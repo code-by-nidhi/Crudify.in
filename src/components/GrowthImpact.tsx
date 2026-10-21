@@ -55,7 +55,7 @@ export default function GrowthImpact() {
               <article
                 key={study.client + study.result}
                 data-bento-card
-                className={`p-7 rounded-3xl flex flex-col justify-between transition-all duration-300 ${
+                className={`p-7 rounded-3xl flex flex-col justify-between transition-[border-color,box-shadow] duration-300 ${
                   i === 0
                     ? "panel panel-feature border border-secondary/40 shadow-[0_28px_60px_-20px_var(--shadow-warm-strong)]"
                     : "panel-light bg-surface border border-tertiary/12 hover:border-secondary/60 hover:shadow-xl"

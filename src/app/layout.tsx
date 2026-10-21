@@ -55,7 +55,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${sora.variable} h-full antialiased`}
+      // The head script below adds data-intro before React hydrates.
+      suppressHydrationWarning
     >
+      <head>
+        {/* Runs before first paint so intro elements start hidden instead of
+            flashing in and out before GSAP takes over. See "Intro gate" in
+            globals.css; SmoothScroll clears it on hydration. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.documentElement.dataset.intro="pending"`,
+          }}
+        />
+      </head>
       <body className="grain relative flex min-h-full flex-col overflow-x-clip">
         <AuroraBackground />
         <SmoothScroll />

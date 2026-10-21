@@ -232,7 +232,7 @@ export default function ProjectsSection() {
                  column it is ~750px — taller than a 780px phone can show with a
                  pin offset on top, so the bottom edge and CTA got clipped. Below
                  `sm` the cards simply flow; the heading still sits behind them. */
-              className="sm:sticky z-10 mx-auto max-w-[1040px] rounded-[32px] p-8 sm:p-12 border border-secondary/40 bg-surface/97 backdrop-blur-2xl shadow-[0_25px_55px_-18px_var(--shadow-warm-strong)] transition-all duration-300 group overflow-hidden"
+              className="sm:sticky z-10 mx-auto max-w-[1040px] rounded-[32px] p-8 sm:p-12 border border-secondary/40 bg-surface/97 shadow-[0_25px_55px_-18px_var(--shadow-warm-strong)] transition-[border-color,box-shadow] duration-300 group overflow-hidden"
               style={{
                 top: `calc(14vh + ${idx * 16}px)`,
               }}
@@ -274,7 +274,7 @@ export default function ProjectsSection() {
                 </div>
 
                 {/* Right Interactive Telemetry Glass Box */}
-                <div className="panel p-6 bg-surface/70 border border-secondary/30 rounded-2xl shadow-xl backdrop-blur-md flex flex-col justify-between h-full">
+                <div className="panel p-6 bg-surface/70 border border-secondary/30 rounded-2xl shadow-xl flex flex-col justify-between h-full">
                   <div className="flex items-center justify-between border-b border-tertiary/12 pb-3 mb-4">
                     <span className="text-xs font-mono font-extrabold uppercase text-secondary flex items-center gap-2">
                       <span className="h-2 w-2 rounded-full bg-secondary animate-pulse" />

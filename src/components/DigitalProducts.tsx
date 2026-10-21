@@ -91,7 +91,7 @@ export default function DigitalProducts() {
                   key={item.name}
                   href={item.href}
                   data-digital-card
-                  className="panel panel-feature group p-6 border border-secondary/25 bg-surface/70 hover:border-secondary/60 hover:shadow-2xl transition-all rounded-3xl flex flex-col justify-between"
+                  className="panel panel-feature group p-6 border border-secondary/25 bg-surface/70 hover:border-secondary/60 hover:shadow-2xl transition-[border-color,box-shadow] rounded-3xl flex flex-col justify-between"
                 >
                   <div>
                     <span className="inline-flex p-2.5 rounded-xl bg-secondary/20 text-secondary border border-secondary/30">
