@@ -10,6 +10,7 @@ import TestimonialSlider from "@/components/home/TestimonialSlider";
 import HomeFaq from "@/components/home/HomeFaq";
 import HomeBlogs from "@/components/home/HomeBlogs";
 import CTA from "@/components/CTA";
+import Preloader from "@/components/motion/Preloader";
 import { BRAND, FAQS, SERVICES } from "@/components/home/homeContent";
 
 export const metadata: Metadata = {
@@ -92,6 +93,7 @@ export default function Home() {
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
+      <Preloader />
       <Hero />
       <Marquee />
       <AboutSection />

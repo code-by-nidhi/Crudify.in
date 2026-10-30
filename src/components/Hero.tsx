@@ -1,49 +1,152 @@
 "use client";
 
+import Image from "next/image";
 import { useRef } from "react";
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
+import { gsap, useGSAP, prefersReducedMotion, introDelay, SCRAMBLE_CHARS } from "@/lib/gsap";
 import AnimatedText from "./AnimatedText";
 import { scrollToSection } from "./SmoothScroll";
 import { CourseIcon } from "./Icons";
 import KeywordText from "./home/KeywordText";
-import HeroPipeline from "./home/HeroPipeline";
 import { BRAND } from "./home/homeContent";
+
+/** The template's five hero cards, left to right. Decorative — the photos
+ *  are the site's own, the same ones the About pages use. */
+const CARDS = [
+  "/about/strategy.jpg",
+  "/about/marketing.jpg",
+  "/about/development.jpg",
+  "/about/security.jpg",
+  "/about/wins.jpg",
+];
+
+/* Card motion, lifted from the Orvix template's interaction data. The
+   template's cards are 15vw wide and its offsets are in vw, so the numbers
+   below are in fifteenths of a card's width and scaled to the real card:
+     STACK — where each card starts: all piled on the middle one
+     FAN   — the arc they spread into once the page is in
+     FALL  — where they drop to as the hero scrolls away */
+const STACK = [
+  { x: 30, y: 0, rotation: 0 },
+  { x: 15, y: 0, rotation: 0 },
+  { x: 0, y: 2, rotation: 0 },
+  { x: -15, y: 0, rotation: 0 },
+  { x: -30, y: 0, rotation: 0 },
+];
+const FAN = [
+  { x: 10, y: 6, rotation: -20 },
+  { x: 5, y: 2, rotation: -10 },
+  { x: 0, y: 0, rotation: 0 },
+  { x: -5, y: 2, rotation: 10 },
+  { x: -10, y: 6, rotation: 20 },
+];
+const FALL = [
+  { x: 30, y: 70 },
+  { x: 15, y: 70 },
+  { x: 0, y: 70 },
+  { x: -15, y: 70 },
+  { x: -30, y: 70 },
+];
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
-  const scene = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      const svg = root.current?.querySelector<SVGSVGElement>("[data-pipe]");
+      const cards = gsap.utils.toArray<HTMLElement>("[data-hero-card]");
+      /** One template "vw", as pixels of this card row. */
+      const vw = (n: number) => (n * (cards[0]?.offsetWidth ?? 0)) / 15;
 
       if (prefersReducedMotion()) {
         gsap.set("[data-hero-fade]", { autoAlpha: 1 });
-        svg?.pauseAnimations();
+        gsap.set(cards, {
+          autoAlpha: 1,
+          x: (i: number) => vw(FAN[i].x),
+          y: (i: number) => vw(FAN[i].y),
+          rotation: (i: number) => FAN[i].rotation,
+        });
         return;
       }
 
-      const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+      // Plays as the preloader sheet lifts off, when there is one.
+      const tl = gsap.timeline({
+        defaults: { ease: "expo.out" },
+        delay: introDelay(),
+      });
 
-      tl.from("[data-hero-badge]", { y: 24, autoAlpha: 0, duration: 1 }, 0.1)
+      // Cards: appear as one pile, then fan out into the arc.
+      tl.fromTo(
+        cards,
+        {
+          autoAlpha: 0,
+          x: (i: number) => vw(STACK[i].x),
+          y: (i: number) => vw(STACK[i].y + 4),
+          rotation: 0,
+        },
+        {
+          autoAlpha: 1,
+          y: (i: number) => vw(STACK[i].y),
+          duration: 0.6,
+          stagger: { each: 0.06, from: "center" },
+          ease: "power3.out",
+        },
+        0,
+      )
+        .to(
+          cards,
+          {
+            x: (i: number) => vw(FAN[i].x),
+            y: (i: number) => vw(FAN[i].y),
+            rotation: (i: number) => FAN[i].rotation,
+            duration: 0.8,
+            ease: "power4.out",
+          },
+          0.75,
+        )
+        .from("[data-hero-badge]", { y: 24, autoAlpha: 0, duration: 1 }, 0.1)
+        .to(
+          "[data-hero-scramble]",
+          {
+            duration: 1.4,
+            ease: "none",
+            scrambleText: { text: "{original}", chars: SCRAMBLE_CHARS, speed: 0.7 },
+          },
+          0.15,
+        )
         .from(
           "[data-hero-fade]",
           { y: 30, autoAlpha: 0, duration: 1.1, stagger: 0.12 },
           0.55,
         )
-        .from(scene.current, { y: 60, autoAlpha: 0, duration: 1.6 }, 0.2)
-        .from(
-          "[data-pipe-joint]",
-          { scale: 0.4, autoAlpha: 0, duration: 1, stagger: 0.08, ease: "back.out(1.6)" },
-          0.6,
-        )
         .from("[data-cue]", { autoAlpha: 0, y: -14, duration: 0.8 }, 1.4);
 
-      // Scroll: copy lifts away, the run drifts slower than the page. No blur
-      // filter — re-blurring the whole block every scroll frame is what made
-      // the hero smear and flicker.
+      // Scroll: the cards straighten and drop away one after another, as the
+      // template's do, while the copy lifts off.
+      gsap.fromTo(
+        cards,
+        {
+          x: (i: number) => vw(FAN[i].x),
+          y: (i: number) => vw(FAN[i].y),
+          rotation: (i: number) => FAN[i].rotation,
+        },
+        {
+          x: (i: number) => vw(FALL[i].x),
+          y: (i: number) => vw(FALL[i].y),
+          rotation: 0,
+          ease: "none",
+          stagger: 0.03,
+          immediateRender: false,
+          scrollTrigger: {
+            invalidateOnRefresh: true,
+            trigger: root.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.8,
+          },
+        },
+      );
+
       gsap.to("[data-hero-copy]", {
-        y: -130,
+        y: -110,
         autoAlpha: 0,
         ease: "none",
         scrollTrigger: {
@@ -53,46 +156,6 @@ export default function Hero() {
           scrub: 0.5,
         },
       });
-
-      gsap.to(scene.current, {
-        yPercent: 18,
-        ease: "none",
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 0.7,
-        },
-      });
-
-      // Pointer: each layer of the run shifts by its own depth, so the
-      // floating pieces slide past the tubes.
-      const layers = gsap.utils
-        .toArray<SVGGElement>("[data-pipe-depth]")
-        .map((el) => {
-          const depth = Number(el.dataset.pipeDepth);
-          return {
-            depth,
-            x: gsap.quickTo(el, "x", { duration: 1, ease: "power3" }),
-            y: gsap.quickTo(el, "y", { duration: 1, ease: "power3" }),
-          };
-        });
-
-      const section = root.current;
-      if (!section) return;
-
-      const onMove = (e: PointerEvent) => {
-        const r = section.getBoundingClientRect();
-        const dx = (e.clientX - r.left) / r.width - 0.5;
-        const dy = (e.clientY - r.top) / r.height - 0.5;
-        layers.forEach((l) => {
-          l.x(dx * 18 * l.depth);
-          l.y(dy * 14 * l.depth);
-        });
-      };
-
-      section.addEventListener("pointermove", onMove);
-      return () => section.removeEventListener("pointermove", onMove);
     },
     { scope: root },
   );
@@ -101,73 +164,106 @@ export default function Hero() {
     <section
       ref={root}
       id="top"
-      className="relative flex min-h-[100svh] flex-col overflow-hidden rounded-b-[40px] border-b border-secondary/20 bg-pattern-hero px-[4vw] pb-12 pt-28 shadow-2xl sm:rounded-b-[60px] lg:pt-32"
+      className="relative flex min-h-[100svh] flex-col overflow-hidden border-b border-tertiary/15 bg-pattern-hero px-[4vw] pb-8 pt-24 lg:pt-28"
     >
-      {/* soft light behind the run so the glass reads against the maroon wash */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_72%_40%,color-mix(in_srgb,var(--color-surface)_55%,transparent)_0%,transparent_45%)]"
-      />
-
-      {/* the marble run — bleeds off the top and right like a product shot */}
-      <div
-        ref={scene}
-        className="pointer-events-none relative order-2 mx-auto -mb-12 mt-6 h-[440px] w-full max-w-[520px] sm:h-[560px] lg:absolute lg:inset-y-0 lg:right-[-2vw] lg:mt-0 lg:mb-0 lg:h-full lg:w-[58%] lg:max-w-none"
-      >
-        <HeroPipeline className="h-full w-full" />
-      </div>
-
-      <div className="relative z-10 mx-auto flex w-full max-w-[1240px] flex-1 items-center">
-        <div data-hero-copy className="max-w-[620px] lg:max-w-[50%]">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-1 flex-col">
+        {/* sub-title row, after the template's label / plus / label strip */}
+        <div
+          data-hero-copy
+          className="flex items-start justify-between gap-6 border-b border-tertiary/15 pb-4"
+        >
           <p
             data-hero-badge
-            className="mb-5 flex items-center gap-2 font-mono text-sm font-bold uppercase tracking-widest text-secondary"
+            className="flex items-center gap-2 text-[15px] font-medium text-tertiary"
           >
             <span className="h-2 w-2 animate-ping rounded-full bg-secondary" />
-            {BRAND} · Your Growth Partner
+            <span data-hero-scramble>({BRAND} · Your Growth Partner)</span>
           </p>
+          <span aria-hidden="true" className="plus-mark hidden sm:block">+</span>
+          <p
+            data-hero-fade
+            className="hidden items-center gap-2 text-[15px] font-medium text-tertiary/70 md:inline-flex"
+          >
+            <CourseIcon name="globe" className="h-4 w-4 text-secondary" />
+            <span>
+              <strong className="kw">Ludhiana</strong>-based. Serving businesses
+              across India.
+            </span>
+          </p>
+        </div>
 
-          <h1 className="font-display text-[clamp(2.4rem,4.2vw,3.85rem)] font-extrabold leading-[1.02] tracking-[-0.045em] text-tertiary">
-            <AnimatedText text="Grow your business" delay={0.2} />
+        {/* the card row — five cards fanned from the middle, as in the
+            template; the first sits on top of the pile */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none flex flex-1 items-end justify-center pb-[15vw] pt-8 md:pb-[7.5vw]"
+        >
+          {CARDS.map((src, i) => (
+            <div
+              key={src}
+              data-hero-card
+              style={{ zIndex: CARDS.length - i }}
+              className="hero-card relative flex h-[32vw] w-[25vw] shrink-0 flex-col rounded-2xl border border-primary p-[1.4vw] will-change-transform md:h-[14.5vw] md:w-[11vw] md:p-[0.7vw]"
+            >
+              <div className="relative flex-1 overflow-hidden rounded-lg">
+                <Image
+                  src={src}
+                  alt=""
+                  fill
+                  priority={i === 2}
+                  sizes="(min-width: 768px) 11vw, 25vw"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div data-hero-copy>
+          <h1 className="font-display text-[clamp(2.4rem,6.4vw,7rem)] font-extrabold uppercase leading-[0.86] tracking-[-0.055em] text-tertiary">
+            <AnimatedText text="Grow your business" delay={0.2} afterIntro />
             <br />
-            <AnimatedText text="with marketing," delay={0.3} />
+            <AnimatedText text="with marketing," delay={0.3} afterIntro />
             <br />
             <AnimatedText
               text="websites & AI"
               className="text-secondary"
               delay={0.4}
+              afterIntro
             />
           </h1>
 
-          {/* One clean, quotable sentence — the line most likely to be lifted
-              verbatim into an AI Overview, so keep it self-contained. */}
-          <p
-            data-hero-fade
-            className="mt-6 max-w-[48ch] text-[1rem] font-medium leading-relaxed text-tertiary/70"
-          >
-            <KeywordText text="We help Indian businesses get found on Google, turn visitors into customers, and automate the busywork. Choose With AI+ for speed and value, or Without AI for a fully handcrafted build." />
-          </p>
-
-          <div data-hero-fade className="mt-9 flex flex-wrap gap-4">
-            <button
-              onClick={() => scrollToSection("apply")}
-              className="btn btn-primary shadow-xl hover:shadow-secondary/30"
+          <div className="mt-6 grid gap-6 border-t border-tertiary/15 pt-5 md:grid-cols-[1fr_auto] md:items-end">
+            {/* One clean, quotable sentence — the line most likely to be lifted
+                verbatim into an AI Overview, so keep it self-contained. */}
+            <p
+              data-hero-fade
+              className="max-w-[56ch] text-[1.02rem] leading-relaxed text-tertiary/75"
             >
-              Get a Free Growth Plan
-              <CourseIcon name="chart" className="h-4 w-4" />
-            </button>
+              <KeywordText text="We help Indian businesses get found on Google, turn visitors into customers, and automate the busywork. Choose With AI+ for speed and value, or Without AI for a fully handcrafted build." />
+            </p>
 
-            <button
-              onClick={() => scrollToSection("services")}
-              className="btn btn-ghost border-secondary/35 text-tertiary hover:border-secondary hover:text-secondary"
-            >
-              See Our Services →
-            </button>
+            <div data-hero-fade className="flex flex-wrap gap-3">
+              <button
+                onClick={() => scrollToSection("apply")}
+                className="btn btn-primary"
+              >
+                Get a Free Growth Plan
+                <CourseIcon name="chart" className="h-4 w-4" />
+              </button>
+
+              <button
+                onClick={() => scrollToSection("services")}
+                className="btn btn-ghost"
+              >
+                See Our Services →
+              </button>
+            </div>
           </div>
 
           <p
             data-hero-fade
-            className="mt-8 inline-flex items-center gap-2 text-[13px] font-semibold text-tertiary/60"
+            className="mt-5 inline-flex items-center gap-2 text-[14px] font-medium text-tertiary/60 md:hidden"
           >
             <CourseIcon name="globe" className="h-4 w-4 text-secondary" />
             <span>
@@ -182,14 +278,12 @@ export default function Hero() {
       <button
         data-cue
         onClick={() => scrollToSection("about-us")}
-        className="absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-tertiary/70 transition-colors hover:text-secondary md:flex"
+        className="absolute right-[4vw] top-1/2 z-10 hidden origin-right -translate-y-1/2 rotate-90 items-center gap-3 text-tertiary/70 transition-colors hover:text-secondary xl:flex"
       >
-        <span className="text-[10px] font-bold uppercase tracking-[0.3em]">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.3em]">
           SCROLL TO EXPLORE
         </span>
-        <span className="relative h-8 w-[20px] rounded-full border border-tertiary/30">
-          <span className="absolute left-1/2 top-1.5 h-1.5 w-1.5 -translate-x-1/2 animate-bounce rounded-full bg-secondary" />
-        </span>
+        <span className="h-px w-10 bg-current" />
       </button>
     </section>
   );

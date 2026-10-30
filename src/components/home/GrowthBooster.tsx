@@ -28,15 +28,22 @@ export default function GrowthBooster() {
     () => {
       if (prefersReducedMotion()) return;
 
-      gsap.from("[data-booster-shell]", {
-        autoAlpha: 0,
-        y: 48,
-        scale: 0.98,
-        duration: 1.1,
-        ease: "expo.out",
-        clearProps: "all",
-        scrollTrigger: { trigger: root.current, start: "top 80%", once: true },
-      });
+      // The panel opens out from an inset frame to its full size as it
+      // scrolls up, like the template's expanding sections.
+      gsap.fromTo(
+        "[data-booster-shell]",
+        { clipPath: "inset(9% 8% 9% 8% round 2rem)" },
+        {
+          clipPath: "inset(0% 0% 0% 0% round 0.95rem)",
+          ease: "none",
+          scrollTrigger: {
+            trigger: "[data-booster-shell]",
+            start: "top 95%",
+            end: "top 30%",
+            scrub: true,
+          },
+        },
+      );
 
       gsap.from("[data-booster-item]", {
         autoAlpha: 0,
@@ -59,12 +66,12 @@ export default function GrowthBooster() {
       aria-labelledby="growth-booster-title"
       className="relative px-[4vw] pb-24 sm:pb-32"
     >
-      <div className="mx-auto max-w-[1240px]">
+      <div className="mx-auto max-w-[1400px]">
         {/* Noir shell with a cherry glow — the one dark block on the page, so
             the package reads as the headline offer of the Services section */}
         <div
           data-booster-shell
-          className="on-dark relative overflow-hidden rounded-[36px] bg-tertiary p-6 text-primary shadow-[0_40px_80px_-30px_var(--shadow-warm-strong)] sm:p-10 lg:p-14"
+          className="on-dark relative overflow-hidden rounded-3xl bg-tertiary p-6 text-primary sm:p-10 lg:p-14"
         >
           <div
             aria-hidden="true"

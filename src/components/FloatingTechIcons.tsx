@@ -23,7 +23,7 @@ export default function FloatingTechIcons({
           className={`absolute flex items-center gap-2 rounded-2xl border border-secondary/25 bg-tertiary/10 px-3 py-1.5 shadow-lg text-secondary ${item.className || ""}`}
           style={{ animationDelay: item.delay || "0s" }}
         >
-          <div className="grid h-7 w-7 place-items-center rounded-xl bg-secondary/15 text-secondary animate-pulse">
+          <div className="grid h-7 w-7 place-items-center rounded-xl bg-secondary/15 text-secondary">
             {item.type === "course" ? (
               <CourseIcon name={item.name as IconName} className="h-4 w-4" />
             ) : (

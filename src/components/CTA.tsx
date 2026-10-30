@@ -50,7 +50,7 @@ export default function CTA() {
 
       <div
         data-cta-panel
-        className="panel panel-accent mx-auto grid max-w-[1180px] gap-12 p-8 sm:p-12 lg:grid-cols-[1fr_0.9fr] lg:p-16 rounded-3xl shadow-[0_28px_60px_-20px_var(--shadow-warm-strong)] relative z-10"
+        className="panel panel-accent relative z-10 mx-auto grid max-w-[1400px] gap-12 p-8 sm:p-12 lg:grid-cols-[1fr_0.9fr] lg:p-16"
       >
         <div>
           <div className="flex items-center gap-2.5">
@@ -59,7 +59,7 @@ export default function CTA() {
             </span>
             <p className="eyebrow !text-primary">Free Growth Plan</p>
           </div>
-          <h2 className="mt-4 font-display text-[clamp(2rem,4.4vw,3.1rem)] font-bold leading-[1.05] tracking-[-0.035em] text-primary">
+          <h2 className="mt-4 font-display text-[clamp(2.4rem,5.4vw,4.8rem)] font-extrabold leading-[0.95] tracking-[-0.05em] text-primary">
             <AnimatedText text="Ready to grow?" className="!text-primary font-bold" onScroll />
             <br />
             <AnimatedText
@@ -80,7 +80,7 @@ export default function CTA() {
               "Transparent pricing — no hidden costs",
             ].map((item) => (
               <li key={item} className="flex items-center gap-3 text-[14px] font-semibold !text-primary">
-                <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-primary text-secondary font-bold shadow-md">
+                <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-primary text-secondary font-bold">
                   <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
                     <path
                       d="m2.5 6.2 2.2 2.2L9.5 3.6"

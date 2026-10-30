@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
+import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import AnimatedText from "../AnimatedText";
 import KeywordText from "./KeywordText";
 import { FAQS } from "./homeContent";
@@ -12,7 +12,7 @@ export default function HomeFaq() {
   const root = useRef<HTMLElement>(null);
   const [open, setOpen] = useState<number | null>(0);
 
-  useGSAP(
+  const { contextSafe } = useGSAP(
     () => {
       const rows = gsap.utils.toArray<HTMLElement>("[data-faq]");
 
@@ -33,16 +33,43 @@ export default function HomeFaq() {
     { scope: root },
   );
 
+  // Heights are tweened by GSAP rather than a CSS grid-rows transition: the
+  // fr interpolation reflows every frame and stutters under Lenis, and two
+  // rows animating on separate CSS timelines make the list jump.
+  const toggle = contextSafe((i: number) => {
+    const next = open === i ? null : i;
+    const panels = gsap.utils.toArray<HTMLElement>("[data-faq-panel]");
+    const instant = prefersReducedMotion();
+
+    panels.forEach((panel, j) => {
+      const show = j === next;
+      const wasOpen = j === open;
+      if (!show && !wasOpen) return;
+
+      gsap.to(panel, {
+        height: show ? "auto" : 0,
+        autoAlpha: show ? 1 : 0,
+        duration: instant ? 0 : 0.5,
+        ease: "power3.inOut",
+        overwrite: true,
+      });
+    });
+
+    // The page below just changed length, so later triggers need new offsets.
+    gsap.delayedCall(instant ? 0 : 0.55, () => ScrollTrigger.refresh());
+    setOpen(next);
+  });
+
   return (
     <section
       ref={root}
       id="faq"
       className="bg-pattern-digital relative px-[4vw] py-24 sm:py-32 border-t border-secondary/20"
     >
-      <div className="mx-auto grid max-w-[1180px] gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+      <div className="mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <p className="eyebrow">FAQ</p>
-          <h2 className="mt-4 font-display text-[clamp(2rem,4.4vw,3.1rem)] font-semibold leading-[1.06] tracking-[-0.035em] text-tertiary">
+          <h2 className="mt-4 font-display text-[clamp(2.4rem,5vw,4.6rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-tertiary">
             <AnimatedText text="Frequently Asked" onScroll />
             <br />
             <AnimatedText text="Questions" className="text-accent" onScroll />
@@ -62,17 +89,26 @@ export default function HomeFaq() {
                 key={faq.q}
                 data-faq
                 style={{ visibility: "hidden" }}
-                className="border-b border-tertiary/10 first:border-t first:border-tertiary/10"
+                className="group relative border-b border-tertiary/15 first:border-t first:border-tertiary/15"
               >
-                <h3>
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute inset-0 origin-bottom bg-secondary/[0.06] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100 ${
+                    expanded ? "scale-y-100" : "scale-y-0"
+                  }`}
+                />
+                <h3 className="relative">
                   <button
-                    onClick={() => setOpen(expanded ? null : i)}
+                    onClick={() => toggle(i)}
                     aria-expanded={expanded}
                     aria-controls={`home-faq-panel-${i}`}
-                    className="flex w-full items-start justify-between gap-6 py-6 text-left"
+                    className="flex w-full items-start gap-5 px-2 py-7 text-left"
                   >
+                    <span className="mt-1 w-7 shrink-0 font-mono text-[13px] font-medium text-secondary">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
                     <span
-                      className={`max-w-[44ch] font-display text-[1.1rem] font-semibold leading-snug tracking-[-0.02em] transition-colors ${
+                      className={`max-w-[44ch] flex-1 font-display text-[clamp(1.15rem,1.7vw,1.5rem)] font-semibold leading-snug tracking-[-0.02em] transition-colors ${
                         expanded ? "text-secondary" : "text-tertiary/80"
                       }`}
                     >
@@ -95,17 +131,12 @@ export default function HomeFaq() {
                     assistants can still read them. */}
                 <div
                   id={`home-faq-panel-${i}`}
-                  className={`grid transition-all duration-400 ease-out ${
-                    expanded
-                      ? "grid-rows-[1fr] opacity-100"
-                      : "grid-rows-[0fr] opacity-0"
-                  }`}
+                  data-faq-panel
+                  className={`overflow-hidden ${i === 0 ? "" : "invisible h-0"}`}
                 >
-                  <div className="overflow-hidden">
-                    <p className="max-w-[62ch] pb-7 text-[14.5px] leading-relaxed text-tertiary/60">
-                      <KeywordText text={faq.a} />
-                    </p>
-                  </div>
+                  <p className="relative max-w-[62ch] pb-8 pl-14 pr-2 text-[15px] leading-relaxed text-tertiary/65">
+                    <KeywordText text={faq.a} />
+                  </p>
                 </div>
               </li>
             );

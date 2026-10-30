@@ -54,9 +54,10 @@ export default function AboutSection() {
   useGSAP(
     () => {
       const cards = gsap.utils.toArray<HTMLElement>("[data-about-card]");
+      const pillars = gsap.utils.toArray<HTMLElement>("[data-about-pillar]");
 
       if (prefersReducedMotion()) {
-        gsap.set(cards, { autoAlpha: 1 });
+        gsap.set([...cards, ...pillars], { autoAlpha: 1 });
         return;
       }
 
@@ -79,6 +80,47 @@ export default function AboutSection() {
           scrollTrigger: { trigger: card, start: "top 88%", once: true },
         });
       });
+
+      const mm = gsap.matchMedia();
+
+      // Desktop: the template's stacked deck. The three cards begin piled on
+      // the middle one, each at its own tilt, and fan out to their columns
+      // while the row is pinned.
+      mm.add("(min-width: 768px)", () => {
+        gsap.set(pillars, { autoAlpha: 1 });
+
+        const stage = root.current?.querySelector<HTMLElement>("[data-about-stage]");
+        const TILTS = [-10, 4, 9];
+
+        gsap.from(pillars, {
+          x: (_i: number, el: HTMLElement) =>
+            stage ? stage.offsetWidth / 2 - (el.offsetLeft + el.offsetWidth / 2) : 0,
+          y: (i: number) => i * 14,
+          rotation: (i: number) => TILTS[i] ?? 0,
+          scale: 0.86,
+          ease: "power2.inOut",
+          scrollTrigger: {
+            trigger: stage,
+            start: "center center",
+            end: "+=110%",
+            scrub: 1,
+            pin: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      });
+
+      mm.add("(max-width: 767px)", () => {
+        pillars.forEach((pillar) => {
+          gsap.from(pillar, {
+            autoAlpha: 0,
+            y: 44,
+            duration: 1,
+            ease: "expo.out",
+            scrollTrigger: { trigger: pillar, start: "top 88%", once: true },
+          });
+        });
+      });
     },
     { scope: root },
   );
@@ -89,7 +131,7 @@ export default function AboutSection() {
       id="about-us"
       className="bg-pattern-architecture relative px-[4vw] py-24 sm:py-32 border-t border-secondary/20"
     >
-      <div className="mx-auto max-w-[1240px]">
+      <div className="mx-auto max-w-[1400px]">
         {/* Two equal halves: copy on the left, the photo on the right
             stretched to exactly the copy's height */}
         <div className="grid gap-12 lg:grid-cols-2 lg:items-stretch lg:gap-16">
@@ -97,7 +139,7 @@ export default function AboutSection() {
             <p data-about-fade className="eyebrow">
               About {BRAND}
             </p>
-            <h2 className="mt-4 max-w-[20ch] font-display text-[clamp(2rem,4.4vw,3.1rem)] font-semibold leading-[1.06] tracking-[-0.035em] text-tertiary">
+            <h2 className="mt-4 max-w-[20ch] font-display text-[clamp(2.4rem,4.8vw,4.4rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-tertiary">
               <AnimatedText
                 text="A Marketing, Tech and Security Team"
                 onScroll
@@ -136,7 +178,7 @@ export default function AboutSection() {
               its lower edge so the column keeps one clean outline */}
           <div
             data-about-fade
-            className="relative min-h-[440px] overflow-hidden rounded-[28px] shadow-[0_28px_60px_-20px_var(--shadow-warm-strong)]"
+            className="relative min-h-[440px] overflow-hidden rounded-3xl"
           >
             <Image
               src="/about/team.jpg"
@@ -173,13 +215,13 @@ export default function AboutSection() {
           </div>
         </div>
 
-        <div className="mt-16 grid gap-6 md:grid-cols-3 lg:mt-20">
+        <div data-about-stage className="relative mt-16 grid gap-6 md:grid-cols-3 md:py-[8vh] lg:mt-20">
           {PILLARS.map((pillar) => (
             <article
               key={pillar.title}
-              data-about-card
-              style={{ visibility: "hidden" }}
-              className="panel group flex flex-col p-7"
+              data-about-pillar
+              style={{ visibility: "hidden", zIndex: PILLARS.indexOf(pillar) === 1 ? 3 : 1 }}
+              className="panel group flex flex-col bg-surface p-7 will-change-transform"
             >
               <div className="relative -mx-7 -mt-7 mb-6 aspect-[16/10] overflow-hidden border-b border-secondary/20">
                 <Image

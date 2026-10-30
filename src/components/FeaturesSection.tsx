@@ -95,7 +95,7 @@ export default function FeaturesSection() {
       id="features"
       className="relative border-t border-secondary/20 bg-pattern-web px-[4vw] py-24 sm:py-32"
     >
-      <div className="mx-auto max-w-[1240px]">
+      <div className="mx-auto max-w-[1400px]">
         {/* label row */}
         <div
           data-features-head
@@ -109,7 +109,7 @@ export default function FeaturesSection() {
 
         {/* header: heading left, intro right, bottoms aligned */}
         <div className="mt-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between md:gap-10 lg:mt-14">
-          <h2 className="max-w-[16ch] font-display text-[clamp(2.2rem,5vw,3.8rem)] font-semibold leading-[1.02] tracking-[-0.04em] text-tertiary">
+          <h2 className="max-w-[16ch] font-display text-[clamp(2.4rem,5.4vw,5rem)] font-semibold leading-[0.96] tracking-[-0.05em] text-tertiary">
             <AnimatedText text="Why Businesses" onScroll />{" "}
             <AnimatedText text={`Choose ${BRAND}`} className="text-accent" onScroll />
           </h2>
@@ -136,7 +136,7 @@ export default function FeaturesSection() {
               >
                 <article
                   data-feature-card
-                  className={`grid origin-top gap-8 rounded-[28px] border p-7 shadow-[0_-12px_40px_-24px_var(--shadow-warm-strong)] sm:p-10 md:min-h-[26rem] md:grid-cols-[1fr_1.15fr] md:gap-12 lg:p-12 ${theme.card}`}
+                  className={`grid origin-top gap-8 rounded-3xl border p-7 shadow-[0_-12px_40px_-24px_var(--shadow-warm-strong)] sm:p-10 md:min-h-[26rem] md:grid-cols-[1fr_1.15fr] md:gap-12 lg:p-12 ${theme.card}`}
                 >
                   {/* big numeral, sitting on the card's bottom edge on desktop */}
                   <span

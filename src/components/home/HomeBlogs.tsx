@@ -19,11 +19,11 @@ export default function HomeBlogs() {
       className="bg-pattern-web relative px-[4vw] py-24 sm:py-32 border-t border-secondary/20"
       {...pauseProps}
     >
-      <div className="mx-auto max-w-[1240px]">
+      <div className="mx-auto max-w-[1400px]">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="eyebrow">Blog</p>
-            <h2 className="mt-4 font-display text-[clamp(2rem,4.4vw,3.1rem)] font-semibold leading-[1.06] tracking-[-0.035em] text-tertiary">
+            <h2 className="mt-4 font-display text-[clamp(2.4rem,5vw,4.6rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-tertiary">
               Growth Tips <span className="text-accent">&amp; Guides</span>
             </h2>
           </div>
@@ -40,8 +40,10 @@ export default function HomeBlogs() {
           role="region"
           aria-roledescription="carousel"
           aria-label="Growth tips and guides"
-          // Lenis would otherwise swallow horizontal trackpad gestures here.
-          data-lenis-prevent
+          // Hand only horizontal trackpad swipes to the track. A plain
+          // data-lenis-prevent also drops vertical wheel scrolls out of Lenis,
+          // so the page stutters as the cards pass under the pointer.
+          data-lenis-prevent-horizontal
           className="-mx-2 mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto px-2 pb-6 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {POSTS.map((post, i) => (
@@ -49,7 +51,8 @@ export default function HomeBlogs() {
               key={post.slug}
               href={`/blog/${post.slug}`}
               aria-roledescription="slide"
-              className="panel group flex w-[85%] shrink-0 snap-start flex-col transition-transform duration-500 hover:-translate-y-1 sm:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)]"
+              data-cursor
+              className="panel group flex w-[85%] shrink-0 snap-start flex-col sm:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)]"
             >
               {/* cover */}
               <div className="relative aspect-[16/10] overflow-hidden">

@@ -36,6 +36,8 @@ export default function SmoothScroll() {
     });
 
     window.__lenis = lenis;
+    // The homepage Preloader holds the page still and restarts Lenis itself.
+    if (document.documentElement.dataset.preload === "on") lenis.stop();
     lenis.on("scroll", ScrollTrigger.update);
 
     const timer = setTimeout(() => {

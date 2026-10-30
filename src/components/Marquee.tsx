@@ -2,25 +2,29 @@
 
 import { useRef } from "react";
 import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion } from "@/lib/gsap";
+import { CourseIcon, type IconName } from "./Icons";
 
-const TELEMETRY_ITEMS = [
-  "📱 Social Media Management",
-  "📣 FB & Insta Ads",
-  "🔎 Google & YouTube Ads",
-  "📍 Google Maps Ranking",
-  "💻 Website Building",
-  "🛒 Shopify & Ecommerce Stores",
-  "🎨 Graphic Design",
-  "🎬 Video Editing & Shoots",
-  "🤖 AI Agents",
-  "⚡ With AI+ or Without AI",
+/** A plain string, or a label with a line icon drawn in front of it. */
+type MarqueeItem = string | { label: string; icon: IconName };
+
+const TELEMETRY_ITEMS: MarqueeItem[] = [
+  { label: "Social Media Management", icon: "social" },
+  { label: "FB & Insta Ads", icon: "megaphone" },
+  { label: "Google & YouTube Ads", icon: "search" },
+  { label: "Google Maps Ranking", icon: "pin" },
+  { label: "Website Building", icon: "code" },
+  { label: "Shopify & Ecommerce Stores", icon: "cart" },
+  { label: "Graphic Design", icon: "palette" },
+  { label: "Video Editing & Shoots", icon: "video" },
+  { label: "AI Agents", icon: "bot" },
+  { label: "With AI+ or Without AI", icon: "zap" },
 ];
 
 export default function Marquee({
   items = TELEMETRY_ITEMS,
   id = "brand-bar",
 }: {
-  items?: string[];
+  items?: MarqueeItem[];
   id?: string;
 } = {}) {
   const root = useRef<HTMLDivElement>(null);
@@ -64,21 +68,35 @@ export default function Marquee({
     <div
       ref={root}
       id={id}
-      /* Inverts against the cotton ground — the one full-bleed cherry band */
-      className="relative overflow-hidden bg-secondary py-5 text-primary border-y border-tertiary/25 shadow-sm"
+      /* The template's oversized ticker type, on the one full-bleed cherry band */
+      className="relative overflow-hidden border-y border-tertiary/25 bg-secondary py-6 text-primary"
     >
       <div ref={track} className="flex w-max">
         {[0, 1].map((copy) => (
-          <div key={copy} className="flex gap-12 pr-12" aria-hidden={copy === 1}>
-            {items.map((item) => (
-              <span
-                key={item}
-                className="flex shrink-0 items-center gap-3 font-display text-[14px] font-extrabold uppercase tracking-wider text-primary"
-              >
-                <span className="h-2 w-2 rounded-full bg-primary shadow-sm" />
-                {item}
-              </span>
-            ))}
+          <div key={copy} className="flex gap-10 pr-10" aria-hidden={copy === 1}>
+            {items.map((item) => {
+              const label = typeof item === "string" ? item : item.label;
+
+              return (
+                <span
+                  key={label}
+                  className="flex shrink-0 items-center gap-10 font-display text-[clamp(1.6rem,3.4vw,3rem)] font-bold leading-none tracking-[-0.04em] text-primary"
+                >
+                  <span className="flex items-center gap-[0.35em]">
+                    {typeof item !== "string" && (
+                      <span
+                        title={label}
+                        className="grid h-[1.25em] w-[1.25em] shrink-0 place-items-center rounded-full border border-primary/35 bg-primary/10"
+                      >
+                        <CourseIcon name={item.icon} className="h-[0.7em] w-[0.7em]" />
+                      </span>
+                    )}
+                    {label}
+                  </span>
+                  <span aria-hidden="true" className="font-light text-primary/70">+</span>
+                </span>
+              );
+            })}
           </div>
         ))}
       </div>

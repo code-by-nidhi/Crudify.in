@@ -66,7 +66,7 @@ export default function AboutHero() {
     <section
       ref={root}
       id="about-top"
-      className="bg-pattern-hero relative overflow-hidden rounded-b-[40px] border-b border-secondary/20 px-[4vw] pb-20 pt-28 shadow-[0_28px_60px_-20px_var(--shadow-warm-strong)] sm:rounded-b-[60px] lg:pt-32"
+      className="bg-pattern-hero relative overflow-hidden border-b border-tertiary/15 px-[4vw] pb-20 pt-28 lg:pt-32"
     >
       <div className="mx-auto grid w-full max-w-[1240px] items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="relative z-10">
@@ -83,7 +83,7 @@ export default function AboutHero() {
             <br />
             <AnimatedText
               text="and secure."
-              className="text-contrast drop-shadow-[0_2px_12px_rgba(99,0,0,0.20)]"
+              className="text-contrast"
               delay={0.4}
             />
           </h1>

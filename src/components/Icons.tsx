@@ -18,7 +18,14 @@ export type IconName =
   | "server"
   | "refresh"
   | "sliders"
-  | "key";
+  | "key"
+  | "social"
+  | "search"
+  | "pin"
+  | "cart"
+  | "palette"
+  | "video"
+  | "bot";
 
 const PATHS: Record<IconName, React.ReactNode> = {
   code: (
@@ -158,6 +165,55 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <circle cx="7.5" cy="15.5" r="5.5" />
       <path d="m21 2-9.6 9.6" />
       <path d="m15.5 7.5 3 3" />
+    </>
+  ),
+  social: (
+    <>
+      <rect x="6.5" y="3" width="11" height="18" rx="2.4" />
+      <path d="M10.5 17.5h3" />
+      <path d="M12 7.4c-.9-1-2.6-.6-2.6.9 0 1.3 2.6 2.9 2.6 2.9s2.6-1.6 2.6-2.9c0-1.5-1.7-1.9-2.6-.9z" />
+    </>
+  ),
+  search: (
+    <>
+      <circle cx="10.5" cy="10.5" r="6" />
+      <path d="m15 15 5 5" />
+    </>
+  ),
+  pin: (
+    <>
+      <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z" />
+      <circle cx="12" cy="10" r="2.4" />
+    </>
+  ),
+  cart: (
+    <>
+      <path d="M3 4h2.2l2.2 10.4a1.5 1.5 0 0 0 1.5 1.2h8.4a1.5 1.5 0 0 0 1.5-1.1L20.5 8H6.1" />
+      <circle cx="9.5" cy="19.5" r="1.2" />
+      <circle cx="17" cy="19.5" r="1.2" />
+    </>
+  ),
+  palette: (
+    <>
+      <path d="M12 3.5a8.5 8.5 0 0 0 0 17c1.3 0 1.9-.9 1.9-1.8 0-1.4-1.2-1.6-1.2-2.8 0-1 .8-1.6 1.8-1.6h2.2a3.8 3.8 0 0 0 3.8-3.8c0-3.9-3.8-7-8.5-7z" />
+      <circle cx="7.8" cy="11" r="1" />
+      <circle cx="10.5" cy="7.4" r="1" />
+      <circle cx="15" cy="7.8" r="1" />
+    </>
+  ),
+  video: (
+    <>
+      <rect x="3" y="6" width="13" height="12" rx="2" />
+      <path d="m16 10.5 5-3v9l-5-3" />
+    </>
+  ),
+  bot: (
+    <>
+      <rect x="4.5" y="8" width="15" height="11" rx="3" />
+      <path d="M12 8V4.5" />
+      <circle cx="12" cy="3.8" r=".9" />
+      <path d="M9.2 13h.01M14.8 13h.01" strokeWidth="2.4" />
+      <path d="M2.5 12.5v2.5M21.5 12.5v2.5" />
     </>
   ),
 };

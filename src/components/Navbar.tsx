@@ -37,7 +37,6 @@ export default function Navbar() {
   const progress = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   /** Mobile accordion inside the sheet — independent of the desktop menu. */
   const [sheetMenuOpen, setSheetMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -53,19 +52,7 @@ export default function Navbar() {
   /** Which service area the mega menu's right side is showing. */
   const [menuSection, setMenuSection] = useState(0);
 
-  /**
-   * The scroll handler below needs the current menu state, but it must not be a
-   * GSAP dependency: useGSAP reverts and replays its whole context when one
-   * changes, which would re-run the bar's intro tween — the bar visibly flying
-   * up — every time the dropdown opened. A ref gives the callback fresh values
-   * while the animation setup still runs exactly once.
-   */
   const anyMenuOpen = open || menuOpen;
-  const anyMenuOpenRef = useRef(anyMenuOpen);
-
-  useEffect(() => {
-    anyMenuOpenRef.current = anyMenuOpen;
-  }, [anyMenuOpen]);
 
   useGSAP(
     () => {
@@ -96,13 +83,10 @@ export default function Navbar() {
         start: 0,
         end: "max",
         onUpdate: (self) => {
-          const isScrolled = self.scroll() > 100;
-          setScrolled(isScrolled);
-          if (prefersReducedMotion()) return;
-          // Never slide the bar away while a menu is hanging off it.
-          setHidden(
-            self.direction === 1 && isScrolled && !anyMenuOpenRef.current,
-          );
+          // Past the first few pixels the full-width bar condenses into a
+          // floating pill. It stays on screen rather than sliding away, so the
+          // shrink is always visible.
+          setScrolled(self.scroll() > 40);
         },
       });
     },
@@ -176,28 +160,36 @@ export default function Navbar() {
   return (
     <header ref={root} className="pointer-events-none fixed inset-x-0 top-0 z-50">
       {/* progress line */}
-      <div className="absolute inset-x-0 top-0 h-[2.5px] bg-tertiary/10">
+      <div className="absolute inset-x-0 top-0 z-10 h-[2px]">
         <div
           ref={progress}
-          className="h-full origin-left scale-x-0 bg-secondary shadow-[0_0_10px_var(--color-secondary)]"
+          className="h-full origin-left scale-x-0 bg-secondary"
         />
       </div>
 
-      {/* The hide-on-scroll slide lives on this wrapper and the GSAP intro on
-          the bar inside it. Sharing one element made a CSS transition and a
-          GSAP tween fight over the same transform, which read as flicker. */}
+      {/* The condensing lives on this wrapper's padding and the GSAP intro on
+          the bar inside it, so a CSS transition and a GSAP tween never fight
+          over the same property. */}
       <div
-        className={`transition-transform duration-300 ease-out ${
-          hidden ? "-translate-y-[130%]" : "translate-y-0"
+        className={`transition-[padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          scrolled ? "px-3 pt-3" : "px-0 pt-0"
         }`}
       >
       <div
         ref={bar}
         data-nav-bar
-        // Solid face, no backdrop-blur and no scale-down on scroll: both
-        // re-rasterise the bar every frame and soften its text.
-        className={`pointer-events-auto relative mx-auto mt-4 flex w-[min(1240px,94vw)] items-center justify-between gap-3 rounded-full px-5 py-2.5 transition-[border-color,box-shadow] duration-300 ease-out bg-primary border border-secondary/35 shadow-[0_18px_45px_-15px_var(--shadow-warm)] ${
-          scrolled ? "border-secondary/60 shadow-[0_24px_55px_-16px_var(--shadow-warm-strong)]" : ""
+        // Full width at the top of the page; once scrolled it narrows, tightens
+        // its padding and rounds into a pill. Width, padding and radius are
+        // transitioned rather than scaled — a scale re-rasterises the bar every
+        // frame and softens its text.
+        className={`pointer-events-auto relative mx-auto flex items-center justify-between gap-3 border transition-[max-width,padding,border-radius,border-color,background-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          scrolled
+            ? "max-w-[1240px] rounded-[2rem] px-5 py-2 shadow-[0_18px_40px_-18px_var(--shadow-warm-strong)]"
+            : "max-w-full rounded-none px-[4vw] py-3.5"
+        } ${
+          scrolled || anyMenuOpen
+            ? "border-secondary/25 bg-primary"
+            : "border-transparent bg-transparent"
         }`}
       >
         <Link
@@ -228,8 +220,8 @@ export default function Navbar() {
                 aria-expanded={link.menu ? menuOpen : undefined}
                 aria-controls={link.menu ? "services-menu" : undefined}
                 onClick={(e) => go(e, link.href)}
-                className={`group relative flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12.5px] font-extrabold transition-colors hover:text-secondary ${
-                  active ? "text-secondary" : "text-tertiary/85"
+                className={`group relative flex items-center gap-1.5 px-3 py-1.5 text-[15px] font-medium transition-colors hover:text-secondary ${
+                  active ? "text-secondary" : "text-tertiary/75"
                 }`}
               >
                 <span className="relative z-10">{link.label}</span>
@@ -252,8 +244,8 @@ export default function Navbar() {
                   </svg>
                 )}
                 <span
-                  className={`absolute inset-0 rounded-full bg-secondary/20 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 ${
-                    active ? "scale-100 opacity-100" : "scale-90 opacity-0"
+                  className={`absolute inset-x-3 bottom-0.5 h-px origin-left bg-current transition-transform duration-300 group-hover:scale-x-100 ${
+                    active ? "scale-x-100" : "scale-x-0"
                   }`}
                 />
               </Link>
@@ -291,7 +283,7 @@ export default function Navbar() {
                 >
                   {/* Opaque face, no backdrop-blur: on a light ground a menu you
                       can read the page through is just hard to read. */}
-                  <div className="grid grid-cols-[17rem_1fr] overflow-hidden rounded-3xl border border-secondary/30 bg-primary shadow-[0_28px_60px_-18px_var(--shadow-warm-strong)]">
+                  <div className="mx-auto grid max-w-[1100px] grid-cols-[17rem_1fr] overflow-hidden rounded-3xl border border-secondary/30 bg-primary shadow-[0_30px_50px_-20px_var(--shadow-warm-strong)]">
                     {/* left — the service areas; hovering one swaps the right side */}
                     <div className="flex flex-col border-r border-tertiary/10 p-2">
                       <ul className="flex flex-col gap-0.5">
@@ -445,19 +437,17 @@ export default function Navbar() {
           <button
             type="button"
             onClick={enquire}
-            className="hidden sm:flex items-center gap-2.5 rounded-full bg-contrast text-primary px-4.5 py-1.5 text-xs font-extrabold shadow-[0_10px_24px_-10px_var(--color-contrast)] transition-all hover:scale-105"
+            className="btn btn-primary hidden whitespace-nowrap !px-4 !py-2.5 text-sm sm:inline-flex"
           >
             <span>Enquire Now</span>
-            <span className="grid h-5 w-5 place-items-center rounded-full bg-primary text-secondary font-bold text-[11px] shadow-sm">
-              →
-            </span>
+            <span aria-hidden="true">→</span>
           </button>
 
           <button
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-label="Toggle menu"
-            className="grid h-10 w-10 place-items-center rounded-full border border-tertiary/20 bg-tertiary/10 lg:hidden text-tertiary"
+            className="grid h-10 w-10 place-items-center rounded-md border border-tertiary/20 bg-primary lg:hidden text-tertiary"
           >
             <span className="relative block h-3 w-4">
               <span

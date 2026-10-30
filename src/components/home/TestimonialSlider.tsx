@@ -1,7 +1,9 @@
 "use client";
 
+import { useRef, useState } from "react";
+import { gsap, Draggable, useGSAP, prefersReducedMotion } from "@/lib/gsap";
+import AnimatedText from "../AnimatedText";
 import { REVIEWS } from "./homeContent";
-import { SliderArrows, SliderDots, useAutoSlider } from "./useAutoSlider";
 
 const SLIDES = REVIEWS;
 
@@ -13,52 +15,181 @@ const initials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
+/** Where a card sits by its place in the deck — the top three fan out at the
+ *  template's tilts, the rest wait invisibly behind them. */
+const POSES = [
+  { x: "0%", y: 0, rotation: -2, scale: 1, autoAlpha: 1 },
+  { x: "7%", y: 18, rotation: 5, scale: 0.95, autoAlpha: 1 },
+  { x: "-7%", y: 32, rotation: -7, scale: 0.9, autoAlpha: 1 },
+  { x: "0%", y: 40, rotation: 0, scale: 0.86, autoAlpha: 0 },
+];
+const poseFor = (rank: number) => POSES[Math.min(rank, POSES.length - 1)];
+
+/** How far the top card has to be dragged before it is thrown to the back. */
+const THROW_AT = 110;
+
 /**
- * Client testimonials as an auto-advancing row: 1 card on phones, 2 on
- * tablets, 3 on desktop. Sliding behaviour lives in useAutoSlider.
+ * Client testimonials as the template's draggable deck: drag the top card
+ * aside (or use the arrows) and it is thrown to the back of the pile. Every
+ * review stays in the DOM — only the top one is exposed to assistive tech.
  */
 export default function TestimonialSlider() {
-  const { track, active, pages, goTo, pauseProps } = useAutoSlider(SLIDES.length);
+  const root = useRef<HTMLElement>(null);
+  const cards = useRef<(HTMLElement | null)[]>([]);
+  const drag = useRef<Draggable | null>(null);
+  const [order, setOrder] = useState(() => SLIDES.map((_, i) => i));
+  const top = order[0];
+
+  const next = () => setOrder((o) => [...o.slice(1), o[0]]);
+  const prev = () => setOrder((o) => [o[o.length - 1], ...o.slice(0, -1)]);
+
+  /** Fling the top card off to one side, then send it to the back. */
+  const throwTop = (direction: 1 | -1) => {
+    const card = cards.current[top];
+    if (!card || prefersReducedMotion()) return next();
+    drag.current?.disable();
+    gsap.to(card, {
+      x: direction * card.offsetWidth * 1.2,
+      rotation: direction * 18,
+      duration: 0.45,
+      ease: "power2.in",
+      onComplete: next,
+    });
+  };
+
+  const bringBack = () => {
+    const last = cards.current[order[order.length - 1]];
+    if (last && !prefersReducedMotion()) {
+      gsap.set(last, { x: -(last.offsetWidth * 1.2), rotation: -18, autoAlpha: 1 });
+    }
+    prev();
+  };
+
+  // Re-deal the deck whenever its order changes, and hand the drag to
+  // whichever card is now on top.
+  useGSAP(
+    () => {
+      const still = prefersReducedMotion();
+
+      order.forEach((index, rank) => {
+        const card = cards.current[index];
+        if (!card) return;
+        gsap.set(card, { zIndex: SLIDES.length - rank });
+        gsap.to(card, {
+          ...poseFor(rank),
+          duration: still ? 0 : 0.8,
+          ease: "expo.out",
+          overwrite: "auto",
+        });
+      });
+
+      drag.current?.kill();
+      drag.current = null;
+
+      const card = cards.current[top];
+      if (!card || still) return;
+
+      [drag.current] = Draggable.create(card, {
+        type: "x",
+        // Vertical swipes still scroll the page on touch screens.
+        allowNativeTouchScrolling: true,
+        onPress() {
+          gsap.killTweensOf(card);
+          gsap.to(card, { scale: 1.02, rotation: 0, duration: 0.25 });
+        },
+        onDrag() {
+          gsap.set(card, { rotation: this.x * 0.05 });
+        },
+        onRelease() {
+          if (Math.abs(this.x) > THROW_AT) {
+            throwTop(this.x > 0 ? 1 : -1);
+          } else {
+            gsap.to(card, {
+              ...poseFor(0),
+              duration: 0.9,
+              ease: "elastic.out(1, 0.6)",
+            });
+          }
+        },
+      });
+    },
+    { scope: root, dependencies: [order] },
+  );
+
+  useGSAP(() => () => drag.current?.kill(), { scope: root });
 
   if (SLIDES.length === 0) return null;
 
   return (
     <section
+      ref={root}
       id="testimonials"
       aria-labelledby="testimonials-title"
-      className="relative border-t border-secondary/20 px-[4vw] py-24 sm:py-32"
-      {...pauseProps}
+      className="relative overflow-hidden border-t border-secondary/20 px-[4vw] py-24 sm:py-32"
     >
-      <div className="mx-auto max-w-[1240px]">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <p className="eyebrow">Testimonials</p>
-            <h2
-              id="testimonials-title"
-              className="mt-4 font-display text-[clamp(2rem,4.4vw,3.1rem)] font-semibold leading-[1.06] tracking-[-0.035em] text-tertiary"
-            >
-              What our <span className="text-accent">clients say</span>
-            </h2>
-          </div>
+      <div className="mx-auto grid max-w-[1400px] gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+        <div>
+          <p className="eyebrow">Testimonials</p>
+          <h2
+            id="testimonials-title"
+            className="mt-4 font-display text-[clamp(2.4rem,5vw,4.6rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-tertiary"
+          >
+            <AnimatedText text="What our" onScroll />{" "}
+            <AnimatedText text="clients say" className="text-accent" onScroll />
+          </h2>
 
-          <SliderArrows active={active} pages={pages} goTo={goTo} label="testimonial" />
+          <div className="mt-10 flex items-end justify-between gap-6 border-t border-tertiary/15 pt-6 lg:max-w-[26rem]">
+            <p
+              aria-live="polite"
+              className="font-display text-[clamp(2.4rem,4vw,3.4rem)] font-semibold leading-none tracking-[-0.05em] text-tertiary tabular-nums"
+            >
+              {String(top + 1).padStart(2, "0")}
+              <span className="text-tertiary/30">
+                /{String(SLIDES.length).padStart(2, "0")}
+              </span>
+            </p>
+
+            <div className="flex gap-2">
+              {[
+                { name: "Previous testimonial", dir: -1, path: "M15 6l-6 6 6 6" },
+                { name: "Next testimonial", dir: 1, path: "M9 6l6 6-6 6" },
+              ].map((btn) => (
+                <button
+                  key={btn.name}
+                  type="button"
+                  aria-label={btn.name}
+                  onClick={() => (btn.dir < 0 ? bringBack() : throwTop(1))}
+                  className="btn btn-ghost h-12 w-12 !p-0"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d={btn.path} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
+        {/* the deck */}
         <div
-          ref={track}
           role="region"
           aria-roledescription="carousel"
           aria-label="Client testimonials"
-          // Lenis would otherwise swallow horizontal trackpad gestures here.
-          data-lenis-prevent
-          className="-mx-2 mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto px-2 pb-6 pt-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="relative mx-auto h-[500px] w-full max-w-[560px] sm:h-[430px]"
         >
           {SLIDES.map((review, i) => (
             <figure
               key={i}
+              ref={(el) => {
+                cards.current[i] = el;
+              }}
               aria-roledescription="slide"
               aria-label={`${i + 1} of ${SLIDES.length}`}
-              className="panel group flex w-[88%] shrink-0 snap-start flex-col p-7 sm:p-8 md:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)]"
+              aria-hidden={i !== top}
+              style={{ zIndex: SLIDES.length - order.indexOf(i) }}
+              className={`panel !absolute inset-x-0 top-0 flex h-[calc(100%-44px)] select-none flex-col p-7 will-change-transform sm:p-9 ${
+                i === top ? "cursor-grab active:cursor-grabbing" : ""
+              }`}
             >
               <div className="flex items-start justify-between gap-4">
                 <svg
@@ -66,7 +197,7 @@ export default function TestimonialSlider() {
                   height="42"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
-                  className="text-secondary/25 transition-colors duration-500 group-hover:text-secondary"
+                  className="text-secondary"
                 >
                   <path
                     fill="currentColor"
@@ -96,12 +227,12 @@ export default function TestimonialSlider() {
                 )}
               </div>
 
-              <blockquote className="mt-6 flex-1 text-[15.5px] font-medium leading-relaxed text-tertiary/80">
+              <blockquote className="mt-6 flex-1 text-[16px] font-medium leading-relaxed text-tertiary/85 sm:text-[17px]">
                 &ldquo;{review.quote}&rdquo;
               </blockquote>
 
-              <figcaption className="mt-8 flex items-center gap-3.5 border-t border-tertiary/12 pt-5">
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-secondary font-display text-[14px] font-bold text-primary shadow-md">
+              <figcaption className="mt-6 flex items-center gap-3.5 border-t border-tertiary/12 pt-5">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-secondary font-display text-[14px] font-bold text-primary">
                   {initials(review.name)}
                 </span>
                 <div className="min-w-0">
@@ -121,8 +252,6 @@ export default function TestimonialSlider() {
             </figure>
           ))}
         </div>
-
-        <SliderDots active={active} pages={pages} goTo={goTo} label="testimonial" />
       </div>
     </section>
   );
