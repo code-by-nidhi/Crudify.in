@@ -100,8 +100,10 @@ export default function ServicesCompare() {
       className="relative border-t border-secondary/20 px-[4vw] pt-24 pb-16 sm:pt-32 sm:pb-20"
     >
       <div className="mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-0">
-        {/* left — the sticky panel */}
-        <div className="lg:sticky lg:top-[calc(var(--nav-h)+1rem)] lg:flex lg:h-[calc(100svh-var(--nav-h)-2rem)] lg:flex-col lg:self-start lg:border-r lg:border-secondary/20 lg:pr-12">
+        {/* left — the sticky panel. min-h, not h: on short or zoomed screens
+            the heading, copy, orbit and CTA outgrow one viewport, and a fixed
+            height let the CTA spill out over the Growth Booster below. */}
+        <div className="lg:sticky lg:top-[calc(var(--nav-h)+1rem)] lg:flex lg:min-h-[calc(100svh-var(--nav-h)-2rem)] lg:flex-col lg:self-start lg:border-r lg:border-secondary/20 lg:pr-12">
           <p data-compare-fade className="eyebrow">
             Services
           </p>

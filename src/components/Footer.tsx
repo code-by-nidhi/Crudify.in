@@ -10,7 +10,16 @@ const PRODUCT_COLUMNS = TIERS.map((tier) => ({
 export default function Footer() {
   return (
     <footer className="relative z-[2] mt-10 overflow-hidden border-t border-tertiary/15 bg-surface px-[4vw] pb-8 pt-20">
-      <div className="mx-auto max-w-[1400px]">
+      {/* the template's oversized wordmark, set behind the footer as a
+          watermark rather than taking up a band of its own */}
+      <p
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 select-none text-center font-display text-[24.5vw] font-extrabold leading-[0.78] tracking-[-0.06em] text-tertiary/[0.06] min-[1600px]:text-[24rem]"
+      >
+        CRUDIFY
+      </p>
+
+      <div className="relative mx-auto max-w-[1400px]">
         <div className="grid gap-12 lg:grid-cols-[1.3fr_repeat(2,1fr)]">
           <div>
             <div className="flex flex-col gap-2">
@@ -67,15 +76,7 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* the template's oversized wordmark */}
-        <p
-          aria-hidden="true"
-          className="mt-20 select-none font-display text-[24.5vw] font-extrabold leading-[0.78] min-[1600px]:text-[24rem] tracking-[-0.06em] text-tertiary"
-        >
-          CRUDIFY
-        </p>
-
-        <div className="mt-8 flex flex-col gap-4 border-t border-tertiary/15 pt-6 text-[13px] text-tertiary/60 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-20 flex flex-col gap-4 border-t border-tertiary/15 pt-6 text-[13px] text-tertiary/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} CRUDIFY. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-5 font-medium">
             <span className="text-secondary font-semibold">Serving {CITIES.join(" · ")}</span>
