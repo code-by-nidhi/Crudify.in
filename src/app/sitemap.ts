@@ -22,6 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    { url: absoluteUrl("/privacy-policy"), changeFrequency: "yearly", priority: 0.3 },
+    { url: absoluteUrl("/terms"), changeFrequency: "yearly", priority: 0.3 },
     ...POSTS.map((post) => ({
       url: absoluteUrl(`/blog/${post.slug}`),
       lastModified: post.updatedAt,

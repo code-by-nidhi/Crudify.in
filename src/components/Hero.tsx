@@ -2,7 +2,14 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import { gsap, useGSAP, prefersReducedMotion, introDelay, SCRAMBLE_CHARS } from "@/lib/gsap";
+import {
+  gsap,
+  ScrollTrigger,
+  useGSAP,
+  prefersReducedMotion,
+  introDelay,
+  SCRAMBLE_CHARS,
+} from "@/lib/gsap";
 import AnimatedText from "./AnimatedText";
 import { scrollToSection } from "./SmoothScroll";
 import { CourseIcon } from "./Icons";
@@ -56,16 +63,50 @@ export default function Hero() {
       /** One template "vw", as pixels of this card row. */
       const vw = (n: number) => (n * (cards[0]?.offsetWidth ?? 0)) / 15;
 
+      /* The intro (pile -> fan) and the scroll (fan -> fall) used to be two
+         tweens on the same x / y / rotation. Scrolling back to the top rewound
+         the scrubbed one, and GSAP restored the cards to whatever they were
+         when it first ran — often the intro pile. Now each motion only moves
+         its own progress value and one render() places the cards from both. */
+      const state = cards.map(() => ({ rise: 1, fan: 0 }));
+      const fall = { p: 0 };
+      const FALL_STAGGER = 0.03;
+      const lerp = gsap.utils.interpolate;
+
+      const render = () => {
+        cards.forEach((card, i) => {
+          const { rise, fan } = state[i];
+          // Same stagger the scrubbed tween had: later cards start later.
+          const span = 1 + FALL_STAGGER * (cards.length - 1);
+          const f = gsap.utils.clamp(0, 1, fall.p * span - FALL_STAGGER * i);
+
+          const x = lerp(lerp(STACK[i].x, FAN[i].x, fan), FALL[i].x, f);
+          const y = lerp(
+            lerp(STACK[i].y + 4 * rise, FAN[i].y, fan),
+            FALL[i].y,
+            f,
+          );
+          gsap.set(card, {
+            x: vw(x),
+            y: vw(y),
+            rotation: FAN[i].rotation * fan * (1 - f),
+          });
+        });
+      };
+
+      // Card width changes with the viewport, so re-place them on refresh.
+      ScrollTrigger.addEventListener("refresh", render);
+
       if (prefersReducedMotion()) {
         gsap.set("[data-hero-fade]", { autoAlpha: 1 });
-        gsap.set(cards, {
-          autoAlpha: 1,
-          x: (i: number) => vw(FAN[i].x),
-          y: (i: number) => vw(FAN[i].y),
-          rotation: (i: number) => FAN[i].rotation,
-        });
-        return;
+        state.forEach((s) => Object.assign(s, { rise: 0, fan: 1 }));
+        gsap.set(cards, { autoAlpha: 1 });
+        render();
+        return () => ScrollTrigger.removeEventListener("refresh", render);
       }
+
+      gsap.set(cards, { autoAlpha: 0 });
+      render();
 
       // Plays as the preloader sheet lifts off, when there is one.
       const tl = gsap.timeline({
@@ -74,17 +115,10 @@ export default function Hero() {
       });
 
       // Cards: appear as one pile, then fan out into the arc.
-      tl.fromTo(
+      tl.to(
         cards,
         {
-          autoAlpha: 0,
-          x: (i: number) => vw(STACK[i].x),
-          y: (i: number) => vw(STACK[i].y + 4),
-          rotation: 0,
-        },
-        {
           autoAlpha: 1,
-          y: (i: number) => vw(STACK[i].y),
           duration: 0.6,
           stagger: { each: 0.06, from: "center" },
           ease: "power3.out",
@@ -92,14 +126,19 @@ export default function Hero() {
         0,
       )
         .to(
-          cards,
+          state,
           {
-            x: (i: number) => vw(FAN[i].x),
-            y: (i: number) => vw(FAN[i].y),
-            rotation: (i: number) => FAN[i].rotation,
-            duration: 0.8,
-            ease: "power4.out",
+            rise: 0,
+            duration: 0.6,
+            stagger: { each: 0.06, from: "center" },
+            ease: "power3.out",
+            onUpdate: render,
           },
+          0,
+        )
+        .to(
+          state,
+          { fan: 1, duration: 0.8, ease: "power4.out", onUpdate: render },
           0.75,
         )
         .from("[data-hero-badge]", { y: 24, autoAlpha: 0, duration: 1 }, 0.1)
@@ -121,29 +160,17 @@ export default function Hero() {
 
       // Scroll: the cards straighten and drop away one after another, as the
       // template's do, while the copy lifts off.
-      gsap.fromTo(
-        cards,
-        {
-          x: (i: number) => vw(FAN[i].x),
-          y: (i: number) => vw(FAN[i].y),
-          rotation: (i: number) => FAN[i].rotation,
+      gsap.to(fall, {
+        p: 1,
+        ease: "none",
+        onUpdate: render,
+        scrollTrigger: {
+          trigger: root.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.8,
         },
-        {
-          x: (i: number) => vw(FALL[i].x),
-          y: (i: number) => vw(FALL[i].y),
-          rotation: 0,
-          ease: "none",
-          stagger: 0.03,
-          immediateRender: false,
-          scrollTrigger: {
-            invalidateOnRefresh: true,
-            trigger: root.current,
-            start: "top top",
-            end: "bottom top",
-            scrub: 0.8,
-          },
-        },
-      );
+      });
 
       gsap.to("[data-hero-copy]", {
         y: -110,
@@ -156,6 +183,8 @@ export default function Hero() {
           scrub: 0.5,
         },
       });
+
+      return () => ScrollTrigger.removeEventListener("refresh", render);
     },
     { scope: root },
   );

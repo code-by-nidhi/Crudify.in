@@ -85,6 +85,14 @@ export default function Footer() {
               Blog
             </Link>
             <span>•</span>
+            <Link href="/privacy-policy" className="transition-colors hover:text-secondary">
+              Privacy Policy
+            </Link>
+            <span>•</span>
+            <Link href="/terms" className="transition-colors hover:text-secondary">
+              Terms &amp; Conditions
+            </Link>
+            <span>•</span>
             <Link href="/#top" className="transition-colors hover:text-secondary font-bold">
               Back to Top ↑
             </Link>

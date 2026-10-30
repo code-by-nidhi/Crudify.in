@@ -92,6 +92,11 @@
   }
 }
 
+/* Component classes live in the components layer so Tailwind utilities on
+   the same element win (hidden, absolute, rounded-*, ...). Unlayered, these
+   beat every utility: `.btn` kept "hidden sm:inline-flex" buttons visible on
+   mobile and `.panel-light` pinned absolutely-placed cards back into flow. */
+@layer components {
 /* ------------------------------------------------------------------
    Section Background Patterns (Cherry & Maroon on Cotton White)
 ------------------------------------------------------------------ */
@@ -407,6 +412,8 @@ select.field-input {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+}
+
 /* ------------------------------------------------------------------
    Intro gate
    The server HTML paints before GSAP hydrates, so intro elements would show
@@ -435,6 +442,7 @@ select.field-input {
   to { opacity: 1; }
 }
 
+@layer components {
 /* ------------------------------------------------------------------
    ANIMATED ICONS & MICRO-INTERACTIONS
 ------------------------------------------------------------------ */
@@ -536,6 +544,8 @@ select.field-input {
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   box-shadow: 0 30px 50px var(--shadow-warm-strong);
+}
+
 }
 
 /* ------------------------------------------------------------------
