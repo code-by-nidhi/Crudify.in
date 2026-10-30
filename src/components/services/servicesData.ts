@@ -96,6 +96,7 @@ export const SERVICES: Service[] = [
           "Website Redesign",
           "Wedding Invitation Sites",
           "Custom Web Experiences",
+          "Custom Portfolios",
         ],
       },
       {
@@ -411,13 +412,44 @@ export const AD_INDUSTRIES = [
 ];
 
 /**
- * Navbar mega menu: the four services plus an industries entry, which shows
- * AD_INDUSTRIES as a grid instead of grouped columns.
+ * Navbar mega menu: the four services, a college projects entry, and an
+ * industries entry, which shows AD_INDUSTRIES as a grid instead of grouped
+ * columns. `blurb` overrides the panel's one-line description.
  */
 export const SERVICE_MENU: ((typeof SERVICE_NAV)[number] & {
   industries?: string[];
+  blurb?: string;
 })[] = [
   ...SERVICE_NAV,
+  {
+    id: "college-projects",
+    label: "College Projects",
+    title: "College Projects",
+    tag: "Final Year & Mini Projects",
+    icon: "terminal",
+    // No page of its own yet; the projects are built by the web team.
+    href: serviceHref("web"),
+    blurb: "Working projects for students, built and explained so you can present them with confidence.",
+    menu: [
+      {
+        title: "By Level",
+        items: ["Final Year Projects", "Mini Projects"],
+      },
+      {
+        title: "By Stack",
+        items: [
+          "Web Development Projects",
+          "AI & ML Projects",
+          "Cybersecurity Projects",
+          "Digital Marketing Projects",
+        ],
+      },
+      {
+        title: "Support",
+        items: ["Project Report & Documentation"],
+      },
+    ],
+  },
   {
     id: "industries",
     label: "Industries",

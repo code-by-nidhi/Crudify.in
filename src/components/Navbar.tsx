@@ -198,12 +198,7 @@ export default function Navbar() {
           className="flex items-center gap-2.5 pl-1 text-left group"
           aria-label="CRUDIFY home"
         >
-          <div className="flex flex-col gap-1">
-            <Logo className="h-[22px] origin-left transition-transform duration-300 group-hover:scale-105" />
-            <span className="hidden text-[9px] font-extrabold tracking-wider text-tertiary/65 sm:block uppercase">
-              Marketing • AI • Web • Cyber
-            </span>
-          </div>
+          <Logo className="h-[22px] origin-left transition-transform duration-300 group-hover:scale-105" />
         </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex">
@@ -369,9 +364,10 @@ export default function Navbar() {
                             {section.title}
                           </Link>
                           <p className="mt-1 text-[13px] font-semibold text-tertiary/65">
-                            {section.industries
-                              ? "Google and Meta ad campaigns built around how each sector buys."
-                              : "Explore our professional solutions and specialised industry expertise."}
+                            {section.blurb ??
+                              (section.industries
+                                ? "Google and Meta ad campaigns built around how each sector buys."
+                                : "Explore our professional solutions and specialised industry expertise.")}
                           </p>
 
                           {section.menu.length > 0 && (

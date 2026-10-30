@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Logo from "./Logo";
-import { CITIES, TIERS } from "./home/homeContent";
+import { TIERS } from "./home/homeContent";
 
 const PRODUCT_COLUMNS = TIERS.map((tier) => ({
   title: tier.id === "ai" ? "AI-Powered Services" : "Human-Driven Services",
@@ -79,8 +79,6 @@ export default function Footer() {
         <div className="mt-20 flex flex-col gap-4 border-t border-tertiary/15 pt-6 text-[13px] text-tertiary/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} CRUDIFY. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-5 font-medium">
-            <span className="text-secondary font-semibold">Serving {CITIES.join(" · ")}</span>
-            <span>•</span>
             <Link href="/blog" className="transition-colors hover:text-secondary">
               Blog
             </Link>
