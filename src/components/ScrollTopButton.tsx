@@ -29,7 +29,8 @@ export default function ScrollTopButton() {
       onClick={scrollToTop}
       aria-label="Scroll to top"
       data-visible={visible}
-      tabIndex={visible ? 0 : -1}
+      // off-screen until scrolled: keep it out of the tab order till then
+      inert={!visible}
       className="comic-top"
     >
       <span aria-hidden="true" className="comic-top__bubble">

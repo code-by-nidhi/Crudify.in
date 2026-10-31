@@ -5,8 +5,7 @@
  * form (components/contact) posts name, phone and service — plus the page URL
  * and browser user agent — to app/api/contact, which forwards them to a Google
  * Sheet via Apps Script; the API keeps IPs in memory for a minute to rate-limit;
- * the homepage preloader sets one sessionStorage flag. Update this file if any
- * of that changes (analytics, a CRM, cookies, a newsletter...).
+ * nothing is stored in the browser. Update this file if any of that changes (analytics, a CRM, cookies, a newsletter...).
  *
  * TODO: add a contact email, registered business name and postal address to
  * CONTACT below once they are final, and have both documents reviewed by a
@@ -224,7 +223,7 @@ export const PRIVACY: LegalDoc = {
       id: "cookies",
       heading: "Cookies and browser storage",
       blocks: [
-        "This website does not use advertising or analytics cookies. It stores one small flag in your browser's session storage to remember that you have already seen the homepage intro animation. The flag is cleared when you close the tab and contains no personal data.",
+        "This website does not use cookies, and it does not store anything in your browser's local or session storage.",
         "If we add analytics or advertising tools in future, we will update this policy first.",
       ],
     },

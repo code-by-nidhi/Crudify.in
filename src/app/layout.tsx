@@ -53,11 +53,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         {/* Runs before first paint so intro elements start hidden instead of
             flashing in and out before GSAP takes over. See "Intro gate" in
-            globals.css; SmoothScroll clears it on hydration. The preload flag
-            shows the homepage Preloader once per visit — see Preloader.tsx. */}
+            globals.css; SmoothScroll clears it on hydration. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `document.documentElement.dataset.intro="pending";try{if(location.pathname==="/"&&!sessionStorage.getItem("crudify-preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.preload="on"}catch(e){}`,
+            __html: `document.documentElement.dataset.intro="pending"`,
           }}
         />
       </head>

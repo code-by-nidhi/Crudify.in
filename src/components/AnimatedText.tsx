@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP, prefersReducedMotion, introDelay } from "@/lib/gsap";
+import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 
 type Props = {
   text: string;
@@ -11,8 +11,6 @@ type Props = {
   delay?: number;
   /** Wait for the block to scroll into view instead of firing on mount. */
   onScroll?: boolean;
-  /** Hold until the homepage preloader has lifted. */
-  afterIntro?: boolean;
 };
 
 /**
@@ -26,7 +24,6 @@ export default function AnimatedText({
   stagger = 0.07,
   delay = 0,
   onScroll = false,
-  afterIntro = false,
 }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
   const words = text.split(" ");
@@ -44,7 +41,7 @@ export default function AnimatedText({
         duration: 1.1,
         ease: "expo.out",
         stagger,
-        delay: delay + (afterIntro ? introDelay() : 0),
+        delay,
         clearProps: "transform,rotate",
         ...(onScroll
           ? { scrollTrigger: { trigger: el, start: "top 90%", once: true } }

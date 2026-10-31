@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent } from "react";
 
 const SUITE_OPTIONS = [
   "Business Growth Booster (website + Meta ads + 5 reels)",
@@ -24,6 +24,10 @@ export default function ContactForm() {
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // The form renders twice on the homepage (CTA and popup), so ids are
+  // per-instance.
+  const id = useId();
+  const errorId = `${id}-error`;
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -106,19 +110,22 @@ export default function ContactForm() {
         </button>
       </div>
     ) : (
-      <form onSubmit={onSubmit} className="flex flex-col gap-4">
-        {/* Honeypot field for bot protection */}
-        <input
-          type="text"
-          name="_hp"
-          tabIndex={-1}
-          autoComplete="off"
-          className="sr-only absolute -left-[9999px]"
-          aria-hidden="true"
-        />
+      <form
+        onSubmit={onSubmit}
+        aria-describedby={error ? errorId : undefined}
+        className="flex flex-col gap-4"
+      >
+        {/* Honeypot for bots. inert keeps it out of the tab order and the
+            accessibility tree; the label is there for audit tools, which
+            flag any unlabelled input. */}
+        <div inert className="sr-only">
+          <label htmlFor={`${id}-hp`}>Leave this field empty</label>
+          <input id={`${id}-hp`} type="text" name="_hp" autoComplete="off" />
+        </div>
 
-        <Field label="Your Name / Business">
+        <Field id={`${id}-name`} label="Your Name / Business">
           <input
+            id={`${id}-name`}
             required
             name="name"
             autoComplete="name"
@@ -127,8 +134,9 @@ export default function ContactForm() {
           />
         </Field>
 
-        <Field label="Phone / WhatsApp">
+        <Field id={`${id}-phone`} label="Phone / WhatsApp">
           <input
+            id={`${id}-phone`}
             required
             name="phone"
             type="tel"
@@ -140,8 +148,14 @@ export default function ContactForm() {
           />
         </Field>
 
-        <Field label="What do you need help with?">
-          <select required name="service" className="field-input font-medium" defaultValue="">
+        <Field id={`${id}-service`} label="What do you need help with?">
+          <select
+            id={`${id}-service`}
+            required
+            name="service"
+            className="field-input font-medium"
+            defaultValue=""
+          >
             <option value="" disabled className="bg-primary text-tertiary">
               Select a service
             </option>
@@ -156,6 +170,7 @@ export default function ContactForm() {
         {error && (
           <div
             className="rounded-xl border border-red-300/40 bg-red-950/70 p-3 text-[13px] font-medium text-red-100"
+            id={errorId}
             role="alert"
           >
             {error}
@@ -180,19 +195,26 @@ export default function ContactForm() {
   );
 }
 
+/** A labelled control. The label is tied to the control by id, not by
+ *  wrapping, so every audit tool and screen reader pairs them. */
 function Field({
+  id,
   label,
   children,
 }: {
+  id: string;
   label: string;
   children: React.ReactNode;
 }) {
   return (
-    <label data-cta-field className="block">
-      <span className="mb-2 block text-[11.5px] font-bold uppercase tracking-[0.18em] !text-primary/85">
+    <div data-cta-field>
+      <label
+        htmlFor={id}
+        className="mb-2 block text-[11.5px] font-bold uppercase tracking-[0.18em] !text-primary/85"
+      >
         {label}
-      </span>
+      </label>
       {children}
-    </label>
+    </div>
   );
 }

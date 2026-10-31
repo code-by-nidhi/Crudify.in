@@ -82,7 +82,7 @@ export default function AboutStory() {
           <div className="relative mt-10 pb-16 pr-10 sm:pr-16">
             <div className="relative aspect-[4/3] overflow-hidden rounded-[28px] shadow-[0_28px_60px_-20px_var(--shadow-warm-strong)]">
               <Image
-                src="/about/team.jpg"
+                src="/about/team.webp"
                 alt="A team working on laptops around a shared table"
                 fill
                 sizes="(min-width: 1024px) 420px, 85vw"
@@ -95,7 +95,7 @@ export default function AboutStory() {
 
             <div className="absolute bottom-0 right-0 aspect-square w-[44%] overflow-hidden rounded-[22px] border-[6px] border-primary shadow-[0_24px_50px_-18px_var(--shadow-warm-strong)]">
               <Image
-                src="/about/strategy.jpg"
+                src="/about/strategy.webp"
                 alt="A strategy session in front of a wall of sticky notes"
                 fill
                 sizes="(min-width: 1024px) 200px, 40vw"

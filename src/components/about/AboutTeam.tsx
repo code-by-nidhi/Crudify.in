@@ -16,7 +16,7 @@ const TEAM: {
 }[] = [
   {
     icon: "code",
-    image: "/about/development.jpg",
+    image: "/about/development.webp",
     alt: "Laptop on a desk showing a code editor",
     discipline: "Development",
     size: "2 engineers",
@@ -24,7 +24,7 @@ const TEAM: {
   },
   {
     icon: "megaphone",
-    image: "/about/marketing.jpg",
+    image: "/about/marketing.webp",
     alt: "Laptop showing an analytics dashboard",
     discipline: "Marketing",
     size: "2 specialists",
@@ -32,7 +32,7 @@ const TEAM: {
   },
   {
     icon: "shield",
-    image: "/about/security.jpg",
+    image: "/about/security.webp",
     alt: "Illuminated circuit board schematic",
     discipline: "Security",
     size: "1 engineer",

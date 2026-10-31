@@ -167,7 +167,7 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
           "@type": "Organization",
           name: SITE_NAME,
           url: absoluteUrl("/"),
-          logo: { "@type": "ImageObject", url: absoluteUrl("/logo/crudy-logo-only.png") },
+          logo: { "@type": "ImageObject", url: absoluteUrl("/logo/crudy-logo-only.webp") },
         },
         abstract: post.quickAnswer,
       },

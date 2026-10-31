@@ -51,6 +51,11 @@ export default function Navbar() {
   const setMenuOpen = (open: boolean) => setMenu({ open, path: pathname });
   /** Which service area the mega menu's right side is showing. */
   const [menuSection, setMenuSection] = useState(0);
+  /** The dropdown holds ~100 nodes, so it is only mounted once the pointer or
+   *  focus reaches the bar — a beat before the trigger itself, which lets the
+   *  closed state paint first and the open transition still run. */
+  const [menuMounted, setMenuMounted] = useState(false);
+  const mountMenu = () => setMenuMounted(true);
 
   const anyMenuOpen = open || menuOpen;
 
@@ -201,7 +206,11 @@ export default function Navbar() {
           <Logo className="h-[22px] origin-left transition-transform duration-300 group-hover:scale-105" />
         </Link>
 
-        <nav className="hidden items-center gap-0.5 lg:flex">
+        <nav
+          onPointerEnter={mountMenu}
+          onFocus={mountMenu}
+          className="hidden items-center gap-0.5 lg:flex"
+        >
           {LINKS.map((link) => {
             const active = isActive(link.href, pathname);
 
@@ -213,7 +222,7 @@ export default function Navbar() {
                 scroll={!link.href.includes("#")}
                 aria-current={active ? "page" : undefined}
                 aria-expanded={link.menu ? menuOpen : undefined}
-                aria-controls={link.menu ? "services-menu" : undefined}
+                aria-controls={link.menu && menuMounted ? "services-menu" : undefined}
                 onClick={(e) => go(e, link.href)}
                 className={`group relative flex items-center gap-1.5 px-3 py-1.5 text-[15px] font-medium transition-colors hover:text-secondary ${
                   active ? "text-secondary" : "text-tertiary/75"
@@ -267,154 +276,154 @@ export default function Navbar() {
                 {/* Anchored to the whole bar rather than the trigger, so the
                     wide panel lines up with it. pt-3 lives inside the wrapper
                     so the gap between the bar and the card stays hoverable. */}
-                <div
-                  id="services-menu"
-                  className={`absolute inset-x-0 top-full z-20 pt-3 transition-all duration-250 ease-out ${
-                    menuOpen
-                      ? "visible translate-y-0 opacity-100"
-                      : "invisible -translate-y-2 opacity-0"
-                  }`}
-                  aria-hidden={!menuOpen}
-                >
-                  {/* Opaque face, no backdrop-blur: on a light ground a menu you
-                      can read the page through is just hard to read. */}
-                  <div className="mx-auto grid max-w-[1100px] grid-cols-[17rem_1fr] overflow-hidden rounded-3xl border border-secondary/30 bg-primary shadow-[0_30px_50px_-20px_var(--shadow-warm-strong)]">
-                    {/* left — the service areas; hovering one swaps the right side */}
-                    <div className="flex flex-col border-r border-tertiary/10 p-2">
-                      <ul className="flex flex-col gap-0.5">
-                        {link.menu.map((item, i) => {
-                          const itemActive = pathname === item.href;
-                          const on = menuSection === i;
+                {menuMounted && (
+                  <div
+                    id="services-menu"
+                    className={`absolute inset-x-0 top-full z-20 pt-3 transition-all duration-250 ease-out ${
+                      menuOpen
+                        ? "visible translate-y-0 opacity-100"
+                        : "invisible -translate-y-2 opacity-0"
+                    }`}
+                    // inert while closed: out of the tab order and the
+                    // accessibility tree in one attribute, not per link
+                    inert={!menuOpen}
+                  >
+                    {/* Opaque face, no backdrop-blur: on a light ground a menu you
+                        can read the page through is just hard to read. */}
+                    <div className="mx-auto grid max-w-[1100px] grid-cols-[17rem_1fr] overflow-hidden rounded-3xl border border-secondary/30 bg-primary shadow-[0_30px_50px_-20px_var(--shadow-warm-strong)]">
+                      {/* left — the service areas; hovering one swaps the right side */}
+                      <div className="flex flex-col border-r border-tertiary/10 p-2">
+                        <ul className="flex flex-col gap-0.5">
+                          {link.menu.map((item, i) => {
+                            const itemActive = pathname === item.href;
+                            const on = menuSection === i;
 
-                          return (
-                            <li key={item.id}>
-                              <Link
-                                href={item.href}
-                                tabIndex={menuOpen ? undefined : -1}
-                                aria-current={itemActive ? "page" : undefined}
-                                onMouseEnter={() => setMenuSection(i)}
-                                onFocus={() => setMenuSection(i)}
-                                onClick={(e) => go(e, item.href)}
-                                className={`group/item flex items-center gap-3 rounded-2xl p-3 transition-colors ${
-                                  on
-                                    ? "bg-secondary/12"
-                                    : "hover:bg-secondary/8"
-                                }`}
-                              >
-                                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-secondary/35 bg-secondary/15 text-secondary">
-                                  <CourseIcon
-                                    name={item.icon}
-                                    className="h-4 w-4"
-                                  />
-                                </span>
-                                <span className="min-w-0 flex-1">
-                                  <span
-                                    className={`block text-[12.5px] font-extrabold transition-colors ${
-                                      on || itemActive
-                                        ? "text-secondary"
-                                        : "text-tertiary"
-                                    }`}
-                                  >
-                                    {item.title}
-                                  </span>
-                                  <span className="mt-0.5 block text-[11px] font-semibold leading-snug text-tertiary/60">
-                                    {item.tag}
-                                  </span>
-                                </span>
-                                <span
-                                  aria-hidden="true"
-                                  className={`text-sm transition-all duration-300 ${
+                            return (
+                              <li key={item.id}>
+                                <Link
+                                  href={item.href}
+                                  aria-current={itemActive ? "page" : undefined}
+                                  onMouseEnter={() => setMenuSection(i)}
+                                  onFocus={() => setMenuSection(i)}
+                                  onClick={(e) => go(e, item.href)}
+                                  className={`group/item flex items-center gap-3 rounded-2xl p-3 transition-colors ${
                                     on
-                                      ? "translate-x-0.5 text-secondary"
-                                      : "text-tertiary/30"
+                                      ? "bg-secondary/12"
+                                      : "hover:bg-secondary/8"
                                   }`}
                                 >
-                                  →
-                                </span>
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
-
-                      <Link
-                        href="/services"
-                        tabIndex={menuOpen ? undefined : -1}
-                        onClick={(e) => go(e, "/services")}
-                        className="mt-auto flex items-center justify-between rounded-2xl border-t border-tertiary/12 px-3 pt-3 pb-2 text-[11.5px] font-extrabold text-tertiary/70 transition-colors hover:text-secondary"
-                      >
-                        All services, compared
-                        <span aria-hidden="true">→</span>
-                      </Link>
-                    </div>
-
-                    {/* right — what the hovered area includes */}
-                    {(() => {
-                      const section: (typeof SERVICE_MENU)[number] =
-                        link.menu[menuSection] ?? link.menu[0];
-
-                      return (
-                        <div key={section.id} className="min-h-[22rem] p-7">
-                          <Link
-                            href={section.href}
-                            tabIndex={menuOpen ? undefined : -1}
-                            onClick={(e) => go(e, section.href)}
-                            className="font-display text-[1.6rem] font-extrabold tracking-[-0.03em] text-secondary transition-opacity hover:opacity-80"
-                          >
-                            {section.title}
-                          </Link>
-                          <p className="mt-1 text-[13px] font-semibold text-tertiary/65">
-                            {section.blurb ??
-                              (section.industries
-                                ? "Google and Meta ad campaigns built around how each sector buys."
-                                : "Explore our professional solutions and specialised industry expertise.")}
-                          </p>
-
-                          {section.menu.length > 0 && (
-                            <div className="mt-5 grid grid-cols-3 gap-6 border-t border-tertiary/10 pt-5">
-                              {section.menu.map((group) => (
-                                <div key={group.title}>
-                                  <p className="border-b border-tertiary/8 pb-2.5 text-[10.5px] font-extrabold uppercase tracking-[0.18em] text-tertiary/50">
-                                    {group.title}
-                                  </p>
-                                  <ul className="mt-3 flex flex-col gap-1">
-                                    {group.items.map((name) => (
-                                      <li key={name}>
-                                        <Link
-                                          href={section.href}
-                                          tabIndex={menuOpen ? undefined : -1}
-                                          onClick={(e) => go(e, section.href)}
-                                          className="block py-1 text-[13px] font-bold leading-snug text-tertiary/80 transition-colors hover:text-secondary"
-                                        >
-                                          {name}
-                                        </Link>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {section.industries && (
-                            <div className="mt-5 border-t border-tertiary/10 pt-5">
-                              <ul className="grid grid-cols-3 gap-2.5">
-                                {section.industries.map((name) => (
-                                  <li
-                                    key={name}
-                                    className="rounded-xl border border-tertiary/10 bg-tertiary/[0.03] px-3 py-3 text-center text-[12.5px] font-bold text-tertiary/75"
+                                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-secondary/35 bg-secondary/15 text-secondary">
+                                    <CourseIcon
+                                      name={item.icon}
+                                      className="h-4 w-4"
+                                    />
+                                  </span>
+                                  <span className="min-w-0 flex-1">
+                                    <span
+                                      className={`block text-[12.5px] font-extrabold transition-colors ${
+                                        on || itemActive
+                                          ? "text-secondary"
+                                          : "text-tertiary"
+                                      }`}
+                                    >
+                                      {item.title}
+                                    </span>
+                                    <span className="mt-0.5 block text-[11px] font-semibold leading-snug text-tertiary/60">
+                                      {item.tag}
+                                    </span>
+                                  </span>
+                                  <span
+                                    aria-hidden="true"
+                                    className={`text-sm transition-all duration-300 ${
+                                      on
+                                        ? "translate-x-0.5 text-secondary"
+                                        : "text-tertiary/30"
+                                    }`}
                                   >
-                                    {name}
-                                  </li>
+                                    →
+                                  </span>
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+
+                        <Link
+                          href="/services"
+                          onClick={(e) => go(e, "/services")}
+                          className="mt-auto flex items-center justify-between rounded-2xl border-t border-tertiary/12 px-3 pt-3 pb-2 text-[11.5px] font-extrabold text-tertiary/70 transition-colors hover:text-secondary"
+                        >
+                          All services, compared
+                          <span aria-hidden="true">→</span>
+                        </Link>
+                      </div>
+
+                      {/* right — what the hovered area includes */}
+                      {(() => {
+                        const section: (typeof SERVICE_MENU)[number] =
+                          link.menu[menuSection] ?? link.menu[0];
+
+                        return (
+                          <div key={section.id} className="min-h-[22rem] p-7">
+                            <Link
+                              href={section.href}
+                              onClick={(e) => go(e, section.href)}
+                              className="font-display text-[1.6rem] font-extrabold tracking-[-0.03em] text-secondary transition-opacity hover:opacity-80"
+                            >
+                              {section.title}
+                            </Link>
+                            <p className="mt-1 text-[13px] font-semibold text-tertiary/65">
+                              {section.blurb ??
+                                (section.industries
+                                  ? "Google and Meta ad campaigns built around how each sector buys."
+                                  : "Explore our professional solutions and specialised industry expertise.")}
+                            </p>
+
+                            {section.menu.length > 0 && (
+                              <div className="mt-5 grid grid-cols-3 gap-6 border-t border-tertiary/10 pt-5">
+                                {section.menu.map((group) => (
+                                  <div key={group.title}>
+                                    <p className="border-b border-tertiary/8 pb-2.5 text-[10.5px] font-extrabold uppercase tracking-[0.18em] text-tertiary/50">
+                                      {group.title}
+                                    </p>
+                                    <ul className="mt-3 flex flex-col gap-1">
+                                      {group.items.map((name) => (
+                                        <li key={name}>
+                                          <Link
+                                            href={section.href}
+                                            onClick={(e) => go(e, section.href)}
+                                            className="block py-1 text-[13px] font-bold leading-snug text-tertiary/80 transition-colors hover:text-secondary"
+                                          >
+                                            {name}
+                                          </Link>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
                                 ))}
-                              </ul>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })()}
+                              </div>
+                            )}
+
+                            {section.industries && (
+                              <div className="mt-5 border-t border-tertiary/10 pt-5">
+                                <ul className="grid grid-cols-3 gap-2.5">
+                                  {section.industries.map((name) => (
+                                    <li
+                                      key={name}
+                                      className="rounded-xl border border-tertiary/10 bg-tertiary/[0.03] px-3 py-3 text-center text-[12.5px] font-bold text-tertiary/75"
+                                    >
+                                      {name}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             );
           })}
@@ -462,8 +471,10 @@ export default function Navbar() {
       </div>
       </div>
 
-      {/* Mobile sheet */}
+      {/* Mobile sheet — inert while closed, or its links stay tabbable
+          though collapsed to zero height */}
       <div
+        inert={!open}
         className={`pointer-events-auto mx-auto mt-2 w-[min(1240px,94vw)] origin-top overflow-hidden rounded-3xl transition-all duration-500 lg:hidden ${
           open
             ? "max-h-[80vh] opacity-100 shadow-[0_28px_60px_-20px_var(--shadow-warm-strong)]"
@@ -545,6 +556,7 @@ export default function Navbar() {
 
                 <div
                   id="services-sheet-menu"
+                  inert={!sheetMenuOpen}
                   className={`grid overflow-hidden transition-all duration-400 ease-out ${
                     sheetMenuOpen
                       ? "grid-rows-[1fr] opacity-100"
@@ -556,7 +568,6 @@ export default function Navbar() {
                       <li key={item.id}>
                         <Link
                           href={item.href}
-                          tabIndex={sheetMenuOpen ? undefined : -1}
                           aria-current={pathname === item.href ? "page" : undefined}
                           onClick={(e) => go(e, item.href)}
                           className={`flex items-center gap-2.5 rounded-xl px-3 py-2 text-[13px] font-semibold transition-colors hover:bg-secondary/15 hover:text-secondary ${

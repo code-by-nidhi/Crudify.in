@@ -64,7 +64,8 @@ export default function HomeFaq() {
     <section
       ref={root}
       id="faq"
-      className="bg-pattern-digital relative px-[4vw] py-24 sm:py-32 border-t border-secondary/20"
+      data-glow="left"
+      className="section-dark bg-dark-gradient relative border-t px-[4vw] py-24 sm:py-32"
     >
       <div className="mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
@@ -88,15 +89,11 @@ export default function HomeFaq() {
               <li
                 key={faq.q}
                 data-faq
-                style={{ visibility: "hidden" }}
-                className="group relative border-b border-tertiary/15 first:border-t first:border-tertiary/15"
+                // ::before is the fill that rises behind a hovered or open row
+                className={`group relative border-b border-tertiary/15 before:pointer-events-none before:absolute before:inset-0 before:origin-bottom before:bg-secondary/[0.06] before:transition-transform before:duration-500 before:ease-[cubic-bezier(0.22,1,0.36,1)] first:border-t first:border-tertiary/15 hover:before:scale-y-100 ${
+                  expanded ? "before:scale-y-100" : "before:scale-y-0"
+                }`}
               >
-                <span
-                  aria-hidden="true"
-                  className={`pointer-events-none absolute inset-0 origin-bottom bg-secondary/[0.06] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100 ${
-                    expanded ? "scale-y-100" : "scale-y-0"
-                  }`}
-                />
                 <h3 className="relative">
                   <button
                     onClick={() => toggle(i)}

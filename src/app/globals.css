@@ -430,6 +430,10 @@ select.field-input {
   [data-hero-fade],
   [data-cue],
   [data-about-fade],
+  [data-about-card],
+  [data-about-pillar],
+  [data-compare-row],
+  [data-faq],
   [data-services-fade],
   [data-services-chip],
   [data-detail-fade],
@@ -549,18 +553,8 @@ select.field-input {
 }
 
 /* ------------------------------------------------------------------
-   Preloader + cursor (components/motion)
+   Cursor (components/motion)
 ------------------------------------------------------------------ */
-.preloader {
-  display: none;
-}
-[data-preload="on"] .preloader {
-  display: flex;
-}
-[data-preload="on"] body {
-  overflow: hidden;
-}
-
 .cursor-dot {
   visibility: hidden;
   background: var(--color-secondary);
@@ -748,4 +742,285 @@ select.field-input {
     rotate: -4deg;
     translate: 0 0;
   }
+}
+
+/* ------------------------------------------------------------------
+   Scroll-driven reveals (the server-rendered homepage sections)
+   Pure CSS: the browser runs these off the scroll position, so they ship
+   no JavaScript, add nothing to hydration, and never use visibility —
+   crawlers, keyboards and browsers without scroll timelines all get the
+   content as-is, just unanimated. Stagger with style={{ "--i": n }}.
+------------------------------------------------------------------ */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--color-secondary) 45%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .sd-rise,
+    .sd-wipe,
+    .sd-pop,
+    .sd-line,
+    .sd-drift,
+    .sd-drift-rev,
+    .sd-tilt-l,
+    .sd-tilt-r {
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--i, 0) * 7%) entry calc(65% + var(--i, 0) * 7%);
+    }
+    .sd-rise { animation-name: sd-rise; }
+    .sd-wipe { animation-name: sd-wipe; }
+    .sd-pop { animation-name: sd-pop; }
+    /* The comparison's rival cards: they lean away from the centre as the
+       section scrolls in, and settle there. */
+    .sd-tilt-l,
+    .sd-tilt-r {
+      animation-range: entry 10% cover 40%;
+    }
+    .sd-tilt-l { animation-name: sd-tilt-l; }
+    .sd-tilt-r { animation-name: sd-tilt-r; }
+    .sd-line {
+      animation-name: sd-line;
+      transform-origin: left;
+      animation-range: entry 20% cover 45%;
+    }
+    /* Oversized display words that slide sideways as the band crosses the
+       viewport — the scroll itself is the playhead. */
+    .sd-drift,
+    .sd-drift-rev {
+      animation-range: cover 0% cover 100%;
+    }
+    .sd-drift { animation-name: sd-drift; }
+    .sd-drift-rev { animation-name: sd-drift-rev; }
+  }
+}
+
+@keyframes sd-rise {
+  from { opacity: 0; transform: translateY(48px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes sd-wipe {
+  from { opacity: 0.2; clip-path: inset(100% 0 0 0 round var(--radius-3xl)); }
+  to { opacity: 1; clip-path: inset(0 0 0 0 round var(--radius-3xl)); }
+}
+@keyframes sd-pop {
+  from { opacity: 0; transform: translateY(24px) scale(0.92) rotate(-1.5deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes sd-tilt-l {
+  from { opacity: 0; transform: translateX(40%) scale(0.9); }
+  to { opacity: 1; transform: translateY(18px) rotate(-5deg); }
+}
+@keyframes sd-tilt-r {
+  from { opacity: 0; transform: translateX(-40%) scale(0.9); }
+  to { opacity: 1; transform: translateY(18px) rotate(5deg); }
+}
+@keyframes sd-line {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes sd-drift {
+  from { transform: translateX(8%); }
+  to { transform: translateX(-28%); }
+}
+@keyframes sd-drift-rev {
+  from { transform: translateX(-28%); }
+  to { transform: translateX(8%); }
+}
+
+/* ------------------------------------------------------------------
+   Pinned glossary board (components/home/HomeGlossary)
+   Each term is one element — the dl's row div — so the look is drawn
+   with its border (white frame), background (pastel card), ::before (the
+   push pin) and ::after (the dashed thread to the next card). The tilt
+   uses the `rotate` property, so the scroll reveal can animate
+   `transform` without fighting it.
+------------------------------------------------------------------ */
+.paper-lines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 47px,
+    color-mix(in srgb, var(--color-tertiary) 7%, transparent) 47px 48px
+  );
+}
+
+.pin-card {
+  /* peach + orange pin by default; [data-tint] swaps the pair */
+  --tint-a: #fdeee3;
+  --tint-b: #fbdcc8;
+  --pin: #f26b3a;
+  --ink-num: #e0662f;
+  position: relative;
+  border: 12px solid #fff;
+  border-radius: 1.75rem;
+  background: linear-gradient(160deg, var(--tint-a), var(--tint-b)) padding-box;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 30px 50px -28px var(--shadow-warm-strong),
+    0 8px 18px -10px var(--shadow-warm);
+  padding: 1.6rem 1.6rem 1.75rem;
+  rotate: var(--tilt, 0deg);
+  transition: rotate 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s;
+}
+/* full-width on phones, so lean half as far to keep corners on screen */
+@media (max-width: 767px) {
+  .pin-card {
+    rotate: calc(var(--tilt, 0deg) / 2);
+  }
+}
+.pin-card:hover {
+  rotate: 0deg;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 40px 60px -26px var(--shadow-warm-strong),
+    0 10px 22px -10px var(--shadow-warm);
+}
+.pin-card[data-tint="blue"] {
+  --tint-a: #eef0fe;
+  --tint-b: #dde2fc;
+  --pin: #4f6bf5;
+  --ink-num: #5068e8;
+}
+.pin-card[data-tint="lilac"] {
+  --tint-a: #f6edfd;
+  --tint-b: #ead9fb;
+  --pin: #9a5cf0;
+  --ink-num: #9254e6;
+}
+
+/* the glossy push pin */
+.pin-card::before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  margin-left: -15px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    #fff 0 9%,
+    color-mix(in srgb, var(--pin) 55%, #fff) 22%,
+    var(--pin) 55%,
+    color-mix(in srgb, var(--pin) 70%, #000) 100%
+  );
+  box-shadow:
+    0 10px 12px -4px color-mix(in srgb, var(--pin) 55%, transparent),
+    0 3px 4px rgba(0, 0, 0, 0.18);
+}
+
+/* the dashed thread to the next card — an arc off the card's inner side */
+.pin-card[data-thread]::after {
+  content: "";
+  position: absolute;
+  top: 48%;
+  width: 34%;
+  height: 72%;
+  border-top: 2px dashed color-mix(in srgb, var(--color-tertiary) 22%, transparent);
+  pointer-events: none;
+  display: none;
+}
+@media (min-width: 768px) {
+  .pin-card[data-thread]::after {
+    display: block;
+  }
+  .pin-card[data-thread="right"]::after {
+    left: calc(100% + 12px);
+    border-right: 2px dashed color-mix(in srgb, var(--color-tertiary) 22%, transparent);
+    border-top-right-radius: 100% 100%;
+  }
+  .pin-card[data-thread="left"]::after {
+    right: calc(100% + 12px);
+    border-left: 2px dashed color-mix(in srgb, var(--color-tertiary) 22%, transparent);
+    border-top-left-radius: 100% 100%;
+  }
+}
+
+/* the handwritten number above each term */
+.pin-card dt::before {
+  content: attr(data-n);
+  /* empty alt text where supported, so the number is drawn but not read */
+  content: attr(data-n) / "";
+  display: block;
+  margin-bottom: 0.35rem;
+  font-family: var(--font-hand), cursive;
+  font-size: 2.1rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink-num);
+}
+
+/* Scroll reveal: the card drops onto the board and settles. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .sd-pin {
+      animation: sd-pin linear both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 85%;
+    }
+  }
+}
+@keyframes sd-pin {
+  from { opacity: 0; transform: translateY(-90px) scale(1.08); }
+  55% { opacity: 1; }
+  80% { transform: translateY(6px) scale(0.99); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ------------------------------------------------------------------
+   Dark sections
+   The homepage alternates light and dark bands. A dark band remaps the
+   theme tokens inside it rather than restyling each component: ink turns
+   cotton, card faces turn charcoal, and every text-tertiary, border and
+   panel follows. Cotton (--color-primary) is left alone, so "cream on red"
+   stays cream. Cherry is lifted to a brighter red that still reads on noir
+   (3.3:1) and still carries cream text (4.4:1); eyebrows and headline
+   accents use a light coral (7.8:1).
+------------------------------------------------------------------ */
+.bg-dark-gradient {
+  background-color: #1b1717;
+  background-image:
+    radial-gradient(70% 55% at 100% 0%, rgba(129, 1, 0, 0.55), transparent 70%),
+    radial-gradient(55% 50% at 0% 100%, rgba(99, 0, 0, 0.6), transparent 70%),
+    linear-gradient(165deg, #1b1717 0%, #110d0d 55%, #220808 100%);
+}
+/* mirrored glow, so neighbouring dark bands don't look stamped */
+.bg-dark-gradient[data-glow="left"] {
+  background-image:
+    radial-gradient(70% 55% at 0% 0%, rgba(129, 1, 0, 0.5), transparent 70%),
+    radial-gradient(55% 50% at 100% 100%, rgba(99, 0, 0, 0.6), transparent 70%),
+    linear-gradient(195deg, #1b1717 0%, #110d0d 55%, #220808 100%);
+}
+
+.section-dark {
+  --color-tertiary: #edebd0;
+  --color-secondary: #c4382a;
+  --color-surface: #251c1c;
+  --accent-on-dark: #f2937f;
+  --hairline: rgba(237, 235, 208, 0.22);
+  --shadow-warm: rgba(0, 0, 0, 0.35);
+  --shadow-warm-strong: rgba(0, 0, 0, 0.55);
+  color: var(--color-tertiary);
+  border-color: rgba(237, 235, 208, 0.1);
+}
+.section-dark .eyebrow,
+.section-dark .text-accent {
+  color: var(--accent-on-dark);
+}
+.section-dark .kw {
+  color: inherit;
+  background-image: linear-gradient(
+    transparent 58%,
+    color-mix(in srgb, var(--accent-on-dark) 30%, transparent) 58%
+  );
+}
+.section-dark .panel {
+  border-color: rgba(237, 235, 208, 0.1);
+}
+.section-dark .text-outline {
+  -webkit-text-stroke-color: rgba(237, 235, 208, 0.12);
 }

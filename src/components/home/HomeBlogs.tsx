@@ -54,8 +54,8 @@ export default function HomeBlogs() {
               data-cursor
               className="panel group flex w-[85%] shrink-0 snap-start flex-col sm:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)]"
             >
-              {/* cover */}
-              <div className="relative aspect-[16/10] overflow-hidden">
+              {/* cover — ::after is the shade that keeps the number legible */}
+              <div className="relative aspect-[16/10] overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-t after:from-ink/55 after:via-transparent after:to-transparent">
                 <Image
                   src={post.image}
                   alt=""
@@ -63,12 +63,11 @@ export default function HomeBlogs() {
                   sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 85vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent" />
-                <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-primary/90 px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-[0.16em] text-secondary">
+                <span className="absolute left-4 top-4 z-[1] inline-flex items-center gap-1.5 rounded-full bg-primary/90 px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-[0.16em] text-secondary">
                   <CourseIcon name={post.icon} className="h-3.5 w-3.5" />
                   {post.category}
                 </span>
-                <span className="absolute bottom-3 right-4 font-display text-[2rem] font-bold leading-none tracking-[-0.05em] text-primary/80">
+                <span className="absolute bottom-3 right-4 z-[1] font-display text-[2rem] font-bold leading-none tracking-[-0.05em] text-primary/80">
                   {String(i + 1).padStart(2, "0")}
                 </span>
               </div>

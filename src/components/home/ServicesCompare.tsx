@@ -48,47 +48,52 @@ export default function ServicesCompare() {
         });
       });
 
-      // The template's service orbit: the icon tiles burst out of the hub to
-      // their places on the ring, then the ring turns as the list scrolls by.
-      const ring = root.current?.querySelector<HTMLElement>("[data-orbit]");
-      const tiles = gsap.utils.toArray<HTMLElement>("[data-orbit-tile]");
-      if (!ring || tiles.length === 0) return;
+      // The orbit only shows from lg up (hidden lg:block), so phones skip
+      // building its tweens and triggers — on a throttled mobile load
+      // they were the single most expensive setup on the page.
+      gsap.matchMedia().add("(min-width: 1024px)", () => {
+        // The template's service orbit: the icon tiles burst out of the hub to
+        // their places on the ring, then the ring turns as the list scrolls by.
+        const ring = root.current?.querySelector<HTMLElement>("[data-orbit]");
+        const tiles = gsap.utils.toArray<HTMLElement>("[data-orbit-tile]");
+        if (!ring || tiles.length === 0) return;
 
-      const radius = () => Math.min(ring.offsetWidth, ring.offsetHeight) * 0.4;
-      const angle = (i: number) => (i / tiles.length) * Math.PI * 2 - Math.PI / 2;
+        const radius = () => Math.min(ring.offsetWidth, ring.offsetHeight) * 0.4;
+        const angle = (i: number) => (i / tiles.length) * Math.PI * 2 - Math.PI / 2;
 
-      gsap.fromTo(
-        tiles,
-        { x: 0, y: 0, scale: 0.3, autoAlpha: 0 },
-        {
-          x: (i: number) => Math.cos(angle(i)) * radius(),
-          y: (i: number) => Math.sin(angle(i)) * radius(),
-          scale: 1,
-          autoAlpha: 1,
-          duration: 1.4,
-          stagger: 0.04,
-          ease: "expo.out",
-          scrollTrigger: {
-            trigger: ring,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
-            invalidateOnRefresh: true,
+        gsap.fromTo(
+          tiles,
+          { x: 0, y: 0, scale: 0.3, autoAlpha: 0 },
+          {
+            x: (i: number) => Math.cos(angle(i)) * radius(),
+            y: (i: number) => Math.sin(angle(i)) * radius(),
+            scale: 1,
+            autoAlpha: 1,
+            duration: 1.4,
+            stagger: 0.04,
+            ease: "expo.out",
+            scrollTrigger: {
+              trigger: ring,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+              invalidateOnRefresh: true,
+            },
           },
-        },
-      );
+        );
 
-      const spin = {
-        ease: "none",
-        scrollTrigger: {
-          trigger: root.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: 1.5,
-        },
-      };
-      gsap.to("[data-orbit-spin]", { rotation: 180, ...spin });
-      // Counter-turn so every icon stays upright as the ring carries it round.
-      gsap.to("[data-orbit-upright]", { rotation: -180, ...spin });
+        const spin = {
+          ease: "none",
+          scrollTrigger: {
+            trigger: root.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1.5,
+          },
+        };
+        gsap.to("[data-orbit-spin]", { rotation: 180, ...spin });
+        // Counter-turn so every icon stays upright as the ring carries it round.
+        gsap.to("[data-orbit-upright]", { rotation: -180, ...spin });
+      });
     },
     { scope: root },
   );
@@ -129,17 +134,15 @@ export default function ServicesCompare() {
             <div data-orbit-spin className="absolute inset-0">
               <span className="absolute left-1/2 top-1/2 aspect-square h-[80%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-secondary/30" />
               {SERVICES.map((service) => (
+                // One element takes both the orbit position (x / y) and the
+                // counter-turn (rotation) — GSAP tweens them independently.
                 <span
                   key={service.name}
                   data-orbit-tile
-                  className="absolute left-1/2 top-1/2 -ml-6 -mt-6 grid h-12 w-12 place-items-center"
+                  data-orbit-upright
+                  className="absolute left-1/2 top-1/2 -ml-6 -mt-6 grid h-12 w-12 place-items-center rounded-xl border border-secondary/30 bg-surface text-secondary"
                 >
-                  <span
-                    data-orbit-upright
-                    className="grid h-12 w-12 place-items-center rounded-xl border border-secondary/30 bg-surface text-secondary"
-                  >
-                    <CourseIcon name={service.icon} className="h-5 w-5" />
-                  </span>
+                  <CourseIcon name={service.icon} className="h-5 w-5" />
                 </span>
               ))}
             </div>
@@ -198,18 +201,13 @@ export default function ServicesCompare() {
                 key={service.name}
                 role="row"
                 data-compare-row
-                style={{ visibility: "hidden" }}
                 onMouseEnter={() => {
                   setHovered(i);
                   show();
                 }}
-                className="group relative grid gap-4 border-b border-tertiary/15 py-7 md:grid-cols-[1fr_1fr] md:gap-x-4 md:pl-12"
+                // ::before is the hover fill rising from the row's base
+                className="group relative grid gap-4 border-b border-tertiary/15 py-7 before:pointer-events-none before:absolute before:inset-0 before:origin-bottom before:scale-y-0 before:bg-secondary/[0.06] before:transition-transform before:duration-500 before:ease-[cubic-bezier(0.22,1,0.36,1)] hover:before:scale-y-100 md:grid-cols-[1fr_1fr] md:gap-x-4 md:pl-12"
               >
-                {/* hover fill rising from the row's base */}
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 origin-bottom scale-y-0 bg-secondary/[0.06] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-y-100"
-                />
 
                 <div role="rowheader" className="relative flex items-baseline gap-4 md:col-span-2 md:-ml-12">
                   <span className="w-8 shrink-0 font-mono text-[13px] font-medium text-secondary">

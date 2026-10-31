@@ -67,16 +67,12 @@ export default function GrowthBooster() {
       className="relative px-[4vw] pb-24 sm:pb-32"
     >
       <div className="mx-auto max-w-[1400px]">
-        {/* Noir shell with a cherry glow — the one dark block on the page, so
+        {/* Noir-to-maroon gradient shell, shared with the dark sections, so
             the package reads as the headline offer of the Services section */}
         <div
           data-booster-shell
-          className="on-dark relative overflow-hidden rounded-3xl bg-tertiary p-6 text-primary sm:p-10 lg:p-14"
+          className="on-dark bg-dark-gradient relative overflow-hidden rounded-3xl p-6 text-primary sm:p-10 lg:p-14"
         >
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_85%_0%,color-mix(in_srgb,var(--color-secondary)_75%,transparent)_0%,transparent_55%),radial-gradient(circle_at_0%_100%,color-mix(in_srgb,var(--color-contrast)_60%,transparent)_0%,transparent_50%)]"
-          />
 
           <div className="relative">
             {/* header */}

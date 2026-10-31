@@ -7,7 +7,6 @@ import {
   ScrollTrigger,
   useGSAP,
   prefersReducedMotion,
-  introDelay,
   SCRAMBLE_CHARS,
 } from "@/lib/gsap";
 import AnimatedText from "./AnimatedText";
@@ -19,11 +18,11 @@ import { BRAND } from "./home/homeContent";
 /** The template's five hero cards, left to right. Decorative — the photos
  *  are the site's own, the same ones the About pages use. */
 const CARDS = [
-  "/about/strategy.jpg",
-  "/about/marketing.jpg",
-  "/about/development.jpg",
-  "/about/security.jpg",
-  "/about/wins.jpg",
+  "/about/strategy.webp",
+  "/about/marketing.webp",
+  "/about/development.webp",
+  "/about/security.webp",
+  "/about/wins.webp",
 ];
 
 /* Card motion, lifted from the Orvix template's interaction data. The
@@ -108,11 +107,7 @@ export default function Hero() {
       gsap.set(cards, { autoAlpha: 0 });
       render();
 
-      // Plays as the preloader sheet lifts off, when there is one.
-      const tl = gsap.timeline({
-        defaults: { ease: "expo.out" },
-        delay: introDelay(),
-      });
+      const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
 
       // Cards: appear as one pile, then fan out into the arc.
       tl.to(
@@ -250,23 +245,23 @@ export default function Hero() {
 
         <div data-hero-copy>
           <h1 className="font-display text-[clamp(2.4rem,6.4vw,7rem)] font-extrabold uppercase leading-[0.86] tracking-[-0.055em] text-tertiary">
-            <AnimatedText text="Grow your business" delay={0.2} afterIntro />
+            <AnimatedText text="Grow your business" delay={0.2} />
             <br />
-            <AnimatedText text="with marketing," delay={0.3} afterIntro />
+            <AnimatedText text="with marketing," delay={0.3} />
             <br />
             <AnimatedText
               text="websites & AI"
               className="text-secondary"
               delay={0.4}
-              afterIntro
             />
           </h1>
 
           <div className="mt-6 grid gap-6 border-t border-tertiary/15 pt-5 md:grid-cols-[1fr_auto] md:items-end">
             {/* One clean, quotable sentence — the line most likely to be lifted
-                verbatim into an AI Overview, so keep it self-contained. */}
+                verbatim into an AI Overview, so keep it self-contained. It is
+                also the page's largest paint on phones, so it is shown from
+                the first frame rather than faded in after hydration. */}
             <p
-              data-hero-fade
               className="max-w-[56ch] text-[1.02rem] leading-relaxed text-tertiary/75"
             >
               <KeywordText text="We help Indian businesses get found on Google, turn visitors into customers, and automate the busywork. Choose With AI+ for speed and value, or Without AI for a fully handcrafted build." />

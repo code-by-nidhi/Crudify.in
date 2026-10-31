@@ -25,6 +25,21 @@ export default function SmoothScroll() {
     delete document.documentElement.dataset.intro;
   }, []);
 
+  // A scroll reveal leaves its target at visibility:hidden (autoAlpha) until
+  // it scrolls into view, and hidden elements can't take focus — so Tab used
+  // to skip every button and FAQ the reader hadn't scrolled to yet. On Tab,
+  // finish every pending one-shot reveal before the browser moves focus.
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+      ScrollTrigger.getAll().forEach((st) => {
+        if (st.vars.once) st.animation?.progress(1);
+      });
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
   useEffect(() => {
     if (prefersReducedMotion()) return;
 
@@ -36,8 +51,6 @@ export default function SmoothScroll() {
     });
 
     window.__lenis = lenis;
-    // The homepage Preloader holds the page still and restarts Lenis itself.
-    if (document.documentElement.dataset.preload === "on") lenis.stop();
     lenis.on("scroll", ScrollTrigger.update);
 
     const timer = setTimeout(() => {

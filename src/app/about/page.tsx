@@ -30,7 +30,7 @@ export default function AboutPage() {
       <Stats
         items={ABOUT_STATS}
         ariaLabel="CRUDIFY by the numbers"
-        image={{ src: "/about/office.jpg", alt: "" }}
+        image={{ src: "/about/office.webp", alt: "" }}
       />
       <AboutStory />
       <AboutValues />

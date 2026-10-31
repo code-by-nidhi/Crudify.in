@@ -7,7 +7,7 @@ export default function Logo({ className = "h-6" }: { className?: string }) {
   return (
     <span className={`relative block aspect-[6.6/1] overflow-hidden ${className}`}>
       <Image
-        src="/logo/crudy-logo1.png"
+        src="/logo/crudy-logo1.webp"
         alt="CRUDIFY"
         fill
         sizes="200px"

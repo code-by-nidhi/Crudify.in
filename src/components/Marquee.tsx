@@ -80,20 +80,18 @@ export default function Marquee({
               return (
                 <span
                   key={label}
-                  className="flex shrink-0 items-center gap-10 font-display text-[clamp(1.6rem,3.4vw,3rem)] font-bold leading-none tracking-[-0.04em] text-primary"
+                  className="flex shrink-0 items-center font-display text-[clamp(1.6rem,3.4vw,3rem)] font-bold leading-none tracking-[-0.04em] text-primary"
                 >
-                  <span className="flex items-center gap-[0.35em]">
-                    {typeof item !== "string" && (
-                      <span
-                        title={label}
-                        className="grid h-[1.25em] w-[1.25em] shrink-0 place-items-center rounded-full border border-primary/35 bg-primary/10"
-                      >
-                        <CourseIcon name={item.icon} className="h-[0.7em] w-[0.7em]" />
-                      </span>
-                    )}
-                    {label}
-                  </span>
-                  <span aria-hidden="true" className="font-light text-primary/70">+</span>
+                  {typeof item !== "string" && (
+                    <span
+                      title={label}
+                      className="mr-[0.35em] grid h-[1.25em] w-[1.25em] shrink-0 place-items-center rounded-full border border-primary/35 bg-primary/10"
+                    >
+                      <CourseIcon name={item.icon} className="h-[0.7em] w-[0.7em]" />
+                    </span>
+                  )}
+                  {label}
+                  <span aria-hidden="true" className="ml-10 font-light text-primary/70">+</span>
                 </span>
               );
             })}

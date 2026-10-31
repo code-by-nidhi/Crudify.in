@@ -91,7 +91,7 @@ export default function CTA() {
                     />
                   </svg>
                 </span>
-                <span className="!text-primary">{item}</span>
+                {item}
               </li>
             ))}
           </ul>

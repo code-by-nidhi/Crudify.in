@@ -125,7 +125,7 @@ export default function TestimonialSlider() {
       ref={root}
       id="testimonials"
       aria-labelledby="testimonials-title"
-      className="relative overflow-hidden border-t border-secondary/20 px-[4vw] py-24 sm:py-32"
+      className="section-dark bg-dark-gradient relative overflow-hidden border-t px-[4vw] py-24 sm:py-32"
     >
       <div className="mx-auto grid max-w-[1400px] gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
         <div>
@@ -204,25 +204,18 @@ export default function TestimonialSlider() {
                     d="M9.6 5C6.2 6.4 4 9.3 4 13.2V19h6v-6H7.1c.1-2.4 1.3-4.2 3.6-5.3L9.6 5Zm10 0c-3.4 1.4-5.6 4.3-5.6 8.2V19h6v-6h-2.9c.1-2.4 1.3-4.2 3.6-5.3L19.6 5Z"
                   />
                 </svg>
+                {/* Stars as text, not five SVGs — one node per card instead
+                    of eleven, across a deck that keeps every card mounted. */}
                 {review.rating && (
                   <span
                     role="img"
                     aria-label={`Rated ${review.rating} out of 5`}
-                    className="flex gap-0.5 text-secondary"
+                    className="text-[16px] leading-none tracking-[0.12em] text-secondary"
                   >
-                    {Array.from({ length: 5 }).map((_, s) => (
-                      <svg
-                        key={s}
-                        width="15"
-                        height="15"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        aria-hidden="true"
-                        className={s < review.rating! ? "" : "opacity-20"}
-                      >
-                        <path d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9L12 2.5Z" />
-                      </svg>
-                    ))}
+                    {"★".repeat(review.rating)}
+                    {review.rating < 5 && (
+                      <span className="opacity-20">{"★".repeat(5 - review.rating)}</span>
+                    )}
                   </span>
                 )}
               </div>

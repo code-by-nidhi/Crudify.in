@@ -70,7 +70,7 @@ export default function AboutValues() {
             className="relative min-h-[340px] overflow-hidden rounded-[var(--panel-radius)] shadow-[0_24px_50px_-20px_var(--shadow-warm-strong)] md:col-span-2 lg:col-span-1 lg:row-span-2"
           >
             <Image
-              src="/about/planning.jpg"
+              src="/about/planning.webp"
               alt="Hands mapping out a project plan on a wall board"
               fill
               sizes="(min-width: 1024px) 400px, 92vw"
@@ -119,7 +119,7 @@ export default function AboutValues() {
                 {wide && (
                   <div className="relative mt-6 aspect-[16/9] overflow-hidden rounded-[18px] lg:mt-0 lg:aspect-[4/3]">
                     <Image
-                      src="/about/wins.jpg"
+                      src="/about/wins.webp"
                       alt="Two colleagues high-fiving across a desk"
                       fill
                       sizes="(min-width: 1024px) 300px, 92vw"

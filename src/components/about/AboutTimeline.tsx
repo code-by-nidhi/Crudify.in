@@ -8,28 +8,28 @@ import AnimatedText from "../AnimatedText";
 const MILESTONES = [
   {
     year: "Now",
-    image: "/about/punjab.jpg",
+    image: "/about/punjab.webp",
     alt: "The Golden Temple in Amritsar at sunset",
     title: "Punjab",
     body: "Starting local — building, marketing and securing for businesses close to home.",
   },
   {
     year: "Next",
-    image: "/about/india.jpg",
+    image: "/about/india.webp",
     alt: "The Gateway of India in Mumbai",
     title: "The rest of India",
     body: "Taking the same model to India's bigger cities.",
   },
   {
     year: "Then",
-    image: "/about/gulf.jpg",
+    image: "/about/gulf.webp",
     alt: "The Dubai skyline at dusk",
     title: "The Gulf",
     body: "The first market outside India, with the same team and the same two tiers.",
   },
   {
     year: "Eventually",
-    image: "/about/uk-us.jpg",
+    image: "/about/uk-us.webp",
     alt: "Tower Bridge and the London skyline",
     title: "UK & US",
     body: "Same model, same team, new markets.",

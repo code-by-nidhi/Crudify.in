@@ -21,7 +21,7 @@ const PILLARS: {
 }[] = [
   {
     icon: "code",
-    image: "/about/development.jpg",
+    image: "/about/development.webp",
     alt: "Laptop on a desk showing a code editor",
     label: "Build",
     title: "Web and app development",
@@ -29,7 +29,7 @@ const PILLARS: {
   },
   {
     icon: "megaphone",
-    image: "/about/marketing.jpg",
+    image: "/about/marketing.webp",
     alt: "Laptop showing an analytics dashboard",
     label: "Promote",
     title: "Digital marketing",
@@ -37,7 +37,7 @@ const PILLARS: {
   },
   {
     icon: "shield",
-    image: "/about/security.jpg",
+    image: "/about/security.webp",
     alt: "Illuminated circuit board schematic",
     label: "Protect",
     title: "Cybersecurity",
@@ -181,7 +181,7 @@ export default function AboutSection() {
             className="relative min-h-[440px] overflow-hidden rounded-3xl"
           >
             <Image
-              src="/about/team.jpg"
+              src="/about/team.webp"
               alt="The team working on laptops around a shared table"
               fill
               sizes="(min-width: 1024px) 600px, 92vw"
@@ -191,7 +191,6 @@ export default function AboutSection() {
 
             <div
               data-about-card
-              style={{ visibility: "hidden" }}
               className="panel-light absolute inset-x-5 bottom-5 p-6 sm:inset-x-6 sm:bottom-6"
             >
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-secondary">
@@ -220,7 +219,7 @@ export default function AboutSection() {
             <article
               key={pillar.title}
               data-about-pillar
-              style={{ visibility: "hidden", zIndex: PILLARS.indexOf(pillar) === 1 ? 3 : 1 }}
+              style={{ zIndex: PILLARS.indexOf(pillar) === 1 ? 3 : 1 }}
               className="panel group flex flex-col bg-surface p-7 will-change-transform"
             >
               <div className="relative -mx-7 -mt-7 mb-6 aspect-[16/10] overflow-hidden border-b border-secondary/20">
