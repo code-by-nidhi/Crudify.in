@@ -6,7 +6,8 @@ import EnquireButton from "@/components/blog/EnquireButton";
 import JsonLd from "@/components/blog/JsonLd";
 import { CourseIcon } from "@/components/Icons";
 import { BLOG_AUTHOR, POSTS, formatDate, readingTime } from "@/content/blog";
-import { SITE_NAME, absoluteUrl } from "@/lib/site";
+import { SCHEMA_ID, breadcrumbNode } from "@/lib/seo";
+import { SITE_LAUNCHED, SITE_NAME, absoluteUrl } from "@/lib/site";
 
 const TITLE = "Growth Tips & Guides";
 const DESCRIPTION =
@@ -21,12 +22,28 @@ export const metadata: Metadata = {
     url: "/blog",
     title: `${TITLE} | ${SITE_NAME} Blog`,
     description: DESCRIPTION,
+    siteName: SITE_NAME,
+    locale: "en_IN",
     images: [{ url: POSTS[0].image, alt: POSTS[0].imageAlt }],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: `${TITLE} | ${SITE_NAME} Blog`,
+    description: DESCRIPTION,
+    images: [POSTS[0].image],
+  },
+};
+
+const BLOG_AUTHOR_SCHEMA = {
+  "@type": "Organization",
+  name: BLOG_AUTHOR,
+  url: absoluteUrl("/about"),
+  parentOrganization: { "@id": SCHEMA_ID.organization },
 };
 
 export default function BlogIndexPage() {
   const [featured, ...rest] = POSTS;
+  const latest = POSTS.map((p) => p.updatedAt).sort().at(-1);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -38,7 +55,11 @@ export default function BlogIndexPage() {
         description: DESCRIPTION,
         url: absoluteUrl("/blog"),
         inLanguage: "en-IN",
-        publisher: { "@type": "Organization", name: SITE_NAME, url: absoluteUrl("/") },
+        datePublished: POSTS.map((p) => p.publishedAt).sort()[0] ?? SITE_LAUNCHED,
+        dateModified: latest,
+        isPartOf: { "@id": SCHEMA_ID.website },
+        publisher: { "@id": SCHEMA_ID.organization },
+        breadcrumb: { "@id": `${absoluteUrl("/blog")}#breadcrumb` },
         blogPost: POSTS.map((post) => ({
           "@type": "BlogPosting",
           headline: post.title,
@@ -47,16 +68,10 @@ export default function BlogIndexPage() {
           image: absoluteUrl(post.image),
           datePublished: post.publishedAt,
           dateModified: post.updatedAt,
-          author: { "@type": "Organization", name: BLOG_AUTHOR },
+          author: BLOG_AUTHOR_SCHEMA,
         })),
       },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
-          { "@type": "ListItem", position: 2, name: "Blog", item: absoluteUrl("/blog") },
-        ],
-      },
+      breadcrumbNode("/blog", [{ name: "Blog", path: "/blog" }]),
     ],
   };
 

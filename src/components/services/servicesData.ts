@@ -216,7 +216,7 @@ export const SERVICES: Service[] = [
     ],
     metaTitle: "Digital Marketing",
     metaDescription:
-      "Meta and Google Ads, Google Business Profile, social media management, video editing and YouTube or Instagram growth — run against leads and revenue, with creative produced in-house.",
+      "Meta and Google Ads, Google Business Profile, social media and video for Ludhiana businesses — run against leads and revenue, with creative made in-house.",
     keywords: [
       "digital marketing agency",
       "meta ads management",
@@ -364,7 +364,7 @@ export const SERVICES: Service[] = [
     ],
     metaTitle: "Cyber Security",
     metaDescription:
-      "Cyber attack prevention, security audits, centralised log management and analysis, and incident response playbooks — built on OWASP, SIEM tooling and Cloudflare.",
+      "Cyber attack prevention, security audits, centralised log management and incident response playbooks — built on OWASP, SIEM tooling and Cloudflare.",
     keywords: [
       "cyber security services",
       "security audit",

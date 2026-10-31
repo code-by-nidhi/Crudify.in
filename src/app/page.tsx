@@ -18,12 +18,23 @@ import HomeFaq from "@/components/home/HomeFaq";
 import HomeBlogs from "@/components/home/HomeBlogs";
 import CTA from "@/components/CTA";
 import { BRAND, CITIES, FAQS, GLOSSARY, SERVICES } from "@/components/home/homeContent";
-import { absoluteUrl, SITE_URL } from "@/lib/site";
+import JsonLd from "@/components/blog/JsonLd";
+import { ADDRESS, LOGO, SCHEMA_ID, pageMetadata } from "@/lib/seo";
+import {
+  BUSINESS,
+  DEFAULT_OG_IMAGE,
+  SITE_LAUNCHED,
+  SITE_UPDATED,
+  SITE_URL,
+  absoluteUrl,
+} from "@/lib/site";
 
 const TITLE = `${BRAND} | Digital Marketing, Web Development & AI Agents in Ludhiana`;
 
-export const metadata: Metadata = {
-  title: { absolute: TITLE },
+export const metadata: Metadata = pageMetadata({
+  title: TITLE,
+  absoluteTitle: true,
+  path: "/",
   // Kept under 160 characters so search results show it whole.
   description: `${BRAND}: digital marketing, websites and AI agents in Ludhiana. Meta & Google ads, Shopify stores and Google Maps ranking, With AI+ or Without AI.`,
   keywords: [
@@ -34,54 +45,26 @@ export const metadata: Metadata = {
     "AI agents for business",
     "digital marketing packages",
   ],
-  alternates: { canonical: "/" },
-};
+});
 
-const DESCRIPTION = `${BRAND} is a Ludhiana-based growth agency combining digital marketing, web and app development, and cybersecurity. Every service comes in two versions: With AI+ (faster, affordable) and Without AI (handcrafted, premium).`;
+const DESCRIPTION = `${BRAND} is a Ludhiana-based growth agency combining digital marketing, web and app development, AI agents and cybersecurity. Every service comes in two versions: With AI+ (faster, affordable) and Without AI (handcrafted, premium).`;
 
 const ID = {
-  organization: `${SITE_URL}/#organization`,
-  business: `${SITE_URL}/#localbusiness`,
-  website: `${SITE_URL}/#website`,
+  ...SCHEMA_ID,
   webpage: `${SITE_URL}/#webpage`,
 };
 
-const LOGO = {
-  "@type": "ImageObject",
-  url: absoluteUrl("/logo/crudy-logo-only.webp"),
-  width: 574,
-  height: 589,
-};
-const IMAGE = absoluteUrl("/about/team.webp");
+const IMAGE = absoluteUrl(DEFAULT_OG_IMAGE.url);
 
-/** Organization, LocalBusiness, WebSite, WebPage and FAQPage, for rich
- *  results and for AI answer engines. @ids are absolute so other pages can
- *  point at the same entities.
- *  TODO: add `telephone`, `email`, `streetAddress`, `postalCode`, `geo`,
- *  `openingHoursSpecification` and `sameAs` (Google Business Profile,
- *  socials) once confirmed, and keep the name, address and phone identical to
- *  the Google Business Profile and directories. */
+/** WebPage, LocalBusiness, FAQPage and the glossary. Organization and WebSite
+ *  come from the root layout; @ids are absolute so every page's graph points
+ *  at the same entities.
+ *  TODO: fill in BUSINESS in lib/site.ts (phone, email, street address,
+ *  profiles) and keep the name, address and phone identical to the Google
+ *  Business Profile and directories. */
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
-    {
-      "@type": "Organization",
-      "@id": ID.organization,
-      name: BRAND,
-      url: absoluteUrl("/"),
-      logo: LOGO,
-      image: IMAGE,
-      slogan: "Your Growth Partner",
-      description: DESCRIPTION,
-    },
-    {
-      "@type": "WebSite",
-      "@id": ID.website,
-      url: absoluteUrl("/"),
-      name: BRAND,
-      inLanguage: "en-IN",
-      publisher: { "@id": ID.organization },
-    },
     {
       "@type": "WebPage",
       "@id": ID.webpage,
@@ -91,7 +74,10 @@ const jsonLd = {
       inLanguage: "en-IN",
       isPartOf: { "@id": ID.website },
       about: { "@id": ID.business },
+      publisher: { "@id": ID.organization },
       primaryImageOfPage: { "@type": "ImageObject", url: IMAGE },
+      datePublished: SITE_LAUNCHED,
+      dateModified: SITE_UPDATED,
     },
     {
       "@type": "ProfessionalService",
@@ -102,12 +88,10 @@ const jsonLd = {
       image: IMAGE,
       description: DESCRIPTION,
       parentOrganization: { "@id": ID.organization },
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Ludhiana",
-        addressRegion: "Punjab",
-        addressCountry: "IN",
-      },
+      address: ADDRESS,
+      ...(BUSINESS.telephone && { telephone: BUSINESS.telephone }),
+      ...(BUSINESS.email && { email: BUSINESS.email }),
+      ...(BUSINESS.sameAs.length > 0 && { sameAs: BUSINESS.sameAs.map((s) => s.url) }),
       areaServed: [
         ...CITIES.map((name) => ({ "@type": "City", name })),
         { "@type": "Country", name: "India" },
@@ -156,12 +140,7 @@ const jsonLd = {
 export default function Home() {
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
-        }}
-      />
+      <JsonLd data={jsonLd} />
       <Hero />
       <Marquee />
       <AboutSection />

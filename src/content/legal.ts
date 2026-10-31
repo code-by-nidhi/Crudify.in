@@ -25,12 +25,15 @@ export type LegalDoc = {
   title: string;
   description: string;
   updated: string;
+  /** ISO form of `updated`, for schema and meta tags. */
+  updatedIso: string;
   intro: string;
   sections: LegalSection[];
   related: { label: string; href: string };
 };
 
 const UPDATED = "30 October 2026";
+const UPDATED_ISO = "2026-10-30";
 
 const CONTACT = `You can reach ${SITE_NAME} through the enquiry form on this website. We are based in Ludhiana, Punjab, India.`;
 
@@ -38,6 +41,7 @@ export const TERMS: LegalDoc = {
   title: "Terms & Conditions",
   description: `The terms that apply when you use the ${SITE_NAME} website or hire ${SITE_NAME} for marketing, web development, AI or cybersecurity work.`,
   updated: UPDATED,
+  updatedIso: UPDATED_ISO,
   intro: `These terms cover your use of this website and the services ${SITE_NAME} provides. By using the site or engaging us, you agree to them.`,
   related: { label: "Privacy Policy", href: "/privacy-policy" },
   sections: [
@@ -167,6 +171,7 @@ export const PRIVACY: LegalDoc = {
   title: "Privacy Policy",
   description: `How ${SITE_NAME} collects, uses and protects the personal data you share through this website, in line with India's Digital Personal Data Protection Act, 2023.`,
   updated: UPDATED,
+  updatedIso: UPDATED_ISO,
   intro: `This policy explains what personal data ${SITE_NAME} collects through this website, why, and the choices you have. We collect as little as we need to reply to you.`,
   related: { label: "Terms & Conditions", href: "/terms" },
   sections: [

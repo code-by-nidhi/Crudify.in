@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Logo from "./Logo";
 import { TIERS } from "./home/homeContent";
+import { BUSINESS, SITE_NAME } from "@/lib/site";
 
 const PRODUCT_COLUMNS = TIERS.map((tier) => ({
   title: tier.id === "ai" ? "AI-Powered Services" : "Human-Driven Services",
@@ -43,18 +44,23 @@ export default function Footer() {
               <span>Ludhiana, Punjab · Free growth audits</span>
             </div>
 
-            <div className="mt-6 flex gap-2">
-              {["github", "x", "linkedin", "discord"].map((social) => (
-                <a
-                  key={social}
-                  href="#"
-                  aria-label={social}
-                  className="grid h-9 w-9 place-items-center rounded-md border border-tertiary/15 bg-primary text-[11px] font-semibold uppercase text-tertiary/70 transition-colors hover:border-secondary hover:bg-secondary hover:text-primary"
-                >
-                  {social.slice(0, 2)}
-                </a>
-              ))}
-            </div>
+            {/* Official profiles only — empty "#" links were crawlable dead ends. */}
+            {BUSINESS.sameAs.length > 0 && (
+              <div className="mt-6 flex gap-2">
+                {BUSINESS.sameAs.map((social) => (
+                  <a
+                    key={social.url}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener me"
+                    aria-label={`${SITE_NAME} on ${social.label}`}
+                    className="grid h-9 w-9 place-items-center rounded-md border border-tertiary/15 bg-primary text-[11px] font-semibold uppercase text-tertiary/70 transition-colors hover:border-secondary hover:bg-secondary hover:text-primary"
+                  >
+                    {social.label.slice(0, 2)}
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           {PRODUCT_COLUMNS.map((column) => (
@@ -79,6 +85,14 @@ export default function Footer() {
         <div className="mt-20 flex flex-col gap-4 border-t border-tertiary/15 pt-6 text-[13px] text-tertiary/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} CRUDIFY. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-5 font-medium">
+            <Link href="/about" className="transition-colors hover:text-secondary">
+              About
+            </Link>
+            <span>•</span>
+            <Link href="/services" className="transition-colors hover:text-secondary">
+              Services
+            </Link>
+            <span>•</span>
             <Link href="/blog" className="transition-colors hover:text-secondary">
               Blog
             </Link>

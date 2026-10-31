@@ -234,7 +234,6 @@ export default function Hero() {
                   src={src}
                   alt=""
                   fill
-                  priority={i === 2}
                   sizes="(min-width: 768px) 11vw, 25vw"
                   className="object-cover"
                 />

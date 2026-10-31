@@ -15,6 +15,7 @@ import {
   readingTime,
   type Block,
 } from "@/content/blog";
+import { LOGO, SCHEMA_ID, breadcrumbNode } from "@/lib/seo";
 import { SITE_NAME, absoluteUrl } from "@/lib/site";
 
 export function generateStaticParams() {
@@ -35,7 +36,7 @@ export async function generateMetadata({
     title: post.metaTitle,
     description: post.description,
     keywords: post.keywords,
-    authors: [{ name: BLOG_AUTHOR }],
+    authors: [{ name: BLOG_AUTHOR, url: absoluteUrl("/about") }],
     alternates: { canonical: url },
     openGraph: {
       type: "article",
@@ -44,6 +45,9 @@ export async function generateMetadata({
       description: post.description,
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
+      authors: [absoluteUrl("/about")],
+      siteName: SITE_NAME,
+      locale: "en_IN",
       section: post.category,
       tags: post.keywords,
       images: [{ url: post.image, alt: post.imageAlt }],
@@ -161,26 +165,40 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
         keywords: post.keywords.join(", "),
         wordCount: words,
         timeRequired: `PT${minutes}M`,
-        mainEntityOfPage: url,
-        author: { "@type": "Organization", name: BLOG_AUTHOR, url: absoluteUrl("/about") },
-        publisher: {
+        mainEntityOfPage: { "@id": `${url}#webpage` },
+        isPartOf: { "@id": `${absoluteUrl("/blog")}#blog` },
+        author: {
           "@type": "Organization",
-          name: SITE_NAME,
-          url: absoluteUrl("/"),
-          logo: { "@type": "ImageObject", url: absoluteUrl("/logo/crudy-logo-only.webp") },
+          name: BLOG_AUTHOR,
+          url: absoluteUrl("/about"),
+          parentOrganization: { "@id": SCHEMA_ID.organization },
         },
+        publisher: { "@id": SCHEMA_ID.organization, name: SITE_NAME, logo: LOGO },
+        about: { "@type": "Thing", name: post.category },
+        mentions: { "@type": "Service", name: post.service.label, url: absoluteUrl(post.service.href) },
         abstract: post.quickAnswer,
       },
       {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
-          { "@type": "ListItem", position: 2, name: "Blog", item: absoluteUrl("/blog") },
-          { "@type": "ListItem", position: 3, name: post.title, item: url },
-        ],
+        "@type": "WebPage",
+        "@id": `${url}#webpage`,
+        url,
+        name: post.metaTitle,
+        description: post.description,
+        inLanguage: "en-IN",
+        isPartOf: { "@id": SCHEMA_ID.website },
+        primaryImageOfPage: { "@type": "ImageObject", url: absoluteUrl(post.image) },
+        datePublished: post.publishedAt,
+        dateModified: post.updatedAt,
+        breadcrumb: { "@id": `${url}#breadcrumb` },
       },
+      breadcrumbNode(`/blog/${post.slug}`, [
+        { name: "Blog", path: "/blog" },
+        { name: post.title, path: `/blog/${post.slug}` },
+      ]),
       {
         "@type": "FAQPage",
+        "@id": `${url}#faq`,
+        isPartOf: { "@id": `${url}#webpage` },
         mainEntity: post.faqs.map((faq) => ({
           "@type": "Question",
           name: faq.q,
@@ -229,10 +247,23 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
               <span className="grid h-8 w-8 place-items-center rounded-full bg-secondary font-display text-[12px] font-bold text-primary">
                 C
               </span>
-              <span className="font-semibold text-tertiary">{BLOG_AUTHOR}</span>
+              <span>
+                By{" "}
+                <Link href="/about" rel="author" className="font-semibold text-tertiary hover:text-secondary">
+                  {BLOG_AUTHOR}
+                </Link>
+              </span>
             </span>
             <span aria-hidden="true">·</span>
-            <time dateTime={post.updatedAt}>Updated {formatDate(post.updatedAt)}</time>
+            <span>
+              Published <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+            </span>
+            {post.updatedAt !== post.publishedAt && (
+              <>
+                <span aria-hidden="true">·</span>
+                <time dateTime={post.updatedAt}>Updated {formatDate(post.updatedAt)}</time>
+              </>
+            )}
             <span aria-hidden="true">·</span>
             <span>{minutes} min read</span>
           </div>

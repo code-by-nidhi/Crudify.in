@@ -2,13 +2,36 @@ import type { Metadata } from "next";
 
 import LegalPage from "@/components/legal/LegalPage";
 import { TERMS } from "@/content/legal";
+import JsonLd from "@/components/blog/JsonLd";
+import { breadcrumbNode, pageMetadata, webPageNode } from "@/lib/seo";
 
-export const metadata: Metadata = {
+const PATH = "/terms";
+
+export const metadata: Metadata = pageMetadata({
   title: TERMS.title,
   description: TERMS.description,
-  alternates: { canonical: "/terms" },
+  path: PATH,
+  modifiedTime: TERMS.updatedIso,
+});
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    webPageNode({
+      path: PATH,
+      name: TERMS.title,
+      description: TERMS.description,
+      dateModified: TERMS.updatedIso,
+    }),
+    breadcrumbNode(PATH, [{ name: TERMS.title, path: PATH }]),
+  ],
 };
 
 export default function TermsPage() {
-  return <LegalPage doc={TERMS} />;
+  return (
+    <>
+      <JsonLd data={jsonLd} />
+      <LegalPage doc={TERMS} />
+    </>
+  );
 }

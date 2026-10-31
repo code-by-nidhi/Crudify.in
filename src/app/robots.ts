@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { absoluteUrl } from "@/lib/site";
+import { SITE_URL, absoluteUrl } from "@/lib/site";
 
 /** Open to search engines and to AI answer engines alike — being quotable by
  *  ChatGPT, Claude, Perplexity and Google's AI features is the point of the
@@ -26,6 +26,6 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: absoluteUrl("/sitemap.xml"),
-    host: absoluteUrl("/"),
+    host: new URL(SITE_URL).host,
   };
 }

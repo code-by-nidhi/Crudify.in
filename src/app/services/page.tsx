@@ -9,11 +9,19 @@ import ServicesProcess from "@/components/services/ServicesProcess";
 import ServicesSectors from "@/components/services/ServicesSectors";
 import ServicesTiers from "@/components/services/ServicesTiers";
 import ServicesWhy from "@/components/services/ServicesWhy";
+import { SERVICES, serviceHref } from "@/components/services/servicesData";
+import JsonLd from "@/components/blog/JsonLd";
+import { SCHEMA_ID, breadcrumbNode, pageMetadata, webPageNode } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Services — Web, Digital Marketing, AI & Cyber Security",
-  description:
-    "E-commerce and business websites, dashboards, SaaS apps, landing pages, digital invitations and menus — plus Meta and Google Ads, social media, video editing, AI agents and chatbots, and cyber security.",
+const TITLE = "Web, Marketing, AI & Cyber Security Services in Ludhiana";
+const DESCRIPTION =
+  "Websites, e-commerce, dashboards and SaaS apps, Meta and Google Ads, social media, AI agents and chatbots, and cyber security — from one Ludhiana team.";
+
+export const metadata: Metadata = pageMetadata({
+  title: TITLE,
+  description: DESCRIPTION,
+  path: "/services",
   keywords: [
     "ecommerce website development",
     "business website design",
@@ -23,6 +31,29 @@ export const metadata: Metadata = {
     "social media management",
     "ai agents and chatbots",
     "cyber security audit",
+  ],
+});
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    webPageNode({
+      type: "CollectionPage",
+      path: "/services",
+      name: TITLE,
+      description: DESCRIPTION,
+      about: { "@id": SCHEMA_ID.business },
+      mainEntity: {
+        "@type": "ItemList",
+        itemListElement: SERVICES.map((service, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: service.title,
+          url: absoluteUrl(serviceHref(service.id)),
+        })),
+      },
+    }),
+    breadcrumbNode("/services", [{ name: "Services", path: "/services" }]),
   ],
 };
 
@@ -38,6 +69,7 @@ const VALUE_STRIP = [
 export default function ServicesPage() {
   return (
     <>
+      <JsonLd data={jsonLd} />
       <ServicesHero />
       <Marquee />
       <ServicesCatalog />

@@ -10,7 +10,9 @@ import ScrollTopButton from "@/components/ScrollTopButton";
 import SmoothScroll from "@/components/SmoothScroll";
 import Cursor from "@/components/motion/Cursor";
 import ScrambleLabels from "@/components/motion/ScrambleLabels";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import JsonLd from "@/components/blog/JsonLd";
+import { SITE_GRAPH } from "@/lib/seo";
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, absoluteUrl } from "@/lib/site";
 
 const spartan = League_Spartan({
   variable: "--font-spartan",
@@ -20,10 +22,20 @@ const spartan = League_Spartan({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: SITE_NAME,
-  openGraph: { siteName: SITE_NAME, locale: "en_IN", type: "website" },
-  twitter: { card: "summary_large_image" },
+  authors: [{ name: SITE_NAME, url: absoluteUrl("/about") }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "Digital marketing, web development and AI services",
+  openGraph: {
+    siteName: SITE_NAME,
+    locale: "en_IN",
+    type: "website",
+    images: [DEFAULT_OG_IMAGE],
+  },
+  twitter: { card: "summary_large_image", images: [DEFAULT_OG_IMAGE.url] },
+  formatDetection: { telephone: false, email: false, address: false },
   title: {
-    default: "CRUDIFY — Best Marketing Company in Punjab",
+    default: "CRUDIFY — Digital Marketing, Web Development & AI Agency in Ludhiana",
     template: "%s | CRUDIFY",
   },
   description:
@@ -61,6 +73,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
       </head>
       <body className="relative flex min-h-full flex-col overflow-x-clip">
+        <JsonLd data={{ "@context": "https://schema.org", "@graph": SITE_GRAPH }} />
         <AuroraBackground />
         <SmoothScroll />
         <ScrambleLabels />

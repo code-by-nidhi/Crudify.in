@@ -8,6 +8,8 @@ import AboutValues from "@/components/about/AboutValues";
 import CTA from "@/components/CTA";
 import Marquee from "@/components/Marquee";
 import Stats from "@/components/Stats";
+import JsonLd from "@/components/blog/JsonLd";
+import { SCHEMA_ID, breadcrumbNode, pageMetadata, webPageNode } from "@/lib/seo";
 
 const ABOUT_STATS = [
   { value: 5, suffix: "", label: "People on the team" },
@@ -16,15 +18,36 @@ const ABOUT_STATS = [
   { value: 4, suffix: "", label: "Sectors with dedicated service lines" },
 ];
 
-export const metadata: Metadata = {
-  title: "About Us",
-  description:
-    "CRUDIFY is a five-person studio covering MERN development, digital marketing and cybersecurity — one team that builds, markets and secures, starting in Punjab.",
+const TITLE = "About CRUDIFY — Digital Growth Studio in Ludhiana, Punjab";
+const DESCRIPTION =
+  "CRUDIFY is a five-person studio in Ludhiana covering MERN development, digital marketing and cybersecurity — one team that builds, markets and secures.";
+
+export const metadata: Metadata = pageMetadata({
+  title: TITLE,
+  absoluteTitle: true,
+  description: DESCRIPTION,
+  path: "/about",
+});
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    webPageNode({
+      type: "AboutPage",
+      path: "/about",
+      name: TITLE,
+      description: DESCRIPTION,
+      about: { "@id": SCHEMA_ID.organization },
+      mainEntity: { "@id": SCHEMA_ID.organization },
+    }),
+    breadcrumbNode("/about", [{ name: "About", path: "/about" }]),
+  ],
 };
 
 export default function AboutPage() {
   return (
     <>
+      <JsonLd data={jsonLd} />
       <AboutHero />
       <Marquee />
       <Stats
