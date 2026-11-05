@@ -1,7 +1,7 @@
 /** Client work shown on the homepage, /projects and each /projects/[slug]
  *  page. Real projects only — every metric should be true of the live
  *  product, and analytics figures backed by one of the `proofs` screenshots. */
-type FeatureIcon = "lock" | "shield" | "zap" | "check" | "key" | "video" | "search" | "pin" | "web" | "social" | "sliders" | "cart";
+type FeatureIcon = "lock" | "shield" | "zap" | "check" | "key" | "video" | "search" | "pin" | "web" | "social" | "sliders" | "cart" | "bot" | "chart" | "activity";
 
 export interface Project {
   /** URL slug: /projects/{id}. */
@@ -34,9 +34,9 @@ export interface Project {
   metrics: { label: string; value: string }[];
   tags: string[];
   icon: "web" | "digital" | "shield" | "code" | "server" | "cpu" | "lock";
-  /** Live site. */
-  url: string;
-  /** Screenshot of the delivered site. */
+  /** Live site. Left out for private systems whose client can't be named. */
+  url?: string;
+  /** Screenshot of the delivered site, or a cover illustration when it is private. */
   image: { src: string; alt: string };
   /** Analytics screenshots backing up the metrics. */
   proofs?: { src: string; alt: string; label: string }[];
@@ -345,6 +345,194 @@ export const PROJECTS: Project[] = [
     image: {
       src: "/projects/seehra-automotive.webp",
       alt: "Seehra Automotive homepage: car repair and auto services in Vancouver, with a black sports car",
+    },
+  },
+  {
+    id: "ai-college-management-system",
+    title: "AI Fully Automated College Management System",
+    client: "Confidential college client",
+    category: "Education Client • AI Automation",
+    description:
+      "A fully AI-automated college management system built for a private college client. It creates and manages student records and runs attendance, marks and grades automatically, so staff spend far less time on paperwork and everyone sees up-to-date results. The college's name is kept confidential at the client's request.",
+    metaTitle: "AI Fully Automated College Management System — Case Study",
+    metaDescription:
+      "How CRUDIFY built a fully AI-automated college management system that creates and manages student attendance, marks, grades and records for a private client.",
+    overview: [
+      "Running a college means managing hundreds of students across attendance registers, exam marks, grade sheets and records — work that usually lives in spreadsheets and paper files and takes up hours of staff time every week.",
+      "We built a system where AI does that work. Student records are created and kept up to date automatically, attendance is tracked and calculated without manual tallying, and marks flow straight into grades and results. Staff check and approve instead of typing everything in by hand.",
+      "The system was built for a private college client and runs on their own deployment. To respect their privacy we don't name the college or show screenshots of the live system; the image on this page is an illustration.",
+    ],
+    deliverables: [
+      "System design and architecture",
+      "AI automation for student records",
+      "Automated attendance tracking",
+      "Automated marks and grade calculation",
+      "Dashboards for admins, teachers and students",
+      "Reports and alerts",
+      "Private deployment for the client",
+    ],
+    features: [
+      {
+        icon: "bot",
+        title: "AI-created student records",
+        body: "New students are added and their profiles kept up to date automatically, so the college always has one accurate record for every student.",
+      },
+      {
+        icon: "check",
+        title: "Automated attendance",
+        body: "Attendance is recorded and attendance percentages calculated automatically for every class, with no manual tallying at the end of the month.",
+      },
+      {
+        icon: "chart",
+        title: "Marks to grades, automatically",
+        body: "Exam and assessment marks are processed by the system and turned into grades and results without anyone re-entering them in a spreadsheet.",
+      },
+      {
+        icon: "activity",
+        title: "Smart alerts",
+        body: "The system flags issues such as low attendance early, so staff can step in before a student falls behind.",
+      },
+      {
+        icon: "sliders",
+        title: "Dashboards for every role",
+        body: "Admins, teachers and students each see what matters to them — from college-wide overviews to a single student's attendance and grades.",
+      },
+      {
+        icon: "lock",
+        title: "Private and secure",
+        body: "Student data stays within the client's own deployment, with access limited by role.",
+      },
+    ],
+    caseStudy: {
+      why: "The college was spending a huge amount of staff time on routine admin: marking attendance registers, totalling marks, working out grades and keeping student records up to date. It was slow, repetitive and easy to get wrong.",
+      needs: "One system that takes routine student management off the staff's hands entirely — fully automated by AI, accurate, and easy for admins, teachers and students to use.",
+      requirements: [
+        "Create and manage student records automatically",
+        "Track attendance and calculate percentages",
+        "Process marks and calculate grades",
+        "Cut manual data entry for staff",
+        "Separate access for admins, teachers and students",
+        "Keep student data private and secure",
+      ],
+      approach: [
+        "Mapped the college's existing processes for records, attendance, marks and grading to see where staff time was going.",
+        "Designed one central student database so every module — attendance, marks, grades — works from the same records.",
+        "Built AI automation that creates and updates student records and processes attendance and marks without manual entry.",
+        "Automated grade calculation from marks, using the college's own grading rules.",
+        "Built role-based dashboards so admins, teachers and students each see exactly what they need.",
+        "Deployed it privately for the client, with access controls protecting student data.",
+      ],
+      additions: [
+        "Low-attendance alerts raised automatically",
+        "Auto-generated reports for staff",
+        "Student-facing view of attendance and grades",
+        "One dashboard for the whole college",
+        "Role-based access control",
+      ],
+    },
+    metrics: [
+      { label: "Attendance", value: "Auto" },
+      { label: "Marks & Grades", value: "Auto" },
+      { label: "Student Records", value: "AI" },
+    ],
+    tags: ["AI Automation", "College Management", "Dashboards", "Education"],
+    icon: "cpu",
+    image: {
+      src: "/projects/ai-college-management-system.webp",
+      alt: "Illustration of the AI college management system: automated attendance, marks and grades",
+    },
+  },
+  {
+    id: "institute-student-management-system",
+    title: "Student Management System for a Computer Institute",
+    client: "Computer institute client",
+    category: "Education Client • Records & Attendance",
+    description:
+      "A student management system built for a computer institute to keep student records and attendance in one place. Its key safeguard: a student is only marked present once their teacher verifies it, so attendance can't be marked by mistake or by proxy and the records the institute relies on are always accurate.",
+    metaTitle: "Student Management System for a Computer Institute — Case Study",
+    metaDescription:
+      "How CRUDIFY built a student management system for a computer institute: student records and attendance, with students marked present only after teacher verification.",
+    overview: [
+      "A computer institute runs several batches and courses at once, and keeping track of who is enrolled and who actually attends quickly becomes a mess of registers and spreadsheets.",
+      "We built one system for the institute's student records and daily attendance. Every student has a single record, and attendance is tracked batch by batch.",
+      "The heart of the system is teacher verification. A student isn't counted as present just because attendance was entered — the teacher has to confirm it first. Until then the student stays unverified and is not marked present, which stops proxy attendance and keeps the records trustworthy.",
+    ],
+    deliverables: [
+      "System design and development",
+      "Student records management",
+      "Batch-wise attendance tracking",
+      "Teacher verification workflow",
+      "Logins for admins and teachers",
+      "Attendance records and history",
+    ],
+    features: [
+      {
+        icon: "social",
+        title: "Student records in one place",
+        body: "Every student's details are kept in a single record that the institute can add to, update and search, instead of scattered registers.",
+      },
+      {
+        icon: "check",
+        title: "Teacher-verified attendance",
+        body: "A student is only marked present once their teacher verifies it. Until then they stay unverified and are not counted as present.",
+      },
+      {
+        icon: "shield",
+        title: "No proxy attendance",
+        body: "Because the teacher has to confirm every present mark, students can't be marked present by mistake or by someone else.",
+      },
+      {
+        icon: "sliders",
+        title: "Batch-wise tracking",
+        body: "Attendance is organised by batch, so each teacher works with their own students and the institute sees every batch at a glance.",
+      },
+      {
+        icon: "chart",
+        title: "Attendance history",
+        body: "Verified attendance builds up into a reliable history for every student that the institute can check at any time.",
+      },
+      {
+        icon: "key",
+        title: "Role-based access",
+        body: "Admins and teachers each log in with their own access, so only the right people can manage records and verify attendance.",
+      },
+    ],
+    caseStudy: {
+      why: "The institute needed attendance it could actually trust. With manual registers, students could be marked present by mistake or by a friend, and student details were spread across paper and spreadsheets.",
+      needs: "One simple system for student records and attendance, where nobody is counted as present unless their teacher has confirmed it.",
+      requirements: [
+        "Keep all student records in one place",
+        "Track attendance for every batch",
+        "Mark a student present only after the teacher verifies it",
+        "Stop proxy and mistaken attendance",
+        "Separate access for admins and teachers",
+        "Easy for staff to use every day",
+      ],
+      approach: [
+        "Mapped how the institute enrolls students and takes attendance across its batches.",
+        "Built a central student database so records and attendance always stay linked.",
+        "Designed attendance as a two-step flow: attendance is entered, then the teacher verifies it.",
+        "Made sure a student is only counted as present once that verification is done; unverified entries are never treated as present.",
+        "Added logins for admins and teachers so only the right people can verify attendance.",
+        "Kept the screens simple so teachers can verify a whole batch quickly at the start of each class.",
+      ],
+      additions: [
+        "A clear status for every student: verified present, awaiting teacher, or absent",
+        "Batch-wise attendance views",
+        "A full attendance history for each student",
+        "Role-based access for admins and teachers",
+      ],
+    },
+    metrics: [
+      { label: "Student Records", value: "1 Place" },
+      { label: "Attendance", value: "Verified" },
+      { label: "Proxy Attendance", value: "Blocked" },
+    ],
+    tags: ["Student Management", "Attendance System", "Teacher Verification", "Education"],
+    icon: "shield",
+    image: {
+      src: "/projects/institute-student-management-system.webp",
+      alt: "Illustration of the institute student management system: attendance marked present only after teacher verification",
     },
   },
 ];

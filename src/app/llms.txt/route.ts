@@ -25,7 +25,7 @@ export function GET() {
     `- [College Projects](${absoluteUrl(COLLEGE_PROJECTS_PATH)}): Final year and mini projects for students — ${COLLEGE_PROJECT_CATEGORIES.map((c) => `${c.title}: ${c.projects.map((p) => p.name).join(", ")}`).join("; ")}`,
     "",
     "## Client Projects",
-    ...PROJECTS.map((p) => `- [${p.title}](${absoluteUrl(projectHref(p.id))}): ${p.description} Live: ${p.url}`),
+    ...PROJECTS.map((p) => `- [${p.title}](${absoluteUrl(projectHref(p.id))}): ${p.description}${p.url ? ` Live: ${p.url}` : ""}`),
     "",
     "## Guides",
     ...POSTS.map((p) => `- [${p.title}](${absoluteUrl(`/blog/${p.slug}`)}): ${p.quickAnswer}`),

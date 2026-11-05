@@ -40,6 +40,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
   const path = projectHref(project.id);
   const url = absoluteUrl(path);
   const others = PROJECTS.filter((p) => p.id !== project.id);
+  const Frame = project.url ? "a" : "div";
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -56,11 +57,14 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
         "@id": `${url}#project`,
         name: project.title,
         description: project.description,
-        url: project.url,
         image: absoluteUrl(project.image.src),
         keywords: project.tags.join(", "),
         creator: { "@id": SCHEMA_ID.organization },
-        sourceOrganization: { "@type": "Organization", name: project.client, url: project.url },
+        // A private project's client stays unnamed here too.
+        ...(project.url && {
+          url: project.url,
+          sourceOrganization: { "@type": "Organization", name: project.client, url: project.url },
+        }),
       },
       breadcrumbNode(path, [
         { name: "Projects", path: "/projects" },
@@ -103,20 +107,20 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
               {project.description}
             </p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <a href={project.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                Visit Live Website ↗
-              </a>
+              {project.url && (
+                <a href={project.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                  Visit Live Website ↗
+                </a>
+              )}
               <Link href="/projects" className="btn btn-ghost">
                 ← All Projects
               </Link>
             </div>
           </header>
 
-          {/* the delivered site, in a browser frame */}
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
+          {/* the delivered site, in a browser frame — a link only when it is public */}
+          <Frame
+            {...(project.url && { href: project.url, target: "_blank", rel: "noopener noreferrer" })}
             className="mt-12 block overflow-hidden rounded-[28px] border border-secondary/25 bg-surface shadow-[0_28px_60px_-24px_var(--shadow-warm-strong)]"
           >
             <div className="flex items-center gap-2 border-b border-tertiary/10 px-5 py-3">
@@ -124,7 +128,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
               <span className="h-2.5 w-2.5 rounded-full bg-secondary/25" />
               <span className="h-2.5 w-2.5 rounded-full bg-secondary/15" />
               <span className="ml-3 truncate font-mono text-[12px] text-tertiary/55">
-                {project.url.replace(/^https?:\/\//, "")}
+                {project.url?.replace(/^https?:\/\//, "") ?? "Private client system"}
               </span>
             </div>
             <div className="relative aspect-[16/10]">
@@ -137,7 +141,7 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
                 className="object-cover object-top"
               />
             </div>
-          </a>
+          </Frame>
 
           <dl className="mt-10 grid gap-4 sm:grid-cols-3">
             {project.metrics.map((m) => (

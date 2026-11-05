@@ -219,7 +219,7 @@ export default function ProjectsSection({ headingAs: Heading = "h2" }: { heading
                   <div className="flex items-center justify-between border-b border-tertiary/12 pb-3 mb-4">
                     <span className="text-xs font-mono font-extrabold uppercase text-secondary flex items-center gap-2">
                       <span className="h-2 w-2 rounded-full bg-secondary animate-pulse" />
-                      Live Website
+                      {project.url ? "Live Website" : "Confidential Client"}
                     </span>
                     <span className="p-2 rounded-xl bg-secondary/20 text-secondary">
                       <CourseIcon name={project.icon} className="h-4 w-4" />
