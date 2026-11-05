@@ -1,80 +1,21 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useRef } from "react";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import { CourseIcon } from "./Icons";
 import AnimatedText from "./AnimatedText";
 import FloatingTechIcons from "./FloatingTechIcons";
-
-interface ProjectItem {
-  id: string;
-  number: string;
-  title: string;
-  category: string;
-  description: string;
-  metrics: { label: string; value: string }[];
-  tags: string[];
-  gradient: string;
-  icon: "web" | "digital" | "shield" | "code" | "server" | "cpu";
-}
-
-const PROJECTS: ProjectItem[] = [
-  {
-    id: "project-1",
-    number: "01",
-    title: "Apex Enterprise Web Platform",
-    category: "Next.js 16 • Headless SSR • Edge CDN",
-    description:
-      "A high-throughput enterprise web platform built on Next.js 16 App Router with automated edge rendering and sub-38ms global TTFB.",
-    metrics: [
-      { label: "Lighthouse Speed", value: "99/100" },
-      { label: "Edge Latency", value: "38 ms" },
-      { label: "Conversion Lift", value: "+320%" },
-    ],
-    tags: ["React 19", "Next.js 16", "Tailwind v4", "GraphQL"],
-    gradient: "from-contrast/20 via-primary to-primary",
-    icon: "web",
-  },
-  {
-    id: "project-2",
-    number: "02",
-    title: "OmniGrowth AI Asset Studio",
-    category: "AI Marketing • Automated Copy & Design",
-    description:
-      "Omnichannel growth automation suite powered by custom neural models that auto-generate multi-platform social banners, ad campaigns, and telemetry dashboards.",
-    metrics: [
-      { label: "Asset Creation", value: "10x Faster" },
-      { label: "Ad Conversion", value: "+340%" },
-      { label: "Lead Pipeline", value: "1.2M req/mo" },
-    ],
-    tags: ["Python ML", "TypeScript", "OpenAI API", "Telemetry"],
-    gradient: "from-secondary/25 via-primary to-primary",
-    icon: "digital",
-  },
-  {
-    id: "project-3",
-    number: "03",
-    title: "CyberShield Zero-Trust Firewall",
-    category: "Cybersecurity • 100 Gbps DDoS Mitigation",
-    description:
-      "Enterprise zero-trust API protection gateway featuring real-time automated bot defense, TLS 1.3 micro-segmentation, and SOC 2 Type II audit tracking.",
-    metrics: [
-      { label: "Threat Scan Speed", value: "100k / sec" },
-      { label: "DDoS Shield", value: "100 Gbps" },
-      { label: "Uptime Rating", value: "99.999%" },
-    ],
-    tags: ["Rust WAF", "OAuth2 Gateway", "SOC 2 Type II", "ISO 27001"],
-    gradient: "from-contrast/15 via-primary to-primary",
-    icon: "shield",
-  },
-];
+import { PROJECTS, projectHref } from "./projects/projectsData";
 
 const PROJECTS_FLOATING_ICONS = [
   { type: "course" as const, name: "code" as const, label: "Liquid Glass", className: "top-12 left-10 animate-float-slow hidden md:flex" },
   { type: "course" as const, name: "shield" as const, label: "Sticky Stacking", className: "bottom-20 right-10 animate-float-reverse hidden md:flex" },
 ];
 
-export default function ProjectsSection() {
+/** `headingAs="h1"` when the section is the page itself (/projects). */
+export default function ProjectsSection({ headingAs: Heading = "h2" }: { headingAs?: "h1" | "h2" }) {
   const root = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -196,7 +137,7 @@ export default function ProjectsSection() {
               the no-JS and reduced-motion appearance. inline-block matters:
               offsetWidth then hugs the longest line, which is what the growth
               factor is measured against. */}
-          <h2
+          <Heading
             data-projects-title
             className="inline-block font-display text-[clamp(2rem,4.4vw,3.1rem)] font-semibold leading-[1.06] tracking-[-0.035em] text-tertiary will-change-transform"
           >
@@ -207,12 +148,12 @@ export default function ProjectsSection() {
               className="text-contrast"
               onScroll
             />
-          </h2>
+          </Heading>
           <p
             data-projects-intro
             className="mt-7 max-w-[46ch] text-base text-tertiary/70 font-medium"
           >
-            Explore our flagship web engines, AI growth platforms, and zero-trust cybersecurity deployments.
+            Real client work — the websites and apps we built, and the results they earn.
           </p>
         </div>
 
@@ -245,7 +186,7 @@ export default function ProjectsSection() {
                 <div>
                   <div className="flex items-center justify-between gap-4 mb-4">
                     <span className="font-mono text-3xl font-extrabold text-secondary/60">
-                      {project.number}
+                      {String(idx + 1).padStart(2, "0")}
                     </span>
                     <span className="rounded-full bg-secondary/15 border border-secondary/30 px-3.5 py-1 text-xs font-extrabold uppercase tracking-wider text-secondary">
                       {project.category}
@@ -253,7 +194,7 @@ export default function ProjectsSection() {
                   </div>
 
                   <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-tertiary group-hover:text-secondary transition-colors">
-                    {project.title}
+                    <Link href={projectHref(project.id)}>{project.title}</Link>
                   </h3>
 
                   <p className="mt-4 text-sm sm:text-base text-tertiary/75 leading-relaxed font-medium">
@@ -278,33 +219,77 @@ export default function ProjectsSection() {
                   <div className="flex items-center justify-between border-b border-tertiary/12 pb-3 mb-4">
                     <span className="text-xs font-mono font-extrabold uppercase text-secondary flex items-center gap-2">
                       <span className="h-2 w-2 rounded-full bg-secondary animate-pulse" />
-                      Live Results
+                      Live Website
                     </span>
                     <span className="p-2 rounded-xl bg-secondary/20 text-secondary">
                       <CourseIcon name={project.icon} className="h-4 w-4" />
                     </span>
                   </div>
 
-                  <div className="space-y-3.5 my-2">
+                  <Link
+                    href={projectHref(project.id)}
+                    aria-label={`${project.title} case study`}
+                    className="relative block aspect-[16/10] overflow-hidden rounded-xl border border-tertiary/12"
+                  >
+                    <Image
+                      src={project.image.src}
+                      alt={project.image.alt}
+                      fill
+                      sizes="(min-width: 1024px) 380px, 85vw"
+                      className="object-cover object-top"
+                    />
+                  </Link>
+
+                  {/* Compact metric row: with the screenshot above, a stacked
+                      list would make the card taller than the viewport and it
+                      could no longer pin. */}
+                  <div className="mt-3 grid grid-cols-3 gap-2">
                     {project.metrics.map((m) => (
                       <div
                         key={m.label}
-                        className="flex items-center justify-between p-3 rounded-xl bg-surface/70 border border-tertiary/12"
+                        className="rounded-xl bg-surface/70 border border-tertiary/12 p-2.5 text-center"
                       >
-                        <span className="text-xs font-semibold text-tertiary/70">{m.label}</span>
-                        <span className="font-mono text-sm font-extrabold text-secondary">
-                          {m.value}
-                        </span>
+                        <div className="font-mono text-sm font-extrabold text-secondary">{m.value}</div>
+                        <div className="mt-0.5 text-[10px] font-semibold leading-tight text-tertiary/70">
+                          {m.label}
+                        </div>
                       </div>
                     ))}
                   </div>
 
-                  <button
-                    onClick={() => alert(`Exploring details for ${project.title}`)}
+                  {project.proofs && (
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      {project.proofs.map((proof) => (
+                        <a
+                          key={proof.src}
+                          href={proof.src}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block overflow-hidden rounded-xl border border-tertiary/12 bg-white"
+                        >
+                          <span className="relative block h-14">
+                            <Image
+                              src={proof.src}
+                              alt={proof.alt}
+                              fill
+                              sizes="180px"
+                              className="object-cover object-left-top"
+                            />
+                          </span>
+                          <span className="block bg-surface/90 px-2 py-1 text-[10px] font-semibold text-tertiary/70">
+                            {proof.label}
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+
+                  <Link
+                    href={projectHref(project.id)}
                     className="btn btn-primary mt-4 w-full !bg-secondary !text-primary font-extrabold text-xs shadow-lg hover:!bg-secondary/90"
                   >
-                    View Project Case Study →
-                  </button>
+                    View Case Study →
+                  </Link>
                 </div>
               </div>
             </div>

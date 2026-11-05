@@ -1,4 +1,6 @@
 import { SERVICES } from "@/components/services/servicesData";
+import { COLLEGE_PROJECTS_PATH, COLLEGE_PROJECT_CATEGORIES } from "@/components/college/collegeProjects";
+import { PROJECTS, projectHref } from "@/components/projects/projectsData";
 import { POSTS } from "@/content/blog";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_UPDATED, absoluteUrl } from "@/lib/site";
 
@@ -19,6 +21,11 @@ export function GET() {
     `- [About](${absoluteUrl("/about")}): The team, story and roadmap`,
     `- [Services](${absoluteUrl("/services")}): All services with With AI+ and Without AI versions`,
     ...SERVICES.map((s) => `- [${s.metaTitle}](${absoluteUrl(`/services/${s.id}`)}): ${s.tag}`),
+    `- [Projects](${absoluteUrl("/projects")}): Client work and the results it earned`,
+    `- [College Projects](${absoluteUrl(COLLEGE_PROJECTS_PATH)}): Final year and mini projects for students — ${COLLEGE_PROJECT_CATEGORIES.map((c) => `${c.title}: ${c.projects.map((p) => p.name).join(", ")}`).join("; ")}`,
+    "",
+    "## Client Projects",
+    ...PROJECTS.map((p) => `- [${p.title}](${absoluteUrl(projectHref(p.id))}): ${p.description} Live: ${p.url}`),
     "",
     "## Guides",
     ...POSTS.map((p) => `- [${p.title}](${absoluteUrl(`/blog/${p.slug}`)}): ${p.quickAnswer}`),

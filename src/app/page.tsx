@@ -13,6 +13,7 @@ import HomeCompare from "@/components/home/HomeCompare";
 import HomeCities from "@/components/home/HomeCities";
 import HomePlatforms from "@/components/home/HomePlatforms";
 import HomeGlossary, { termId } from "@/components/home/HomeGlossary";
+import ProjectsSection from "@/components/ProjectsSection";
 import TestimonialSlider from "@/components/home/TestimonialSlider";
 import HomeFaq from "@/components/home/HomeFaq";
 import HomeBlogs from "@/components/home/HomeBlogs";
@@ -151,6 +152,7 @@ export default function Home() {
       <HomeGuide />
       <HomeIndustries />
       <HomeCompare />
+      <ProjectsSection />
       <TestimonialSlider />
       <HomeCities />
       <HomePlatforms />

@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 
 import { SERVICES } from "@/components/services/servicesData";
+import { COLLEGE_PROJECTS_PATH } from "@/components/college/collegeProjects";
+import { PROJECTS, projectHref } from "@/components/projects/projectsData";
 import { POSTS } from "@/content/blog";
 import { PRIVACY, TERMS } from "@/content/legal";
 import { SITE_UPDATED, absoluteUrl } from "@/lib/site";
@@ -17,6 +19,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: SITE_UPDATED,
       changeFrequency: "monthly" as const,
       priority: 0.8,
+    })),
+    { url: absoluteUrl(COLLEGE_PROJECTS_PATH), lastModified: SITE_UPDATED, changeFrequency: "monthly", priority: 0.7 },
+    {
+      url: absoluteUrl("/projects"),
+      lastModified: SITE_UPDATED,
+      changeFrequency: "monthly",
+      priority: 0.8,
+      images: PROJECTS.map((project) => absoluteUrl(project.image.src)),
+    },
+    ...PROJECTS.map((project) => ({
+      url: absoluteUrl(projectHref(project.id)),
+      lastModified: SITE_UPDATED,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+      images: [project.image, ...(project.proofs ?? [])].map((img) => absoluteUrl(img.src)),
     })),
     {
       url: absoluteUrl("/blog"),

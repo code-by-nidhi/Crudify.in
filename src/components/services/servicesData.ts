@@ -427,8 +427,7 @@ export const SERVICE_MENU: ((typeof SERVICE_NAV)[number] & {
     title: "College Projects",
     tag: "Final Year & Mini Projects",
     icon: "terminal",
-    // No page of its own yet; the projects are built by the web team.
-    href: serviceHref("web"),
+    href: "/college-projects",
     blurb: "Working projects for students, built and explained so you can present them with confidence.",
     menu: [
       {
@@ -437,12 +436,7 @@ export const SERVICE_MENU: ((typeof SERVICE_NAV)[number] & {
       },
       {
         title: "By Stack",
-        items: [
-          "Web Development Projects",
-          "AI & ML Projects",
-          "Cybersecurity Projects",
-          "Digital Marketing Projects",
-        ],
+        items: ["Cyber Security Projects", "Web Development Projects"],
       },
       {
         title: "Support",
